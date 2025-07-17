@@ -1,0 +1,475 @@
+/*ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS direccion_nor character varying;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = direccion;
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'A. T. DE ALVEAR','ANGEL T DE ALVEAR');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ACHA MARIANO','MARIANO ACHA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ADER BERNARDO AV.','BERNARDO ADER');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AGUADO ALEJANDRO M.','ALEJANDRO M AGUADO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AGUERO J. S.','JULIAN S AGUERO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ALBERDI JUAN BAUTISTA','JUAN B ALBERDI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ALMIRANTE BROWN','GUILLERMO BROWN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ALVEAR CARLOS MARIA DE','CARLOS M DE ALVEAR');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AMADOR FERNAN F DE','FERNAN F DE AMADOR');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AMBROSETTI JUAN BAUTISTA','JUAN B AMBROSETTI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AMÉRICA','AMERICA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ANCHORENA TOMAS DE','TOMAS M DE ANCHORENA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ANDRÉS FERREYRA','ANDRES FERREYRA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ANGEL T. DE ALVEAR','ANGEL T DE ALVEAR');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ARAOZ','ARAOZ DE LAMADRID');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ARISTÓBULO DEL VALLE','ARISTOBULO DEL VALLE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ARTIGAS JOSE GERVASIO GRAL','JOSE G DE ARTIGAS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ASCASUBI HILARIO','HILARIO ASCASUBI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AVALOS AMARO INT.','AMARO AVALOS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AVELLANEDA NICOLAS','NICOLAS AVELLANEDA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AVENIDA BARTOLOMÉ MITRE','BARTOLOME MITRE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AVENIDA DE LOS CONSTITUYENTES','DE LOS CONSTITUYENTES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AVENIDA DEL LIBERTADOR','DEL LIBERTADOR');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AVENIDA GENERAL PAZ','JOSE M PAZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AVENIDA MAIPÚ','MAIPU');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AZCUENAGA MIGUEL DE','MIGUEL DE AZCUENAGA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AZURDUY JUANA','JUANA AZURDUY');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BAIGORRIA SGTO','BAUTISTA BAIGORRIA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BALCARCE GRAL','BALCARCE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BARDI FEDERICO','FEDERICO BARDI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BARREIRO AGUIRRE','RICARDO BARREIRO AGUIRRE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BASAVILBASO MANUEL','MANUEL BASAVILBASO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BEIRO FRANCISCO','FRANCISCO BEIRO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BELGRANO GRAL','MANUEL BELGRANO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BELLOCQ ADOLFO','ADOLFO BELLOCQ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BELZU MANUEL','MANUEL BELZU');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BERMUDEZ JUSTO CAP.','JUSTO G DE BERMUDEZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BERUTI ANTONIO','ANTONIO L BERUTI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BLANCO ENCALADA','MANUEL BLANCO ENCALADA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BOEDO','MARIANO BOEDO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BOEDO MARIANO','MARIANO BOEDO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BOGADO CNEL','FELIX BOGADO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BOLIVAR SIMON','SIMON BOLIVAR');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BOSCH J. J.','JUAN J BOSCH');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BOUCHARD ALFEREZ','HIPOLITO BOUCHARD');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BRANDSEN FEDERICO','FEDERICO BRANDSEN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BROWN ALTE','GUILLERMO BROWN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CABRAL SGTO','JUAN B CABRAL');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CAJARAVILLE','MIGUEL CAJARAVILLE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CALVO CARLOS','CARLOS CALVO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GASPAR CAMPOS','CAMPOS GASPAR');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CANE MIGUEL','MIGUEL CANE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CARLOS FRANCISCO MELO','CARLOS F MELO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CARREGAL MAQUINISTA','CARREGAL');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CARRIEGO EVARISTO','EVARISTO CARRIEGO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CASTELLANOS JOAQUIN DR','JOAQUIN CASTELLANOS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CASTELLI JUAN JOSE','JUAN J CASTELLI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CASTRO BARROS PEDRO','PEDRO I DE CASTRO BARROS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CASTRO EMILIO GDOR.','EMILIO CASTRO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CASTRO EMILIO GOB.','EMILIO CASTRO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CASTRO RAMON B.','RAMON B CASTRO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CERVANTES SAAVEDRA','MIGUEL DE CERVANTES SAAVEDRA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CESARIO BERNALDO DE QUIRÓS','CESARIO B DE QUIROS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CESPEDES MARTINA','MARTINA CESPEDES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CETRANGOLO A. DR','ANTONIO A CETRANGOLO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CEVALLOS VIRREY','PEDRO DE CEVALLOS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CHELIA F','FRANCISCO CHELIA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CHICLANA','FELICIANO CHICLANA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'COLOMBRES JOSE','JOSE E COLOMBRES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'COMANDANTE LEONARDO ROSALES','LEONARDO ROSALES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'COMANDANTE LUIS PIEDRA BUENA','LUIS PIEDRABUENA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'COMANDANTE ROSALES','LEONARDO ROSALES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CONSTITUYENTES','DE LOS CONSTITUYENTES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'COQUIMBO CAZADORES DE','CAZADORES DE COQUIMBO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CORONEL BOGADO','FELIX BOGADO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CORONEL MANUEL ROSEETTI','MANUEL ROSETTI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CORONEL MANUEL ROSETTI','MANUEL ROSETTI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CROACIA PASAJE','CROACIA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CUENCA DR.','CUENCA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DARIO RUBEN','RUBEN DARIO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DE LA QUINTANA HILARION','HILARION DE LA QUINTANA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DE LA TORRE LISANDRO','LISANDRO DE LA TORRE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DE LUCA ESTEBAN','ESTEBAN DE LUCA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DEAN FUNES','GREGORIO FUNES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DEBENEDETTI','SALVADOR DEBENEDETTI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DEL CAMPO ESTANISLAO','ESTANISLAO DEL CAMPO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DEL LIBERTADOR AV.','DEL LIBERTADOR');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DEL VALLE ARISTOBULO','ARISTOBULO DEL VALLE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DEPRATI ATILIO INT','ATILIO DEPRATI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DERQUI PTE','SANTIAGO DERQUI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DIAZ DE SOLIS J','JUAN DIAZ DE SOLIS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DIAZ VELEZ','MANUEL DIAZ VELEZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DÍAZ VÉLEZ','MANUEL DIAZ VELEZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DOCTOR ANTONIO CETRÁNGOLO','ANTONIO A CETRANGOLO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DOCTOR JOSÉ INGENIEROS','JOSE INGENIEROS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DOCTOR MARCOS SASTRE','MARCOS SASTRE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DOMINGO FAUSTINO SARMIENTO','DOMINGO F SARMIENTO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DOMINGO MARTÍNEZ DE IRALA','DOMINGO MARTINEZ DE IRALA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DORREGO MANUEL CNEL.','MANUEL DORREGO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DR. LUIS PASTEUR','LUIS PASTEUR');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DRAGO LUIS MARIA','LUIS M DRAGO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'EDISON TOMAS','TOMAS A EDISON');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ELFLEIN ADA','ADA ELFLEIN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ELFLEIN ADA MAESTRA','ADA ELFLEIN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ESCALADA DE SAN MARTIN','REMEDIOS ESCALADA DE SAN MARTIN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ESPINEIRA U.R.','VICENTA RABELA ESPINEIRA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ESPORA TOMAS CMTE','TOMAS ESPORA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ESTRADA JOSE MANUEL','JOSE M DE ESTRADA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'FERNÁN FÉLIX DE AMADOR','FERNAN F DE AMADOR');
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MUNRO','');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),',FLORIDA','');
+
+----------------------
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'A. CÓRDOBA','CORDOBA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ACASSUSO DOMINGO DE','DOMINGO DE ACASSUSO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ADA ELFLEIN MAESTRA','ADA ELFLEIN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AGUSTÍN ÁLVAREZ','AGUSTIN ALVAREZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ALSINA ADOLFO','ADOLFO ALSINA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'AMEGHINO FLORENTINO','FLORENTINO AMEGHINO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ARENALES GRAL','ARENALES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ARGENTINO PUERTO','PUERTO ARGENTINO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ARGERICH COSME','COSME ARGERICH');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BORGES FRANCISCO','FRANCISCO BORGES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CAMACUÁ','CAMACUA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CAMPO NRO.','ESTANISLAO DEL CAMPO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CAMPOS GASPAR','GASPAR CAMPOS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'CURAPALIGÜE','CURAPALIGUE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DARWIN CARLOS','CARLOS DARWIN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'DE LOS DE LOS CONSTITUYENTES','DE LOS CONSTITUYENTES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ECHEVERRIA ESTEBAN','ESTEBAN ECHEVERRIA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ESPAÑA','ESPANA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ESREBAN ECHEVERRIA','ESTEBAN ECHEVERRIA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ESTEBAN ECHEVERRÍA','ESTEBAN ECHEVERRIA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'FERREYRA ANDRES','ANDRES FERREYRA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'FIORAVANTI JOSE','JOSE FIORAVANTI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'FLEMING ALEXANDER','ALEXANDER FLEMING');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'FLORIDA AV.','FLORIDA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'FRANCISCO NARCISO DE LAPRIDA','FRANCISCO N DE LAPRIDA');
+--UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'RAMON FRANCO','FRANCO RAMON CMTE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'FRANKLIN BENJAMIN','BENJAMIN FRANKLIN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'FRAY JUSTO SARMIENTO','JUSTO SARMIENTO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'FRAY LUIS BELTRAN','LUIS BELTRAN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'FRAY MAMERTO ESQUIU','MAMERTO ESQUIU');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'FRENCH DOMINGO','DOMINGO FRENCH');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GABOTO SEBASTIAN','SEBASTIAN GABOTO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GARAY JUAN DE','JUAN DE GARAY');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GARCIA M. PROFESOR','MANUEL GARCIA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GARDEL CARLOS','CARLOS GARDEL');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GENERAL BELGRANO','MANUEL BELGRANO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GENERAL JOSÉ DE SAN MARTÍN','JOSE DE SAN MARTIN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GENERAL JUAN GREGORIO LAS HERAS','JUAN G DE LAS HERAS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GENERAL JUAN LAVALLE','JUAN LAVALLE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GENERAL JULIO ARGENTINO ROCA','JULIO A ROCA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GENERAL JUSTO JOSÉ DE URQUIZA','JUSTO J DE URQUIZA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GENERAL LAS HERAS','JUAN G DE LAS HERAS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GERVASIO DE POSADAS','GERVASIO POSADAS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GOBERNADOR EMILIO CASTRO','EMILIO CASTRO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GOBERNADOR MARCELINO UGARTE','MARCELINO UGARTE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GOBERNADOR VALENTÍN VERGARA','VALENTIN VERGARA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GOBERNADOR VERNET','LUIS VERNET');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GONZALEZ JOAQUIN V.','JOAQUIN V GONZALEZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GOYENA PEDRO','PEDRO GOYENA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GRAL. M. MIGUEL DE GÜEMES','MARTIN M DE GUEMES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GRAMAJO GUTIERREZ PINTO','ALFREDO GRAMAJO GUTIERREZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GRIERSON CECILIA','CECILIA GRIERSON');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GUEMES MARTIN MIGUEL GRAL','MARTIN M DE GUEMES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GUIDO ALFREDO','ALFREDO GUIDO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'GUTIERREZ RICARDO','RICARDO GUTIERREZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'HAEDO MARTIN J.','MARTIN J HAEDO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'HAITÍ','HAITI');
+
+-----------------------
+
+
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'HERNANDEZ JOSE','JOSE HERNANDEZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'FRANCO RAMON CMTE','RAMON FRANCO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'HILARIÓN DE LA QUINTANA','HILARION DE LA QUINTANA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'INGENIEROS JOSE','JOSE INGENIEROS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'INT. CORONEL AMARO ÁVALOS','AMARO AVALOS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'INTENDENTE ATILIO DEPRATI','ATILIO DEPRATI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'IRALA DOMINGO MARTINEZ DE','DOMINGO MARTINEZ DE IRALA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'IRIGOYEN BERNARDO DE','BERNARDO DE IRIGOYEN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JOSÉ HERNÁNDEZ','JOSE HERNANDEZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JOSÉ INGENIEROS','JOSE INGENIEROS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JOSÉ MANUEL ESTRADA','JOSE M DE ESTRADA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JUAN BAUTISTA ALBERDI','JUAN B ALBERDI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JUAN BAUTISTA DE LA SALLE','SAN JUAN B DE LASALLE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JUAN BAUTISTA JUSTO','JUAN B JUSTO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JUAN BAUTISTA LA SALLE','SAN JUAN B DE LASALLE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JUAN CARLOS RICHIERI','JUAN C RICCHIERI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JUAN DÍAZ DE SOLÍS','JUAN DIAZ DE SOLIS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JULIO ARGENTINO ROCA','JULIO A ROCA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JUNCAL PASAJE','JUNCAL');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JUSTO JUAN B.','JUAN B JUSTO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'LAMADRID','ARAOZ DE LAMADRID');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'LAPRIDA FRANCISCO NARCISO (BOULEVARD','FRANCISCO N DE LAPRIDA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'LAPRIDA FRANCISCO NARCISO','FRANCISCO N DE LAPRIDA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'LAPRIDA FRANCISCO NARCISO DE','FRANCISCO N DE LAPRIDA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'LARREA JUAN','JUAN LARREA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'LAS HERAS GRAL','JUAN G DE LAS HERAS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'LASALLE JUAN BAUTISTA DE','SAN JUAN B DE LASALLE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'LAVALLE GRAL.','JUAN LAVALLE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'LEANDRO N. ALEM','LEANDRO N ALEM');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'LIMA CIPRIANO','CIPRIANO LIMA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'LINIERS','SANTIAGO DE LINIERS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'LOPEZ Y PLANES VICENTE','VICENTE LOPEZ Y PLANES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'LORETO VIRREY','LORETO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'LUGONES LEOPOLDO','LEOPOLDO LUGONES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MADERO EDUARDO DR','EDUARDO MADERO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MAIPU AV.','MAIPU');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MALAVER ANTONIO','ANTONIO MALAVER');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MANSILLA LUCIO GRAL','LUCIO MANSILLA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MANSO GUILLERMO','GUILLERMO MANSO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MANUEL BELZÚ','MANUEL BELZU');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MAQUINISTA CARREGAL','CARREGAL');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MAQUINOSRA CARREGAL','CARREGAL');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MARCONI GUILLERMO','GUILLERMO MARCONI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MARIANO MARIANO BOEDO','MARIANO MORENO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MORENO PERITO','MARIANO MORENO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MARMOL JOSE','JOSE MARMOL');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MARTÍN J. HAEDO','MARTIN J HAEDO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MATHEU DOMINGO','DOMINGO MATHEU');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MEDEIROS','GERTRUDIS MEDEIROS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MEDRANO','PEDRO MEDRANO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MELGAR R.','RAMON MELGAR');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MELO CARLOS F.','CARLOS F MELO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MENDEZ GERVASIO','GERVASIO MENDEZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MIGUEL DE AZCUÉNAGA','MIGUEL DE AZCUENAGA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MITRE BARTOLOME AV.','BARTOLOME MITRE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MOLDES JOSE','JOSE MOLDES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MONTEAGUDO B. DE','BERNARDO DE MONTEAGUDO');
+
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ARAOZ DE ARAOZ DE LAMADRID','ARAOZ DE LAMADRID');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'FRANCISCO N DE LAPRIDA DE','FRANCISCO N DE LAPRIDA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MONTES DE OCA','MANUEL MONTES DE OCA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MONTEVERDE LUIS','LUIS MONTEVERDE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MORENO MARIANO DR','MARIANO MORENO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MORRIS WILLIAMS','WILLIAM C MORRIS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'NAVARRO JULIAN','JULIAN NAVARRO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'NECOCHEA','MARIANO NECOCHEA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'NEWBERY JORGE','JORGE NEWBERY');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'O HIGGINS BERNARDO',$xxx$BERNARDO O'HIGGINS$xxx$);
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'OBARRIO MANUEL DR.','MANUEL OBARRIO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'OBLIGADO RAFAEL','RAFAEL OBLIGADO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'OLAGUER Y FELIU VIRREY','ANTONIO OLAGUER Y FELIU');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'OLAVARRIA','JOSE DE OLAVARRIA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PACHECO GRAL','ANGEL PACHECO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PADILLA ALDO','ALDO PADILLA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PADRE EDMUNDO VANINI','EDMUNDO VANINI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PARANÁ','PARANA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PARERA BLAS','BLAS PARERA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PASAJE LA PAZ','LA PAZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PASAJE LA VICTORIA','LA VICTORIA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PASO JUAN JOSE','JUAN J PASO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PAVON DIAGONAL','PAVON');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PAZ JOSE MARIA GRAL','JOSE M PAZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PEDRAZA MANUELA','MANUELA PEDRAZA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PELLEGRINI CARLOS','CARLOS PELLEGRINI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PELLIZA MARIANO','MARIANO PELLIZA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PENNA JOSE DR','JOSE PENNA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PIEDRA BUENA','LUIS PIEDRABUENA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PIEDRABUENA LUIS CMTE.','LUIS PIEDRABUENA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PINEDA JACINTO INT','JACINTO PINEDA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PORCHIA A','ANTONIO PORCHIA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'POSADAS GERVASIO','GERVASIO POSADAS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PRESIDENTE HIPÓLITO YRIGOYEN','HIPOLITO YRIGOYEN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PRESIDENTE ROQUE SÁENZ PEÑA','ROQUE SAENZ PENA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PRINGLES J. P. CNEL','JUAN J PRINGLES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PUCCIO AMALIA MAESTRA','AMALIA PUCCIO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PUEYRREDON JUAN MARTIN','JUAN M DE PUEYRREDON');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'PUEYRREDON PRILIDIANO','PRILIDIANO PUEYRREDON');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'QUERIDO NATALIO','NATALIO QUERIDO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'QUESADA','ERNESTO QUESADA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'QUIROGA HORACIO','HORACIO QUIROGA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'QUIROZ CESARIO','CESARIO B DE QUIROS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'RAMÓN CASTRO','RAMON B CASTRO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'RAMSEYER','EDUARDO RAMSEYER');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'RAMSEYER EDUARDO RAMSEYER','EDUARDO RAMSEYER');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'RAWSON GUILLERMO','GUILLERMO RAWSON');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'REMEDIOS DE ESCALADA DE SAN MARTÍN','REMEDIOS ESCALADA DE SAN MARTIN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'REPETTO NICOLAS','NICOLAS REPETTO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'RICARDO GUTIÉRREZ','RICARDO GUTIERREZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'RÍO PILCOMAYO','RIO PILCOMAYO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'RIOJA','LA RIOJA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'RIVADAVIA BERNARDINO','BERNARDINO RIVADAVIA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'RIVERA PEDRO IGNACIO','PEDRO I RIVERA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ROCA GRAL','JULIO A ROCA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'RODRIGUEZ CAYETANO FRAY','CAYETANO RODRIGUEZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ROJAS RICARDO','RICARDO ROJAS');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ROLDAN BELISARIO','BELISARIO ROLDAN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ROQUE SAENZ PENA','ROQUE SAENZ PENA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ROSALES CMTE','LEONARDO ROSALES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ROSETTI MANUEL CNEL','MANUEL ROSETTI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'RUBÉN DARÍO','RUBEN DARIO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'RUBIO J. INT','JOSE E RUBIO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SAAVEDRA CORNELIO','CORNELIO SAAVEDRA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SAENZ PENA ROQUE','ROQUE SAENZ PENA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SALK JONAS DR','JONAS SALK');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SAN MARTIN','JOSE DE SAN MARTIN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SANCHEZ DE THOMPSON MARIQUITA','MARIQUITA SANCHEZ DE THOMPSON');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SANTA MARIA DE ORO','JUSTO SANTAMARIA DE ORO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SARGENTO BAIGORRIA','BAUTISTA BAIGORRIA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SARGENTO CABRAL','JUAN B CABRAL');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SARMIENTO D. F.','DOMINGO F SARMIENTO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SARMIENTO JUSTO M. FRAY','JUSTO SARMIENTO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SARRATEA MANUEL DE','MANUEL DE SARRATEA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SASTRE MARCOS','MARCOS SASTRE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SAUBIDET TOMAS','TOMAS M SAUBIDET');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SAVIO MANUEL','MANUEL SAVIO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SEGUROLA S.','SATURNINO SEGUROLA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SERRANO JOSE MARIA','JOSE M SERRANO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SILVEYRA ING.','LUIS SILVEYRA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SIVORI EDUARDO','EDUARDO SIVORI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'SPANO GUIDO','CARLOS GUIDO SPANO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'STURIZA MATIAS','MATIAS STURIZA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'TEJEDOR CARLOS','CARLOS TEJEDOR');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'TERRAGNO LUIS','LUIS TERRAGNO');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'TOMÁS ESPORA','TOMAS ESPORA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'UGARTE GDOR','MARCELINO UGARTE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'URIBELARREA','MANUEL DE URIBELARREA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'URQUIZA','JUSTO J DE URQUIZA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'URQUIZA GRAL','JUSTO J DE URQUIZA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'UZAL CNEL','FRANCISCO UZAL');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'VARELA F.','FLORENCIO VARELA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'VELEZ SARSFIELD','DALMACIO VELEZ SARSFIELD');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'VÉLEZ SÁRSFIELD','DALMACIO VELEZ SARSFIELD');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'VERGARA','VALENTIN VERGARA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'VERNET LUIS GDOR','LUIS VERNET');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'VIAMONTE','JUAN J VIAMONTE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'VICENTE LÓPEZ Y PLANES','VICENTE LOPEZ Y PLANES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'VIEYTES H.','HIPOLITO VIEYTES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'VILLATE CARLOS','CARLOS VILLATE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'VIRREY VERTIZ','JUAN J VERTIZ');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'WARNES IGNACIO','IGNACIO WARNES');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'WASHINGTON J.','JORGE WASHINGTON');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'WHITE G.','GUILLERMO WHITE');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'WINEBERG','HERNAN WINEBERG');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'YRIGOYEN HIPOLITO','HIPOLITO YRIGOYEN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ZAPIOLA GRAL','JOSE M ZAPIOLA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ZORROAQUIN','EMILIO ZORRAQUIN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ZUFRIATEGUI','JUAN ZUFRIATEGUI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ZUFRIATEGUI J.','JUAN ZUFRIATEGUI');
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),',FLORLDA','');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'2343G','2343');
+																																  
+
+------------------------------
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'EDUARDO EDUARDO RAMSEYER','EDUARDO RAMSEYER');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'EDUARDO RAMSEYER EDUARDO EDUARDO RAMSEYER','EDUARDO RAMSEYER');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'HERNAN HERNAN WINEBERG','HERNAN WINEBERG');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JOSE DE JOSE DE SAN MARTIN','JOSE DE SAN MARTIN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JUAN JUAN ZUFRIATEGUI','JUAN ZUFRIATEGUI');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JUSTO J DE JUSTO J DE URQUIZA','JUSTO J DE URQUIZA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MANUEL DE MANUEL DE URIBELARREA','MANUEL DE URIBELARREA');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'VALENTIN VALENTIN VERGARA','VALENTIN VERGARA');
+
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'EDUARDO RAMSEYER EDUARDO RAMSEYER','EDUARDO RAMSEYER');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'REMEDIOS ESCALADA DE JOSE DE SAN MARTIN','REMEDIOS ESCALADA DE SAN MARTIN');
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'ROQUE SÁENZ PEÑA','ROQUE SAENZ PENA');
+
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'ECHEVERRIA 3850' WHERE direccion_nor = 'ACCESO A ECHEVERRÍA 3850';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'ECHEVERRIA 3921' WHERE direccion_nor = 'ACCESO A ECHEVERRÍA 3921';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'ESTEBAN ECHEVERRIA 3698' WHERE direccion_nor = 'ESTEBAN ECHEVERRIA 3500-3698';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'ESTEBAN ECHEVERRIA 3796' WHERE direccion_nor = 'ESTEBAN ECHEVERRIA 3796, B1605DTJ';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'HIPOLITO YRIGOYEN' WHERE direccion_nor = 'FLORIDA OESTE HIPOLITO YRIGOYEN';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'FRANCISCO N DE LAPRIDA 0-600' WHERE direccion_nor = 'FRANCISCO N DE LAPRIDA 0-600)';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'FRANCISCO N DE LAPRIDA 432' WHERE direccion_nor = 'FRANCISCO N DE LAPRIDA 102-432';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'HILARIO DE ASCASUBI 5533' WHERE direccion_nor = 'HILARIO DE ASCASUBI 5533 CARAPACGAY';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'HIPOLITO YRIGOYEN 527' WHERE direccion_nor = 'HIPOLITO YRIGOYEN 527-599';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'JOSE INGENIEROS 6552' WHERE direccion_nor = 'JOSE INGENIEROS 6552-6600';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'JUAN G DE LAS HERAS 473' WHERE direccion_nor = 'JUAN G DE LAS HERAS 473-657';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'JUSTO J DE URQUIZA 324' WHERE direccion_nor = 'JUSTO J DE URQUIZA 324-302';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'LUIS PIEDRABUENA' WHERE direccion_nor = 'LUIS LUIS PIEDRABUENA';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'MENDOZA 2749' WHERE direccion_nor = 'MENDOZA 2749 CARAPACHAY';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PADRE GUSTAVINO 3015' WHERE direccion_nor = 'PADRE GUASTAVINO 3015';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PARANA 24' WHERE direccion_nor = 'PARANA24';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'MAIPU 75' WHERE direccion_nor = 'PREDIO MAIPU 75';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'RAUL RICARDO ALFONSIN' WHERE direccion_nor = 'RAÚL RICARDO ALFONSÍN';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'RAUL RICARDO ALFONSIN 100' WHERE direccion_nor = 'RAÚL RICARDO ALFONSÍN 100';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'RAUL RICARDO ALFONSIN 400' WHERE direccion_nor = 'RAÚL RICARDO ALFONSÍN 400';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'MARIANO BOEDO 90' WHERE direccion_nor = 'MARIANO MORENO 90' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'MARIANO BOEDO 30' WHERE direccion_nor = 'MARIANO MORENO 30' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'MARIANO BOEDO 60' WHERE direccion_nor = 'MARIANO MORENO 60' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'MARIANO BOEDO 10' WHERE direccion_nor = 'MARIANO MORENO 10' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PEDRO ARAOZ 902' WHERE direccion_nor = 'ARAOZ DE LAMADRID 902' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PEDRO ARAOZ 910' WHERE direccion_nor = 'ARAOZ DE LAMADRID 910' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PEDRO ARAOZ 970' WHERE direccion_nor = 'ARAOZ DE LAMADRID 970' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PEDRO ARAOZ 1023' WHERE direccion_nor = 'ARAOZ DE LAMADRID 1023' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PEDRO ARAOZ 1024' WHERE direccion_nor = 'ARAOZ DE LAMADRID 1024' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PEDRO ARAOZ 1048' WHERE direccion_nor = 'ARAOZ DE LAMADRID 1048' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'JOSE INGENIEROS 6578' WHERE direccion_nor = 'JOSE INGENIEROS 6678' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'JOSE INGENIEROS 6582' WHERE direccion_nor = 'JOSE INGENIEROS 6682' AND geom_new is null;
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'JUAN CARLOS CRUZ','BARTOLOME CRUZ');
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'BUENOS AIRES 3510' WHERE direccion_nor = '3510 BUENOS AIRES' AND geom_new is null;
+
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'HIPOLITO YRIGOYEN 2890' WHERE direccion_nor = 'BERNARDO DE IRIGOYEN 2890' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'HIPOLITO YRIGOYEN 2901' WHERE direccion_nor = 'BERNARDO DE IRIGOYEN 2901' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'HIPOLITO YRIGOYEN 2923' WHERE direccion_nor = 'BERNARDO DE IRIGOYEN 2923' AND geom_new is null;
+
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'HIPOLITO YRIGOYEN 585' WHERE direccion_nor = 'BERNARDO DE IRIGOYEN 585' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'HIPOLITO YRIGOYEN 557' WHERE direccion_nor = 'BERNARDO DE IRIGOYEN 557' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'HIPOLITO YRIGOYEN 535' WHERE direccion_nor = 'BERNARDO DE IRIGOYEN 535' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'HIPOLITO YRIGOYEN 504' WHERE direccion_nor = 'BERNARDO DE IRIGOYEN 504' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'HIPOLITO YRIGOYEN 550' WHERE direccion_nor = 'BERNARDO DE IRIGOYEN 550' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'HIPOLITO YRIGOYEN 549' WHERE direccion_nor = 'BERNARDO DE IRIGOYEN 549' AND geom_new is null;
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'HIPOLITO YRIGOYEN 549' WHERE direccion_nor = 'BERNARDO DE IRIGOYEN 549' AND geom_new is null;
+
+
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'MARIANO MORENO','PARANA') WHERE geom_new is null;
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'HILARIO ASCASUBI 5533' WHERE direccion_nor = 'HILARIO DE ASCASUBI 5533' AND geom_new is null;
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'DOMINGO DE ACASSUSO 501' WHERE direccion_nor = 'DOMINGO DE ACASSUSO 501-539' AND geom_new is null;
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'RAUL RICARDO ALFONSIN' WHERE direccion_nor = 'RUAL RICARDO ALFONSIN' AND geom_new is null;
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'BARTOLOME CRUZ 115' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'BARTOLOME CRUZ 125' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'BARTOLOME CRUZ 120' AND geom_new is null;
+
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'RAUL RICARDO ALFONSIN' WHERE direccion_nor = 'EAUL RICARDO ALFONSIN' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'RAUL RICARDO ALFONSIN' WHERE direccion_nor = 'RAUL RICARDO ALGONSIN' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'RAUL RICARDO ALFONSIN' WHERE direccion_nor = 'RICARDO RAUL ALFONSIN' AND geom_new is null;
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'JUAN LAVALLE 300' AND geom_new is null;
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'RAUL RICARDO ALFONSIN';
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'RAUL RICARDO ALFOSIN' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'RAÚL RICARDO ALFONSÍN Y' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'MARTIN M DE GUEMES 299' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'LUIS VERNET 28' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'JUAN DIAZ DE SOLIS 1287' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'JULIO A ROCA 100' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'JUAN DIAZ DE SOLIS 1200' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'JUSTO J DE URQUIZA 324' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'JOSE DE SAN MARTIN 201' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'ARENALES Y' AND geom_new is null;
+
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'JUAN DIAZ DE SOLIS 1300' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'JUAN DIAZ DE SOLIS 1400' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'JOSE DE SAN MARTIN 300' AND geom_new is null;
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE direccion_nor = 'RAUL RACARDO ALFOSIN' AND geom_new is null;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'ANFITEATRO PRESIDENTE ARTURO UMBERTO ILLIA' WHERE direccion_nor = 'JOSE M PAZ &' AND geom_new is null;
+
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'ARTURO ILLIA' WHERE direccion_nor = 'DE LOS CONSTITUYENTES &' AND geom_new is null;
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'MANTENIMIENTO M.V.L.' WHERE direccion_nor = 'EST. MVL' AND geom_new is null;
+
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = REPLACE(UPPER(trim(direccion_nor)),'BARTOLOME CRUZ','JUAN CARLOS CRUZ');
+
+
+*/
+

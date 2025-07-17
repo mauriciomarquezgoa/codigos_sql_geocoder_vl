@@ -1,0 +1,1748 @@
+--SELECT ST_GEOMETRYTYPE(geom) FROM base.calles;
+
+/*
+--RECORTANDO BORDES DE LAS CALLES PARA QUE GEOCODIFACIONES CERCANAS AL INICIO O AL FINAL NO QUEDEN SOBRE PAVIMENTO
+ALTER TABLE base.calles_vertices_pgr ADD COLUMN geom_buffer geometry;
+UPDATE base.calles_vertices_pgr SET geom_buffer = ST_BUFFER(the_geom,2);
+CREATE INDEX calles_vertices_pgr_geom_buffer ON base.calles_vertices_pgr USING GIST (geom_buffer); 
+
+DROP TABLE IF EXISTS calculos.buffer_recorte;
+CREATE TABLE calculos.buffer_recorte AS
+SELECT ST_UNION(geom_buffer) as geom FROM base.calles_vertices_pgr;
+
+CREATE INDEX buffer_recorte_geom ON calculos.buffer_recorte USING GIST (geom); 
+
+--CAPA QUE SUSTITUYE EL CALLEJERO PARA QUE INICIOS Y FIN DE EJE QUEDEN RECORTADOS
+SELECT 
+a.*, ST_Difference(a.geom_32721,b.geom) as geom_recortado
+FROM 
+base.calles as a,
+calculos.buffer_recorte as b
+
+*/
+
+
+--ALTER TABLE base.calles ADD COLUMN geom_32721 geometry;
+--UPDATE base.calles SET geom_32721 = ST_TRANSFORM(geom,32721);
+
+--UPDATE base.calles SET "street_nam" = 'Francisco Uzal' WHERE "street_nam" ilike '%morales%'; 
+--UPDATE base.calles SET r_t_add = 2899 WHERE r_t_add = 1899 AND UPPER("street_nam") = 'JOSE M PAZ';
+--UPDATE base.calles SET r_f_add = 1901, l_f_add = 1902 WHERE r_f_add = 2001 AND UPPER("street_nam") = 'JUAN ZUFRIATEGUI';
+--UPDATE base.calles SET r_f_add = 1, r_t_add = 99, l_f_add = 2, l_t_add = 100 WHERE r_f_add = 101 AND UPPER("street_nam") = '12 DE OCTUBRE';
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 149, l_f_add = 102, l_t_add = 150 WHERE r_f_add = 201 AND UPPER("street_nam") = '12 DE OCTUBRE';
+--UPDATE base.calles SET r_f_add = 1, r_t_add = 89, l_f_add = 2, l_t_add = 90 WHERE r_f_add = 1 AND UPPER("street_nam") = 'EDUARDO MADERO';
+--UPDATE base.calles SET r_f_add = 91, r_t_add = 99, l_f_add = 92, l_t_add = 100 WHERE r_f_add = 101 AND UPPER("street_nam") = 'EDUARDO MADERO';
+--UPDATE base.calles SET l_f_add = 2, l_t_add = 90 WHERE l_f_add = 2 AND UPPER("street_nam") = 'MIGUEL DE AZCUENAGA';
+--UPDATE base.calles SET l_f_add = 92, l_t_add = 100 WHERE l_f_add = 32 AND UPPER("street_nam") = 'MIGUEL DE AZCUENAGA';
+--UPDATE base.calles SET r_f_add = 0, r_t_add = 0, l_f_add = 92, l_t_add = 100 WHERE objectid = 350 AND UPPER("street_nam") = 'MIGUEL DE AZCUENAGA';
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 199, l_f_add = 102, l_t_add = 200 WHERE objectid = 1960 AND UPPER("street_nam") = 'MIGUEL DE AZCUENAGA';
+--UPDATE base.calles SET r_f_add = 201, r_t_add = 249, l_f_add = 202, l_t_add = 250 WHERE objectid = 274 AND UPPER("street_nam") = 'MIGUEL DE AZCUENAGA';
+--UPDATE base.calles SET r_f_add = 251, r_t_add = 299, l_f_add = 252, l_t_add = 300 WHERE objectid = 208 AND UPPER("street_nam") = 'MIGUEL DE AZCUENAGA';
+--UPDATE base.calles SET r_f_add = 4091, r_t_add = 4099, l_f_add = 4092, l_t_add = 5000 WHERE r_f_add = 901 AND UPPER("street_nam") = 'LOS POZOS';
+--UPDATE base.calles SET r_t_add = 1049, l_t_add = 1050 WHERE r_f_add = 901 AND UPPER("street_nam") = 'PEDRO ARAOZ';
+--UPDATE base.calles SET r_f_add = 1501, l_f_add = 1502 WHERE r_f_add = 1701 AND UPPER("street_nam") = 'ANTONIO L BERUTI';
+--UPDATE base.calles SET r_f_add = 6401, r_t_add = 6449, l_f_add = 6402, l_t_add = 6450 WHERE r_f_add = 6501 AND UPPER("street_nam") = 'MANUEL GARCIA';
+--UPDATE base.calles SET r_f_add = 6451, r_t_add = 6499, l_f_add = 6452, l_t_add = 6500 WHERE r_f_add = 6551 AND UPPER("street_nam") = 'MANUEL GARCIA';
+--UPDATE base.calles SET r_f_add = 3801, r_t_add = 3899, l_f_add = 3802, l_t_add = 3900 WHERE r_f_add = 3901 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 3901, r_t_add = 3999, l_f_add = 3902, l_t_add = 4000 WHERE r_f_add = 4001 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 6451, r_t_add = 6499, l_f_add = 6452, l_t_add = 6500 WHERE r_f_add = 6451 AND UPPER("street_nam") = 'DOMINGO DE ACASSUSO';
+--UPDATE base.calles SET r_f_add = 6501, r_t_add = 6599, l_f_add = 6502, l_t_add = 6600 WHERE r_f_add = 6481 AND UPPER("street_nam") = 'DOMINGO DE ACASSUSO';
+--UPDATE base.calles SET r_f_add = 6451, r_t_add = 6499, l_f_add = 6452, l_t_add = 6500 WHERE r_f_add = 6451 AND UPPER("street_nam") = 'JOSE INGENIEROS';
+--UPDATE base.calles SET r_f_add = 6501, r_t_add = 6599, l_f_add = 6502, l_t_add = 6600 WHERE r_f_add = 6481 AND UPPER("street_nam") = 'JOSE INGENIEROS';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE r_f_add = 2301 AND UPPER("street_nam") = 'COSME ARGERICH';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2499, l_f_add = 2402, l_t_add = 2500 WHERE r_f_add = 2351 AND UPPER("street_nam") = 'COSME ARGERICH';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2599, l_f_add = 2502, l_t_add = 2600 WHERE objectid = 732;
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2449, l_f_add = 2452, l_t_add = 2450 WHERE r_f_add = 2501 AND UPPER("street_nam") = 'COSME ARGERICH';
+--UPDATE base.calles SET r_f_add = 2901, r_t_add = 2999, l_f_add = 2902, l_t_add = 3000 WHERE r_f_add = 3001 AND UPPER("street_nam") = 'COSME ARGERICH';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3099, l_f_add = 3002, l_t_add = 3100 WHERE r_f_add = 3101 AND UPPER("street_nam") = 'COSME ARGERICH';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3299, l_f_add = 3202, l_t_add = 3300 WHERE objectid = 6101 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3349, l_f_add = 3302, l_t_add = 3350 WHERE objectid = 6074 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 3351, r_t_add = 3399, l_f_add = 3352, l_t_add = 3400 WHERE objectid = 6041 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 3401, r_t_add = 3449, l_f_add = 3402, l_t_add = 3450 WHERE objectid = 6013 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 2751, r_t_add = 2899, l_f_add = 2752, l_t_add = 2900 WHERE objectid = 567 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2749, l_f_add = 2702, l_t_add = 2750 WHERE objectid = 635 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2699, l_f_add = 2602, l_t_add = 2700 WHERE objectid = 701 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 2551, r_t_add = 2699, l_f_add = 2552, l_t_add = 2600 WHERE objectid = 785 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2649, l_f_add = 2502, l_t_add = 2550 WHERE objectid = 878 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2499, l_f_add = 2402, l_t_add = 2499 WHERE objectid = 925 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2699, l_f_add = 2602, l_t_add = 2700 WHERE objectid = 732 AND UPPER("street_nam") = 'COSME ARGERICH';
+--UPDATE base.calles SET r_f_add = 2551, r_t_add = 2699, l_f_add = 2552, l_t_add = 2600 WHERE objectid = 800 AND UPPER("street_nam") = 'COSME ARGERICH';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2649, l_f_add = 2502, l_t_add = 2550 WHERE objectid = 836 AND UPPER("street_nam") = 'COSME ARGERICH';
+--UPDATE base.calles SET r_f_add = 6101, r_t_add = 6199, l_f_add = 6102, l_t_add = 6200 WHERE objectid = 5552 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 3151, r_t_add = 3199, l_f_add = 3152, l_t_add = 3200 WHERE objectid = 5631 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3901, r_t_add = 3999, l_f_add = 3902, l_t_add = 4000 WHERE objectid = 628 AND UPPER("street_nam") = 'ARENALES';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 2853 AND UPPER("street_nam") = 'CUENCA';
+--UPDATE base.calles SET r_f_add = 1401, r_t_add = 1499, l_f_add = 1402, l_t_add = 1500 WHERE objectid = 3096 AND UPPER("street_nam") = 'EDUARDO RAMSEYER';
+--UPDATE base.calles SET r_f_add = 701, r_t_add = 799, l_f_add = 702, l_t_add = 800 WHERE objectid = 3012 AND UPPER("street_nam") = 'EDUARDO RAMSEYER';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2349, l_f_add = 2302, l_t_add = 2350 WHERE objectid = 3090 AND UPPER("street_nam") = 'CORDOBA';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 2774 AND UPPER("street_nam") = 'TUCUMAN';
+--UPDATE base.calles SET r_f_add = 2631, r_t_add = 2799, l_f_add = 2632, l_t_add = 2800 WHERE objectid = 3013 AND UPPER("street_nam") = 'LA RIOJA';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2899, l_f_add = 2802, l_t_add = 2900 WHERE objectid = 4189 AND UPPER("street_nam") = 'LA RIOJA';
+--UPDATE base.calles SET r_f_add = 501, r_t_add = 699, l_f_add = 502, l_t_add = 700 WHERE objectid = 3895 AND UPPER("street_nam") = 'MATIAS STURIZA';
+--UPDATE base.calles SET r_f_add = 401, r_t_add = 499, l_f_add = 402, l_t_add = 500 WHERE objectid = 3899 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 1901, r_t_add = 1999, l_f_add = 1902, l_t_add = 2000 WHERE objectid = 4115 AND UPPER("street_nam") = 'BUENOS AIRES';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2099, l_f_add = 2002, l_t_add = 2100 WHERE objectid = 3549 AND UPPER("street_nam") = 'BUENOS AIRES';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2199, l_f_add = 2102, l_t_add = 2200 WHERE objectid = 2278 AND UPPER("street_nam") = 'BUENOS AIRES';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2459, l_f_add = 2402, l_t_add = 2460 WHERE objectid = 2299 AND UPPER("street_nam") = 'BUENOS AIRES';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2099, l_f_add = 2002, l_t_add = 2100, "street_nam" = 'Chacabuco' WHERE objectid = 2502;
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 2646 AND UPPER("street_nam") = 'ESMERALDA';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 3554 AND UPPER("street_nam") = 'ESMERALDA';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 2565 AND UPPER("street_nam") = 'ITALIA';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 2647 AND UPPER("street_nam") = 'ITALIA';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 2654 AND UPPER("street_nam") = 'FRANCIA';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 2651 AND UPPER("street_nam") = 'FRANCIA';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2519, l_f_add = 2502, l_t_add = 2520 WHERE objectid = 3690 AND UPPER("street_nam") = 'ANTONIO MALAVER';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3399, l_f_add = 3302, l_t_add = 3400 WHERE objectid = 3516 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3299, l_f_add = 3202, l_t_add = 3300 WHERE objectid = 3515 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3199, l_f_add = 3102, l_t_add = 3200 WHERE objectid = 3663 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3099, l_f_add = 3002, l_t_add = 3100 WHERE objectid = 3466 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2799, l_f_add = 2702, l_t_add = 2800 WHERE objectid = 2572 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2699, l_f_add = 2602, l_t_add = 2700 WHERE objectid = 3216 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2599, l_f_add = 2502, l_t_add = 2600 WHERE objectid = 3201 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2499, l_f_add = 2402, l_t_add = 2500 WHERE objectid = 3182 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 3164 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 3149 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2199, l_f_add = 2102, l_t_add = 2200 WHERE objectid = 2472 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2099, l_f_add = 2002, l_t_add = 2100 WHERE objectid = 2470 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 1901, r_t_add = 1999, l_f_add = 1902, l_t_add = 2000 WHERE objectid = 2468 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 1801, r_t_add = 1899, l_f_add = 1802, l_t_add = 1900 WHERE objectid = 2467 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 1701, r_t_add = 1799, l_f_add = 1702, l_t_add = 1800 WHERE objectid = 2466 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 1601, r_t_add = 1699, l_f_add = 1602, l_t_add = 1700 WHERE objectid = 2859 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 1501, r_t_add = 1599, l_f_add = 1502, l_t_add = 1600 WHERE objectid = 2857 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3399, l_f_add = 3302, l_t_add = 3400 WHERE objectid = 3521 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3299, l_f_add = 3202, l_t_add = 3300 WHERE objectid = 3518 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3199, l_f_add = 3102, l_t_add = 3200 WHERE objectid = 3512 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3099, l_f_add = 3002, l_t_add = 3100 WHERE objectid = 3666 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2799, l_f_add = 2702, l_t_add = 2800 WHERE objectid = 4179 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2699, l_f_add = 2602, l_t_add = 2700 WHERE objectid = 4116 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2599, l_f_add = 2502, l_t_add = 2600 WHERE objectid = 3223 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2499, l_f_add = 2402, l_t_add = 2500 WHERE objectid = 3199 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 3184 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 3169 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2199, l_f_add = 2102, l_t_add = 2200 WHERE objectid = 2626 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 6101, r_t_add = 6149, l_f_add = 6102, l_t_add = 6150 WHERE objectid = 5682 AND UPPER("street_nam") = 'RAFAEL OBLIGADO';
+--UPDATE base.calles SET r_f_add = 6151, r_t_add = 6199, l_f_add = 6152, l_t_add = 6200 WHERE objectid = 5705 AND UPPER("street_nam") = 'RAFAEL OBLIGADO';
+--UPDATE base.calles SET r_f_add = 4951, r_t_add = 4999, l_f_add = 4952, l_t_add = 5000 WHERE objectid = 5819 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4949, l_f_add = 4902, l_t_add = 4950 WHERE objectid = 5778 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4899, l_f_add = 4802, l_t_add = 4900 WHERE objectid = 5747 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 4721, r_t_add = 4799, l_f_add = 4722, l_t_add = 4800 WHERE objectid = 5723 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 4701, r_t_add = 4719, l_f_add = 4702, l_t_add = 4720 WHERE objectid = 5965 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 4601, r_t_add = 4699, l_f_add = 4602, l_t_add = 4700 WHERE objectid = 5663 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 4501, r_t_add = 4599, l_f_add = 4502, l_t_add = 4600 WHERE objectid = 5665 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 4451, r_t_add = 4499, l_f_add = 4452, l_t_add = 4500 WHERE objectid = 5632 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 4421, r_t_add = 4449, l_f_add = 4422, l_t_add = 4450 WHERE objectid = 5613 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 4401, r_t_add = 4419, l_f_add = 4402, l_t_add = 4420 WHERE objectid = 5614 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 4301, r_t_add = 4399, l_f_add = 4302, l_t_add = 4400 WHERE objectid = 5585 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 4221, r_t_add = 4299, l_f_add = 4222, l_t_add = 4300 WHERE objectid = 5583 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 4201, r_t_add = 4219, l_f_add = 4202, l_t_add = 4220 WHERE objectid = 5561 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 4101, r_t_add = 4199, l_f_add = 4102, l_t_add = 4200 WHERE objectid = 5558 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 4601, r_t_add = 4699, l_f_add = 4602, l_t_add = 4700 WHERE objectid = 3771 AND UPPER("street_nam") = 'MANUEL DORREGO';
+--UPDATE base.calles SET r_f_add = 4301, r_t_add = 4399, l_f_add = 4302, l_t_add = 4400 WHERE objectid = 4172 AND UPPER("street_nam") = 'MANUEL DORREGO';
+--UPDATE base.calles SET r_f_add = 4201, r_t_add = 4299, l_f_add = 4202, l_t_add = 4300 WHERE objectid = 3232 AND UPPER("street_nam") = 'MANUEL DORREGO';
+--UPDATE base.calles SET r_f_add = 4101, r_t_add = 4199, l_f_add = 4102, l_t_add = 4200 WHERE objectid = 3214 AND UPPER("street_nam") = 'MANUEL DORREGO';
+--UPDATE base.calles SET r_f_add = 4601, r_t_add = 4699, l_f_add = 4602, l_t_add = 4700 WHERE objectid = 3768 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 4501, r_t_add = 4599, l_f_add = 4502, l_t_add = 4600 WHERE objectid = 3719 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 4401, r_t_add = 4499, l_f_add = 4402, l_t_add = 4500 WHERE objectid = 3717 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 4301, r_t_add = 4399, l_f_add = 4302, l_t_add = 4400 WHERE objectid = 4221 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 4201, r_t_add = 4299, l_f_add = 4202, l_t_add = 4300 WHERE objectid = 4174 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 4101, r_t_add = 4199, l_f_add = 4102, l_t_add = 4200 WHERE objectid = 3234 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 4001, r_t_add = 4049, l_f_add = 4002, l_t_add = 4050 WHERE objectid = 3209 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 5301, r_t_add = 5399, l_f_add = 5302, l_t_add = 5400 WHERE objectid = 5516 AND UPPER("street_nam") = 'SANTIAGO DERQUI';
+--UPDATE base.calles SET r_f_add = 5201, r_t_add = 5299, l_f_add = 5202, l_t_add = 5300 WHERE objectid = 5491 AND UPPER("street_nam") = 'SANTIAGO DERQUI';
+--UPDATE base.calles SET r_f_add = 5101, r_t_add = 5199, l_f_add = 5102, l_t_add = 5200 WHERE objectid = 5465 AND UPPER("street_nam") = 'SANTIAGO DERQUI';
+--UPDATE base.calles SET r_f_add = 5001, r_t_add = 5099, l_f_add = 5002, l_t_add = 5100 WHERE objectid = 5430 AND UPPER("street_nam") = 'SANTIAGO DERQUI';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4999, l_f_add = 4902, l_t_add = 5000 WHERE objectid = 5402 AND UPPER("street_nam") = 'SANTIAGO DERQUI';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4899, l_f_add = 4802, l_t_add = 4900 WHERE objectid = 5378 AND UPPER("street_nam") = 'SANTIAGO DERQUI';
+--UPDATE base.calles SET r_f_add = 4701, r_t_add = 4799, l_f_add = 4702, l_t_add = 4800 WHERE objectid = 5355 AND UPPER("street_nam") = 'SANTIAGO DERQUI';
+--UPDATE base.calles SET r_f_add = 5301, r_t_add = 5399, l_f_add = 5302, l_t_add = 5400 WHERE objectid = 5498 AND UPPER("street_nam") = 'JOSE INGENIEROS';
+--UPDATE base.calles SET r_f_add = 5201, r_t_add = 5299, l_f_add = 5202, l_t_add = 5300 WHERE objectid = 5459 AND UPPER("street_nam") = 'JOSE INGENIEROS';
+--UPDATE base.calles SET r_f_add = 5101, r_t_add = 5199, l_f_add = 5102, l_t_add = 5200 WHERE objectid = 5429 AND UPPER("street_nam") = 'JOSE INGENIEROS';
+--UPDATE base.calles SET r_f_add = 5001, r_t_add = 5099, l_f_add = 5002, l_t_add = 5100 WHERE objectid = 5410 AND UPPER("street_nam") = 'JOSE INGENIEROS';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4999, l_f_add = 4902, l_t_add = 5000 WHERE objectid = 5381 AND UPPER("street_nam") = 'JOSE INGENIEROS';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4899, l_f_add = 4802, l_t_add = 4900 WHERE objectid = 5353 AND UPPER("street_nam") = 'JOSE INGENIEROS';
+--UPDATE base.calles SET r_f_add = 3521, r_t_add = 3449, l_f_add = 3522, l_t_add = 3550 WHERE objectid = 1299 AND UPPER("street_nam") = 'AGUSTIN ALVAREZ';
+--UPDATE base.calles SET r_f_add = 3501, r_t_add = 3419, l_f_add = 3502, l_t_add = 3520 WHERE objectid = 1275 AND UPPER("street_nam") = 'AGUSTIN ALVAREZ';
+--UPDATE base.calles SET r_f_add = 3401, r_t_add = 3499, l_f_add = 3402, l_t_add = 3500 WHERE objectid = 1247 AND UPPER("street_nam") = 'AGUSTIN ALVAREZ';
+--UPDATE base.calles SET r_f_add = 3401, r_t_add = 3499, l_f_add = 3402, l_t_add = 3500 WHERE objectid = 1206 AND UPPER("street_nam") = 'JOSE MARMOL';
+--UPDATE base.calles SET r_f_add = 3381, r_t_add = 3399, l_f_add = 3382, l_t_add = 3400 WHERE objectid = 1948 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 3051, r_t_add = 3099, l_f_add = 3052, l_t_add = 3100 WHERE objectid = 991 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 3100, r_t_add = 3149, l_f_add = 3102, l_t_add = 3150 WHERE objectid = 973 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 3151, r_t_add = 3199, l_f_add = 3152, l_t_add = 3200 WHERE objectid = 1033 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3299, l_f_add = 3202, l_t_add = 3300 WHERE objectid = 1058 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3499, l_f_add = 3302, l_t_add = 3500 WHERE objectid = 1946 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 4501, r_t_add = 4599, l_f_add = 4502, l_t_add = 4600 WHERE objectid = 1586 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 4601, r_t_add = 4649, l_f_add = 4602, l_t_add = 4650 WHERE objectid = 1587 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 4651, r_t_add = 4699, l_f_add = 4652, l_t_add = 4700 WHERE objectid = 1553 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 551, r_t_add = 599, l_f_add = 552, l_t_add = 600 WHERE objectid = 1947 AND UPPER("street_nam") = 'JULIAN S AGUERO';
+--UPDATE base.calles SET r_f_add = 1, r_t_add = 99, l_f_add = 2, l_t_add = 100 WHERE objectid = 1712 AND UPPER("street_nam") = 'JACINTO PINEDA';
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 199, l_f_add = 102, l_t_add = 200 WHERE objectid = 1743 AND UPPER("street_nam") = 'JACINTO PINEDA';
+--UPDATE base.calles SET r_f_add = 201, r_t_add = 299, l_f_add = 202, l_t_add = 300 WHERE objectid = 1742 AND UPPER("street_nam") = 'JACINTO PINEDA';
+--UPDATE base.calles SET r_f_add = 1, r_t_add = 99, l_f_add = 2, l_t_add = 100 WHERE objectid = 1710 AND UPPER("street_nam") = 'FALUCHO';
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 199, l_f_add = 102, l_t_add = 200 WHERE objectid = 1725 AND UPPER("street_nam") = 'FALUCHO';
+--UPDATE base.calles SET r_f_add = 1, r_t_add = 99, l_f_add = 2, l_t_add = 100 WHERE objectid = 1767 AND UPPER("street_nam") = 'ALFREDO GRAMAJO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 199, l_f_add = 102, l_t_add = 200 WHERE objectid = 1799 AND UPPER("street_nam") = 'ALFREDO GRAMAJO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 5301, r_t_add = 5349, l_f_add = 5302, l_t_add = 5350 WHERE objectid = 1568 AND UPPER("street_nam") = 'SANTA ROSA';
+--UPDATE base.calles SET r_f_add = 5201, r_t_add = 5299, l_f_add = 5202, l_t_add = 5300 WHERE objectid = 1518 AND UPPER("street_nam") = 'SANTA ROSA';
+--UPDATE base.calles SET r_f_add = 5101, r_t_add = 5199, l_f_add = 5102, l_t_add = 5200 WHERE objectid = 1485 AND UPPER("street_nam") = 'SANTA ROSA';
+--UPDATE base.calles SET r_f_add = 5001, r_t_add = 5099, l_f_add = 5002, l_t_add = 5100 WHERE objectid = 1518 AND UPPER("street_nam") = 'SANTA ROSA';
+--UPDATE base.calles SET r_f_add = 4951, r_t_add = 4999, l_f_add = 4952, l_t_add = 5000 WHERE objectid = 1390 AND UPPER("street_nam") = 'SANTA ROSA';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4949, l_f_add = 4902, l_t_add = 4950 WHERE objectid = 1371 AND UPPER("street_nam") = 'SANTA ROSA';
+--UPDATE base.calles SET r_f_add = 1501, r_t_add = 1599, l_f_add = 1502, l_t_add = 1600 WHERE objectid = 841 AND UPPER("street_nam") = 'CARLOS TEJEDOR';
+--UPDATE base.calles SET r_f_add = 1601, r_t_add = 1699, l_f_add = 1602, l_t_add = 1700 WHERE objectid = 774 AND UPPER("street_nam") = 'CARLOS TEJEDOR';
+--UPDATE base.calles SET r_f_add = 4391, r_t_add = 4409, l_f_add = 4392, l_t_add = 4410 WHERE objectid = 633 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 4981, r_t_add = 4999, l_f_add = 4982, l_t_add = 5000 WHERE objectid = 968 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 3951, r_t_add = 3999, l_f_add = 3952, l_t_add = 4000 WHERE objectid = 361 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 0, r_t_add = 0, l_f_add = 0, l_t_add = 0 WHERE objectid = 361 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 4001, r_t_add = 4049, l_f_add = 4002, l_t_add = 4050 WHERE objectid = 416 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 4051, r_t_add = 4079, l_f_add = 4052, l_t_add = 4080 WHERE objectid = 459 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 4001, r_t_add = 4099, l_f_add = 4002, l_t_add = 4100 WHERE objectid = 3767 AND UPPER("street_nam") = 'ENTRE RIOS';
+--UPDATE base.calles SET r_f_add = 5401, r_t_add = 5499, l_f_add = 5402, l_t_add = 5500 WHERE objectid = 6036 AND UPPER("street_nam") = 'LOPE DE VEGA';
+--UPDATE base.calles SET r_f_add = 5401, r_t_add = 5499, l_f_add = 5402, l_t_add = 5500 WHERE objectid = 6016 AND UPPER("street_nam") = 'HILARIO ASCASUBI';
+--UPDATE base.calles SET r_f_add = 5301, r_t_add = 5399, l_f_add = 5302, l_t_add = 5400 WHERE objectid = 6021 AND UPPER("street_nam") = 'HILARIO ASCASUBI';
+--UPDATE base.calles SET r_f_add = 5401, r_t_add = 5499, l_f_add = 5402, l_t_add = 5500 WHERE objectid = 5972 AND UPPER("street_nam") = 'ALMAFUERTE';
+--UPDATE base.calles SET r_f_add = 5301, r_t_add = 5399, l_f_add = 5302, l_t_add = 5400 WHERE objectid = 5988 AND UPPER("street_nam") = 'ALMAFUERTE';
+--UPDATE base.calles SET r_f_add = 5401, r_t_add = 5499, l_f_add = 5402, l_t_add = 5500 WHERE objectid = 5931 AND UPPER("street_nam") = 'JULIAN NAVARRO';
+--UPDATE base.calles SET r_f_add = 5301, r_t_add = 5399, l_f_add = 5302, l_t_add = 5400 WHERE objectid = 5930 AND UPPER("street_nam") = 'JULIAN NAVARRO';
+--UPDATE base.calles SET r_f_add = 5701, r_t_add = 5799, l_f_add = 5702, l_t_add = 5800 WHERE objectid = 5930 AND UPPER("street_nam") = 'DIRECTORIO';
+--UPDATE base.calles SET r_f_add = 5601, r_t_add = 5699, l_f_add = 5602, l_t_add = 5900 WHERE objectid = 6084 AND UPPER("street_nam") = 'DIRECTORIO';
+--UPDATE base.calles SET r_f_add = 6101, r_t_add = 6199, l_f_add = 6102, l_t_add = 6200 WHERE objectid = 849 AND UPPER("street_nam") = 'JUAN B AMBROSETTI';
+--UPDATE base.calles SET r_f_add = 6201, r_t_add = 6299, l_f_add = 6202, l_t_add = 6300 WHERE objectid = 871 AND UPPER("street_nam") = 'JUAN B AMBROSETTI';
+--UPDATE base.calles SET r_f_add = 6301, r_t_add = 6399, l_f_add = 6302, l_t_add = 6400 WHERE objectid = 901 AND UPPER("street_nam") = 'JUAN B AMBROSETTI';
+--UPDATE base.calles SET r_f_add = 6101, r_t_add = 6199, l_f_add = 6102, l_t_add = 6200 WHERE objectid = 929 AND UPPER("street_nam") = 'PEDRO I RIVERA';
+--UPDATE base.calles SET r_f_add = 6301, r_t_add = 6399, l_f_add = 6302, l_t_add = 6400 WHERE objectid = 928 AND UPPER("street_nam") = 'PEDRO I RIVERA';
+--UPDATE base.calles SET r_f_add = 6401, r_t_add = 6499, l_f_add = 6402, l_t_add = 6500 WHERE objectid = 964 AND UPPER("street_nam") = 'PEDRO I RIVERA';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2199, l_f_add = 2102, l_t_add = 2200 WHERE objectid = 1114 AND UPPER("street_nam") = 'ISRAEL';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 1069 AND UPPER("street_nam") = 'ISRAEL';
+--UPDATE base.calles SET r_f_add = 6201, r_t_add = 6299, l_f_add = 6202, l_t_add = 6300 WHERE objectid = 827 AND UPPER("street_nam") = 'ZAPALA';
+--UPDATE base.calles SET r_f_add = 6301, r_t_add = 6399, l_f_add = 6302, l_t_add = 6400 WHERE objectid = 853 AND UPPER("street_nam") = 'ZAPALA';
+--UPDATE base.calles SET r_f_add = 6301, r_t_add = 6399, l_f_add = 6302, l_t_add = 6400 WHERE objectid = 788 AND UPPER("street_nam") = 'VICTOR HUGO';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2899, l_f_add = 2602, l_t_add = 2800 WHERE objectid = 826 AND UPPER("street_nam") = 'CAYETANO RODRIGUEZ';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2899, l_f_add = 2802, l_t_add = 2900 WHERE objectid = 739 AND UPPER("street_nam") = 'CAYETANO RODRIGUEZ';
+--UPDATE base.calles SET r_f_add = 6701, r_t_add = 6799, l_f_add = 6702, l_t_add = 6800 WHERE objectid = 6170 AND UPPER("street_nam") = '5 DE JULIO';
+--UPDATE base.calles SET r_f_add = 6801, r_t_add = 6809, l_f_add = 6802, l_t_add = 6810 WHERE objectid = 6179 AND UPPER("street_nam") = '5 DE JULIO';
+--UPDATE base.calles SET r_f_add = 6811, r_t_add = 6899, l_f_add = 6812, l_t_add = 6900 WHERE objectid = 6190 AND UPPER("street_nam") = '5 DE JULIO';
+--UPDATE base.calles SET r_f_add = 6901, r_t_add = 6999, l_f_add = 6902, l_t_add = 7000 WHERE objectid = 6195 AND UPPER("street_nam") = '5 DE JULIO';
+--UPDATE base.calles SET r_f_add = 6301, r_t_add = 6399, l_f_add = 6302, l_t_add = 6400 WHERE objectid = 994 AND UPPER("street_nam") = 'JOSE M ZAPIOLA';
+--UPDATE base.calles SET r_f_add = 6401, r_t_add = 6499, l_f_add = 6402, l_t_add = 6500 WHERE objectid = 1016 AND UPPER("street_nam") = 'JOSE M ZAPIOLA';
+--UPDATE base.calles SET r_f_add = 6301, r_t_add = 6399, l_f_add = 6302, l_t_add = 6400 WHERE objectid = 1068 AND UPPER("street_nam") = 'RECONQUISTA';
+--UPDATE base.calles SET r_f_add = 6401, r_t_add = 6499, l_f_add = 6402, l_t_add = 6500 WHERE objectid = 1077 AND UPPER("street_nam") = 'RECONQUISTA';
+--UPDATE base.calles SET r_f_add = 6301, r_t_add = 6399, l_f_add = 6302, l_t_add = 6400 WHERE objectid = 1935 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 6401, r_t_add = 6499, l_f_add = 6402, l_t_add = 6500 WHERE objectid = 1936 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 6201, r_t_add = 6299, l_f_add = 6202, l_t_add = 6300 WHERE objectid = 6192 AND UPPER("street_nam") = 'SAN JUAN';
+--UPDATE base.calles SET r_f_add = 6301, r_t_add = 6399, l_f_add = 6302, l_t_add = 6400 WHERE objectid = 6197 AND UPPER("street_nam") = 'SAN JUAN';
+--UPDATE base.calles SET r_f_add = 1601, r_t_add = 1699, l_f_add = 1602, l_t_add = 1700 WHERE objectid = 493 AND UPPER("street_nam") = 'PERU';
+--UPDATE base.calles SET r_f_add = 1701, r_t_add = 1799, l_f_add = 1702, l_t_add = 1800 WHERE objectid = 423 AND UPPER("street_nam") = 'PERU';
+--UPDATE base.calles SET r_f_add = 1801, r_t_add = 1899, l_f_add = 1802, l_t_add = 1900 WHERE objectid = 352 AND UPPER("street_nam") = 'PERU';
+--UPDATE base.calles SET r_f_add = 1701, r_t_add = 1799, l_f_add = 1702, l_t_add = 1800 WHERE objectid = 417 AND UPPER("street_nam") = 'BOLIVIA';
+--UPDATE base.calles SET r_f_add = 1801, r_t_add = 1899, l_f_add = 1802, l_t_add = 1900 WHERE objectid = 409 AND UPPER("street_nam") = 'BOLIVIA';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4899, l_f_add = 4802, l_t_add = 4900 WHERE objectid = 1280 AND UPPER("street_nam") = 'JUSTO J DE URQUIZA';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4899, l_f_add = 4802, l_t_add = 4900 WHERE objectid = 1226 AND UPPER("street_nam") = 'VALENTIN VERGARA';
+--UPDATE base.calles SET r_f_add = 1601, r_t_add = 1699, l_f_add = 1602, l_t_add = 1700 WHERE objectid = 441 AND UPPER("street_nam") = 'GREGORIO FUNES';
+--UPDATE base.calles SET r_f_add = 1701, r_t_add = 1799, l_f_add = 1702, l_t_add = 1800 WHERE objectid = 371 AND UPPER("street_nam") = 'GREGORIO FUNES';
+--UPDATE base.calles SET r_f_add = 1801, r_t_add = 1899, l_f_add = 1802, l_t_add = 1900 WHERE objectid = 297 AND UPPER("street_nam") = 'GREGORIO FUNES';
+--UPDATE base.calles SET r_f_add = 1901, r_t_add = 1949, l_f_add = 1902, l_t_add = 1950 WHERE objectid = 237 AND UPPER("street_nam") = 'GREGORIO FUNES';
+--UPDATE base.calles SET r_f_add = 1951, r_t_add = 1999, l_f_add = 1952, l_t_add = 2000 WHERE objectid = 188 AND UPPER("street_nam") = 'GREGORIO FUNES';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2099, l_f_add = 2002, l_t_add = 2100 WHERE objectid = 148 AND UPPER("street_nam") = 'GREGORIO FUNES';
+--UPDATE base.calles SET r_f_add = 1601, r_t_add = 1699, l_f_add = 1602, l_t_add = 1700 WHERE objectid = 400 AND UPPER("street_nam") = 'JUAN B CABRAL';
+--UPDATE base.calles SET r_f_add = 1701, r_t_add = 1799, l_f_add = 1702, l_t_add = 1800 WHERE objectid = 320 AND UPPER("street_nam") = 'JUAN B CABRAL';
+--UPDATE base.calles SET r_f_add = 1801, r_t_add = 1899, l_f_add = 1802, l_t_add = 1900 WHERE objectid = 262 AND UPPER("street_nam") = 'JUAN B CABRAL';
+--UPDATE base.calles SET r_f_add = 1901, r_t_add = 1949, l_f_add = 1902, l_t_add = 1950 WHERE objectid = 205 AND UPPER("street_nam") = 'JUAN B CABRAL';
+--UPDATE base.calles SET r_f_add = 1951, r_t_add = 1999, l_f_add = 1952, l_t_add = 2000 WHERE objectid = 159 AND UPPER("street_nam") = 'JUAN B CABRAL';
+--UPDATE base.calles SET r_f_add = 1681, r_t_add = 1699, l_f_add = 1682, l_t_add = 1700 WHERE objectid = 3640 AND UPPER("street_nam") = 'BARTOLOME MITRE';
+--UPDATE base.calles SET r_f_add = 1701, r_t_add = 1799, l_f_add = 1702, l_t_add = 1800 WHERE objectid = 3641 AND UPPER("street_nam") = 'BARTOLOME MITRE';
+--UPDATE base.calles SET r_f_add = 1901, r_t_add = 1949, l_f_add = 1902, l_t_add = 1950 WHERE objectid = 232 AND UPPER("street_nam") = 'SIMON BOLIVAR';
+--UPDATE base.calles SET r_f_add = 1951, r_t_add = 1999, l_f_add = 1952, l_t_add = 2000 WHERE objectid = 216 AND UPPER("street_nam") = 'SIMON BOLIVAR';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2049, l_f_add = 2002, l_t_add = 2050 WHERE objectid = 177 AND UPPER("street_nam") = 'SIMON BOLIVAR';
+--UPDATE base.calles SET r_f_add = 2051, r_t_add = 2099, l_f_add = 2052, l_t_add = 2100 WHERE objectid = 136 AND UPPER("street_nam") = 'SIMON BOLIVAR';
+--UPDATE base.calles SET r_f_add = 2051, r_t_add = 2099, l_f_add = 2052, l_t_add = 2100 WHERE objectid = 136 AND UPPER("street_nam") = 'SIMON BOLIVAR';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2199, l_f_add = 2102, l_t_add = 2200 WHERE objectid = 98 AND UPPER("street_nam") = 'SIMON BOLIVAR';
+--UPDATE base.calles SET r_f_add = 3551, r_t_add = 3599, l_f_add = 3552, l_t_add = 3600 WHERE objectid = 5617 AND UPPER("street_nam") = 'JORGE WASHINGTON';
+--UPDATE base.calles SET r_f_add = 4201, r_t_add = 4299, l_f_add = 4202, l_t_add = 4300 WHERE objectid = 4952 AND UPPER("street_nam") = 'PRILIDIANO PUEYRREDON';
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 199, l_f_add = 102, l_t_add = 200 WHERE objectid = 864 AND UPPER("street_nam") = 'AYACUCHO';
+--UPDATE base.calles SET r_f_add = 1301, r_t_add = 1399, l_f_add = 1302, l_t_add = 1400 WHERE objectid = 553 AND UPPER("street_nam") = 'ALEJANDRO M AGUADO';
+--UPDATE base.calles SET r_f_add = 1401, r_t_add = 1499, l_f_add = 1402, l_t_add = 1500 WHERE objectid = 588 AND UPPER("street_nam") = 'ALEJANDRO M AGUADO';
+--UPDATE base.calles SET r_f_add = 1401, r_t_add = 1499, l_f_add = 1402, l_t_add = 1500 WHERE objectid = 2788 AND UPPER("street_nam") = 'ITALIA';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3049, l_f_add = 3002, l_t_add = 3050, "street_nam" = 'Padre Guastavino' WHERE objectid = 3901;
+--UPDATE base.calles SET r_f_add = 4101, r_t_add = 4199, l_f_add = 4102, l_t_add = 4200 WHERE objectid = 5167 AND UPPER("street_nam") = 'BARTOLOME MITRE';
+--UPDATE base.calles SET r_f_add = 4601, r_t_add = 4699, l_f_add = 4602, l_t_add = 4700 WHERE objectid = 6320 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 4701, r_t_add = 4789, l_f_add = 4702, l_t_add = 4790 WHERE objectid = 6323 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 4791, r_t_add = 4799, l_f_add = 4792, l_t_add = 4800 WHERE objectid = 6324 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4899, l_f_add = 4802, l_t_add = 4900 WHERE objectid = 6322 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4999, l_f_add = 4902, l_t_add = 5000 WHERE objectid = 6321 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5001, r_t_add = 5099, l_f_add = 5002, l_t_add = 5100 WHERE objectid = 6325 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5101, r_t_add = 5199, l_f_add = 5102, l_t_add = 5200 WHERE objectid = 6328 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5201, r_t_add = 5289, l_f_add = 5202, l_t_add = 5290 WHERE objectid = 6328 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5291, r_t_add = 5299, l_f_add = 5292, l_t_add = 5300 WHERE objectid = 6330 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5301, r_t_add = 5349, l_f_add = 5302, l_t_add = 5350 WHERE objectid = 5319 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5351, r_t_add = 5399, l_f_add = 5352, l_t_add = 5400 WHERE objectid = 5340 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 3901, r_t_add = 3999, l_f_add = 3902, l_t_add = 4000 WHERE objectid = 5367 AND UPPER("street_nam") = 'GERVASIO MENDEZ';
+--UPDATE base.calles SET r_f_add = 3401, r_t_add = 3599, l_f_add = 3402, l_t_add = 3600 WHERE objectid = 1206 AND UPPER("street_nam") = 'JOSE MARMOL';
+--UPDATE base.calles SET r_f_add = 3901, r_t_add = 3999, l_f_add = 3902, l_t_add = 4000 WHERE objectid = 4990 AND UPPER("street_nam") = 'ADOLFO BELLOCQ';
+--UPDATE base.calles SET r_f_add = 1101, r_t_add = 1149, l_f_add = 1102, l_t_add = 1150 WHERE objectid = 2170 AND UPPER("street_nam") = 'EDUARDO MADERO';
+--UPDATE base.calles SET r_f_add = 1151, r_t_add = 1199, l_f_add = 1152, l_t_add = 1200 WHERE objectid = 2163 AND UPPER("street_nam") = 'EDUARDO MADERO';
+--UPDATE base.calles SET r_f_add = 5301, r_t_add = 5399, l_f_add = 5302, l_t_add = 5400 WHERE objectid = 5341 AND UPPER("street_nam") = 'SANTA FE';
+--UPDATE base.calles SET r_f_add = 5401, r_t_add = 5499, l_f_add = 5402, l_t_add = 5500 WHERE objectid = 5372 AND UPPER("street_nam") = 'SANTA FE';
+--UPDATE base.calles SET r_f_add = 2901, r_t_add = 2999, l_f_add = 2902, l_t_add = 3000 WHERE objectid = 2843 AND UPPER("street_nam") = 'HILARION DE LA QUINTANA';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3099, l_f_add = 3002, l_t_add = 3100 WHERE objectid = 2839 AND UPPER("street_nam") = 'HILARION DE LA QUINTANA';
+--UPDATE base.calles SET r_f_add = 2901, r_t_add = 2999, l_f_add = 2902, l_t_add = 3000 WHERE objectid = 2841 AND UPPER("street_nam") = 'DOMINGO F SARMIENTO';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3099, l_f_add = 3002, l_t_add = 3100 WHERE objectid = 2835 AND UPPER("street_nam") = 'DOMINGO F SARMIENTO';
+--UPDATE base.calles SET r_f_add = 5201, r_t_add = 5299, l_f_add = 5202, l_t_add = 5300 WHERE objectid = 454 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 5301, r_t_add = 5399, l_f_add = 5302, l_t_add = 5400 WHERE objectid = 461 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 5401, r_t_add = 5499, l_f_add = 5402, l_t_add = 5500 WHERE objectid = 1926 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 5501, r_t_add = 5599, l_f_add = 5502, l_t_add = 5600 WHERE objectid = 1927 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 5601, r_t_add = 5699, l_f_add = 5602, l_t_add = 5700 WHERE objectid = 1928 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 5701, r_t_add = 5799, l_f_add = 5702, l_t_add = 5800 WHERE objectid = 1929 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 5801, r_t_add = 5889, l_f_add = 5802, l_t_add = 5890 WHERE objectid = 1930 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 5891, r_t_add = 5899, l_f_add = 5892, l_t_add = 5900 WHERE objectid = 1931 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 5901, r_t_add = 5999, l_f_add = 5902, l_t_add = 6000 WHERE objectid = 1932 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 6001, r_t_add = 6049, l_f_add = 6002, l_t_add = 6050 WHERE objectid = 1933 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 6051, r_t_add = 6099, l_f_add = 6052, l_t_add = 6100 WHERE objectid = 1934 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 6301, r_t_add = 6399, l_f_add = 6302, l_t_add = 6400 WHERE objectid = 1935 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 6401, r_t_add = 6449, l_f_add = 6402, l_t_add = 6450 WHERE objectid = 1936 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 6451, r_t_add = 6499, l_f_add = 6452, l_t_add = 6500 WHERE objectid = 1937 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 1, r_t_add = 699, l_f_add = 2, l_t_add = 700 WHERE objectid = 106 AND UPPER("street_nam") = 'FRANCISCO N DE LAPRIDA';
+--UPDATE base.calles SET r_f_add = 1001, r_t_add = 1099, l_f_add = 1002, l_t_add = 1100 WHERE objectid = 2423 AND UPPER("street_nam") = 'SATURNINO SEGUROLA';
+--UPDATE base.calles SET r_f_add = 1101, r_t_add = 1149, l_f_add = 1102, l_t_add = 1150 WHERE objectid = 2159 AND UPPER("street_nam") = 'SATURNINO SEGUROLA';
+--UPDATE base.calles SET r_f_add = 1151, r_t_add = 1199, l_f_add = 1152, l_t_add = 1200 WHERE objectid = 2152 AND UPPER("street_nam") = 'SATURNINO SEGUROLA';
+--UPDATE base.calles SET r_f_add = 1931, r_t_add = 1999, l_f_add = 1932, l_t_add = 2000 WHERE objectid = 2080 AND UPPER("street_nam") = 'TAPIALES';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399 WHERE objectid = 3097 AND UPPER("street_nam") = 'MAIPU';
+--UPDATE base.calles SET l_f_add = 2302, l_t_add = 2400 WHERE objectid = 2255 AND UPPER("street_nam") = 'MAIPU';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2499 WHERE objectid = 3085 AND UPPER("street_nam") = 'MAIPU';
+--UPDATE base.calles SET l_f_add = 2402, l_t_add = 2500 WHERE objectid = 3086 AND UPPER("street_nam") = 'MAIPU';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2599 WHERE objectid = 3079 AND UPPER("street_nam") = 'MAIPU';
+--UPDATE base.calles SET l_f_add = 2502, l_t_add = 2600 WHERE objectid = 3080 AND UPPER("street_nam") = 'MAIPU';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2699 WHERE objectid = 3071 AND UPPER("street_nam") = 'MAIPU';
+--UPDATE base.calles SET l_f_add = 2602, l_t_add = 2700 WHERE objectid = 3072 AND UPPER("street_nam") = 'MAIPU';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2779 WHERE objectid = 3057 AND UPPER("street_nam") = 'MAIPU';
+--UPDATE base.calles SET l_f_add = 2702, l_t_add = 2780 WHERE objectid = 3058 AND UPPER("street_nam") = 'MAIPU';
+--UPDATE base.calles SET r_f_add = 2781, r_t_add = 2799 WHERE objectid = 3043 AND UPPER("street_nam") = 'MAIPU';
+--UPDATE base.calles SET l_f_add = 2782, l_t_add = 2800 WHERE objectid = 2833 AND UPPER("street_nam") = 'MAIPU';
+--UPDATE base.calles SET r_f_add = 2901, r_t_add = 2999 WHERE objectid = 3038 AND UPPER("street_nam") = 'MAIPU';
+--UPDATE base.calles SET l_f_add = 2902, l_t_add = 3000 WHERE objectid = 2889 AND UPPER("street_nam") = 'MAIPU';
+--UPDATE base.calles SET r_f_add = 3851, r_t_add = 3899, l_f_add = 3852, l_t_add = 3900 WHERE objectid = 4257 AND UPPER("street_nam") = 'DEL LIBERTADOR';
+--UPDATE base.calles SET r_f_add = 3901, r_t_add = 3949, l_f_add = 3902, l_t_add = 3950 WHERE objectid = 4252 AND UPPER("street_nam") = 'DEL LIBERTADOR';
+--UPDATE base.calles SET r_f_add = 501, r_t_add = 599, l_f_add = 502, l_t_add = 600, "street_nam" = 'Nogoya' WHERE objectid = 3005 AND UPPER("street_nam") = 'SIN NOMBRE';
+--UPDATE base.calles SET r_f_add = 1501, r_t_add = 1599, l_f_add = 1502, l_t_add = 1600 WHERE objectid = 3614 AND UPPER("street_nam") = 'REMEDIOS ESCALADA DE SAN MARTIN';
+--UPDATE base.calles SET r_f_add = 1601, r_t_add = 1699, l_f_add = 1602, l_t_add = 1700 WHERE objectid = 2655 AND UPPER("street_nam") = 'REMEDIOS ESCALADA DE SAN MARTIN';
+--UPDATE base.calles SET r_f_add = 1701, r_t_add = 1799, l_f_add = 1702, l_t_add = 1800 WHERE objectid = 2689 AND UPPER("street_nam") = 'REMEDIOS ESCALADA DE SAN MARTIN';
+--UPDATE base.calles SET r_f_add = 1901, r_t_add = 1999, l_f_add = 1902, l_t_add = 2000 WHERE objectid = 2928 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2019, l_f_add = 2002, l_t_add = 2020 WHERE objectid = 2677 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 2021, r_t_add = 2099, l_f_add = 2022, l_t_add = 2100 WHERE objectid = 2677 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2129, l_f_add = 2102, l_t_add = 2130 WHERE objectid = 2680 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2129, l_f_add = 2102, l_t_add = 2130 WHERE objectid = 2680 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 2131, r_t_add = 2159, l_f_add = 2132, l_t_add = 2160 WHERE objectid = 2681 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 2161, r_t_add = 2199, l_f_add = 2162, l_t_add = 2200 WHERE objectid = 2929 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 1801, r_t_add = 1899, l_f_add = 1802, l_t_add = 1900 WHERE objectid = 4147 AND UPPER("street_nam") = 'FLORIDA';
+--UPDATE base.calles SET r_f_add = 1901, r_t_add = 1999, l_f_add = 1902, l_t_add = 2000 WHERE objectid = 2490 AND UPPER("street_nam") = 'FLORIDA';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2199, l_f_add = 2102, l_t_add = 2200 WHERE objectid = 4144 AND UPPER("street_nam") = 'FLORIDA';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2249, l_f_add = 2202, l_t_add = 2250 WHERE objectid = 2672 AND UPPER("street_nam") = 'FLORIDA';
+--UPDATE base.calles SET r_f_add = 2251, r_t_add = 2299, l_f_add = 2252, l_t_add = 2300 WHERE objectid = 2676 AND UPPER("street_nam") = 'FLORIDA';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 2682 AND UPPER("street_nam") = 'FLORIDA';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2799, l_f_add = 2702, l_t_add = 2800 WHERE objectid = 2298 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2649, l_f_add = 2602, l_t_add = 2650 WHERE objectid = 2298 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2651, r_t_add = 2699, l_f_add = 2652, l_t_add = 2700 WHERE objectid = 2294 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2549, l_f_add = 2502, l_t_add = 2450 WHERE objectid = 2284 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2451, r_t_add = 2499, l_f_add = 2452, l_t_add = 2500 WHERE objectid = 2281 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2449, l_f_add = 2402, l_t_add = 2450 WHERE objectid = 3242 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2351, r_t_add = 2399, l_f_add = 2352, l_t_add = 2400 WHERE objectid = 3551 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2351, r_t_add = 2399, l_f_add = 2352, l_t_add = 2400 WHERE objectid = 3551 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2649, l_f_add = 2602, l_t_add = 2650 WHERE objectid = 2291 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2351, r_t_add = 2399, l_f_add = 2352, l_t_add = 2400 WHERE objectid = 2284 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2349, l_f_add = 2302, l_t_add = 2350 WHERE objectid = 2281 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2251, r_t_add = 2299, l_f_add = 2252, l_t_add = 2300 WHERE objectid = 3242 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2249, l_f_add = 2202, l_t_add = 2250 WHERE objectid = 3551 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2199, l_f_add = 2102, l_t_add = 2200 WHERE objectid = 3547 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2049, l_f_add = 2002, l_t_add = 2050 WHERE objectid = 2634 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 2051, r_t_add = 2099, l_f_add = 2052, l_t_add = 2100 WHERE objectid = 3545 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 1941, r_t_add = 1949, l_f_add = 1942, l_t_add = 1950 WHERE objectid = 2499 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 1951, r_t_add = 1999, l_f_add = 1952, l_t_add = 2000 WHERE objectid = 2500 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 1931, r_t_add = 1939, l_f_add = 1932, l_t_add = 1940 WHERE objectid = 2497 AND UPPER("street_nam") = 'ANTONIO OLAGUER Y FELIU';
+--UPDATE base.calles SET r_f_add = 1, r_t_add = 299, l_f_add = 2, l_t_add = 300 WHERE objectid = 4529 AND UPPER("street_nam") = 'FRANCISCO BORGES';
+--UPDATE base.calles SET r_f_add = 401, r_t_add = 599, l_f_add = 402, l_t_add = 600 WHERE objectid = 1967 AND UPPER("street_nam") = 'MARTIN M DE GUEMES';
+--UPDATE base.calles SET r_f_add = 401, r_t_add = 699, l_f_add = 402, l_t_add = 700 WHERE objectid = 2992 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2449, l_f_add = 2402, l_t_add = 2450 WHERE objectid = 2359 AND UPPER("street_nam") = 'JUAN DIAZ DE SOLIS';
+--UPDATE base.calles SET r_f_add = 2451, r_t_add = 2499, l_f_add = 2452, l_t_add = 2500 WHERE objectid = 2064 AND UPPER("street_nam") = 'JUAN DIAZ DE SOLIS';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2599, l_f_add = 2502, l_t_add = 2600 WHERE objectid = 4126 AND UPPER("street_nam") = 'JUAN DIAZ DE SOLIS';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2699, l_f_add = 2602, l_t_add = 2700 WHERE objectid = 2057 AND UPPER("street_nam") = 'JUAN DIAZ DE SOLIS';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2349, l_f_add = 2302, l_t_add = 2350 WHERE objectid = 2057 AND UPPER("street_nam") = 'JUAN DIAZ DE SOLIS';
+--UPDATE base.calles SET r_f_add = 2351, r_t_add = 2399, l_f_add = 2352, l_t_add = 2400 WHERE objectid = 2088 AND UPPER("street_nam") = 'JUAN DIAZ DE SOLIS';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2449, l_f_add = 2402, l_t_add = 2450 WHERE objectid = 2059 AND UPPER("street_nam") = 'JUAN DIAZ DE SOLIS';
+--UPDATE base.calles SET r_f_add = 2451, r_t_add = 2499, l_f_add = 2452, l_t_add = 2500 WHERE objectid = 2064 AND UPPER("street_nam") = 'JUAN DIAZ DE SOLIS';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2349, l_f_add = 2302, l_t_add = 2350 WHERE objectid = 4067 AND UPPER("street_nam") = 'BARTOLOME CRUZ';
+--UPDATE base.calles SET r_f_add = 2351, r_t_add = 2399, l_f_add = 2352, l_t_add = 2400 WHERE objectid = 4066 AND UPPER("street_nam") = 'BARTOLOME CRUZ';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2699, l_f_add = 2602, l_t_add = 2700 WHERE objectid = 2057 AND UPPER("street_nam") = 'JUAN DIAZ DE SOLIS';
+--UPDATE base.calles SET r_f_add = 501, r_t_add = 599, l_f_add = 502, l_t_add = 600 WHERE objectid = 2365 AND UPPER("street_nam") = 'CORRIENTES';
+--UPDATE base.calles SET r_f_add = 301, r_t_add = 499, l_f_add = 302, l_t_add = 500 WHERE objectid = 2062 AND UPPER("street_nam") = 'CAMACUA';
+--UPDATE base.calles SET r_f_add = 301, r_t_add = 499, l_f_add = 302, l_t_add = 500 WHERE objectid = 2062 AND UPPER("street_nam") = 'CAMACUA';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2999, l_f_add = 2802, l_t_add = 3000 WHERE objectid = 3827 AND UPPER("street_nam") = 'BLAS PARERA';
+--UPDATE base.calles SET r_f_add = 4301, r_t_add = 4399, l_f_add = 4302, l_t_add = 4400 WHERE objectid = 571 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 4401, r_t_add = 4409, l_f_add = 4402, l_t_add = 4410 WHERE objectid = 633 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 5001, r_t_add = 5049, l_f_add = 5002, l_t_add = 5050 WHERE objectid = 1456 AND UPPER("street_nam") = 'SANTA ROSA';
+--UPDATE base.calles SET r_f_add = 5051, r_t_add = 5099, l_f_add = 5052, l_t_add = 5100 WHERE objectid = 1485 AND UPPER("street_nam") = 'SANTA ROSA';
+--UPDATE base.calles SET r_f_add = 5101, r_t_add = 5199, l_f_add = 5102, l_t_add = 5200 WHERE objectid = 1518 AND UPPER("street_nam") = 'SANTA ROSA';
+--UPDATE base.calles SET r_f_add = 5201, r_t_add = 5299, l_f_add = 5202, l_t_add = 5300 WHERE objectid = 1568 AND UPPER("street_nam") = 'SANTA ROSA';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4999, l_f_add = 4902, l_t_add = 5000 WHERE objectid = 1465 AND UPPER("street_nam") = 'LOS POZOS';
+--UPDATE base.calles SET r_f_add = 6401, r_t_add = 6449, l_f_add = 6402, l_t_add = 6450 WHERE objectid = 1936 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 6301, r_t_add = 6349, l_f_add = 6302, l_t_add = 6350 WHERE objectid = 929 AND UPPER("street_nam") = 'PEDRO I RIVERA';
+--UPDATE base.calles SET r_f_add = 6351, r_t_add = 6399, l_f_add = 6352, l_t_add = 6400 WHERE objectid = 928 AND UPPER("street_nam") = 'PEDRO I RIVERA';
+--UPDATE base.calles SET r_f_add = 6301, r_t_add = 6399, l_f_add = 6302, l_t_add = 6400 WHERE objectid = 849 AND UPPER("street_nam") = 'JUAN B AMBROSETTI';
+--UPDATE base.calles SET r_f_add = 6401, r_t_add = 6499, l_f_add = 6402, l_t_add = 6500 WHERE objectid = 871 AND UPPER("street_nam") = 'JUAN B AMBROSETTI';
+--UPDATE base.calles SET r_f_add = 6501, r_t_add = 6549, l_f_add = 6502, l_t_add = 6550 WHERE objectid = 901 AND UPPER("street_nam") = 'JUAN B AMBROSETTI';
+--UPDATE base.calles SET r_f_add = 6401, r_t_add = 6499, l_f_add = 6402, l_t_add = 6500 WHERE objectid = 853 AND UPPER("street_nam") = 'ZAPALA';
+--UPDATE base.calles SET r_f_add = 6351, r_t_add = 6399, l_f_add = 6352, l_t_add = 6400 WHERE objectid = 827 AND UPPER("street_nam") = 'ZAPALA';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2699, l_f_add = 2502, l_t_add = 2700 WHERE objectid = 852 AND UPPER("street_nam") = 'CAYETANO RODRIGUEZ';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2799, l_f_add = 2702, l_t_add = 2800 WHERE objectid = 826 AND UPPER("street_nam") = 'CAYETANO RODRIGUEZ';
+--UPDATE base.calles SET r_f_add = 6351, r_t_add = 6399, l_f_add = 6352, l_t_add = 6400 WHERE objectid = 788 AND UPPER("street_nam") = 'VICTOR HUGO';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 925 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2499, l_f_add = 2402, l_t_add = 2500 WHERE objectid = 878 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2599, l_f_add = 2502, l_t_add = 2600 WHERE objectid = 785 AND UPPER("street_nam") = 'LORETO';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2499, l_f_add = 2402, l_t_add = 2500 WHERE objectid = 836 AND UPPER("street_nam") = 'COSME ARGERICH';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2599, l_f_add = 2502, l_t_add = 2600 WHERE objectid = 800 AND UPPER("street_nam") = 'COSME ARGERICH';
+--UPDATE base.calles SET r_f_add = 5701, r_t_add = 5799, l_f_add = 5702, l_t_add = 5800 WHERE objectid = 6069 AND UPPER("street_nam") = 'DIRECTORIO';
+--UPDATE base.calles SET r_f_add = 5801, r_t_add = 5899, l_f_add = 5802, l_t_add = 5900 WHERE objectid = 6084 AND UPPER("street_nam") = 'DIRECTORIO';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3099, l_f_add = 3002, l_t_add = 3100 WHERE objectid = 6187 AND UPPER("street_nam") = 'BERNARDO ADER';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3199, l_f_add = 3102, l_t_add = 3200 WHERE objectid = 6173 AND UPPER("street_nam") = 'BERNARDO ADER';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2499, l_f_add = 2402, l_t_add = 2500 WHERE objectid = 895 AND UPPER("street_nam") = 'BERNARDO ADER';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2599, l_f_add = 2502, l_t_add = 2600 WHERE objectid = 838 AND UPPER("street_nam") = 'BERNARDO ADER';
+--UPDATE base.calles SET r_f_add = 6401, r_t_add = 6499, l_f_add = 6402, l_t_add = 6500 WHERE objectid = 5982 AND UPPER("street_nam") = 'DOMINGO DE ACASSUSO';
+--UPDATE base.calles SET r_f_add = 6501, r_t_add = 6549, l_f_add = 6502, l_t_add = 6550 WHERE objectid = 6027 AND UPPER("street_nam") = 'DOMINGO DE ACASSUSO';
+--UPDATE base.calles SET r_f_add = 6551, r_t_add = 6599, l_f_add = 6552, l_t_add = 6600 WHERE objectid = 6060 AND UPPER("street_nam") = 'DOMINGO DE ACASSUSO';
+--UPDATE base.calles SET r_f_add = 6401, r_t_add = 6499, l_f_add = 6402, l_t_add = 6500 WHERE objectid = 5942 AND UPPER("street_nam") = 'JOSE INGENIEROS';
+--UPDATE base.calles SET r_f_add = 6501, r_t_add = 6549, l_f_add = 6502, l_t_add = 6550 WHERE objectid = 5981 AND UPPER("street_nam") = 'JOSE INGENIEROS';
+--UPDATE base.calles SET r_f_add = 6551, r_t_add = 6599, l_f_add = 6552, l_t_add = 6600 WHERE objectid = 6010 AND UPPER("street_nam") = 'JOSE INGENIEROS';
+--UPDATE base.calles SET r_f_add = 4701, r_t_add = 4719, l_f_add = 4702, l_t_add = 4720 WHERE objectid = 5695 AND UPPER("street_nam") = 'ALBARELLOS';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2349, l_f_add = 2302, l_t_add = 2350 WHERE objectid = 118 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 2351, r_t_add = 2399, l_f_add = 2352, l_t_add = 2400 WHERE objectid = 64 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2499, l_f_add = 2402, l_t_add = 2500 WHERE objectid = 48 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2599, l_f_add = 2502, l_t_add = 2600 WHERE objectid = 5936 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2699, l_f_add = 2602, l_t_add = 2700 WHERE objectid = 5878 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2799, l_f_add = 2702, l_t_add = 2800 WHERE objectid = 5830 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2899, l_f_add = 2802, l_t_add = 2900 WHERE objectid = 5770 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 2901, r_t_add = 2999, l_f_add = 2902, l_t_add = 3000 WHERE objectid = 5718 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3049, l_f_add = 3002, l_t_add = 3050 WHERE objectid = 5677 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3051, r_t_add = 3099, l_f_add = 3052, l_t_add = 3100 WHERE objectid = 5631 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3199, l_f_add = 3102, l_t_add = 3200 WHERE objectid = 5620 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3199, l_f_add = 3102, l_t_add = 3200 WHERE objectid = 5620 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3299, l_f_add = 3202, l_t_add = 3300 WHERE objectid = 5580 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3399, l_f_add = 3302, l_t_add = 3400 WHERE objectid = 5557 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3401, r_t_add = 3499, l_f_add = 3402, l_t_add = 3500 WHERE objectid = 5486 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3501, r_t_add = 3599, l_f_add = 3502, l_t_add = 3600 WHERE objectid = 5482 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3601, r_t_add = 3649, l_f_add = 3602, l_t_add = 3650 WHERE objectid = 5441 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3651, r_t_add = 3699, l_f_add = 3652, l_t_add = 3700 WHERE objectid = 5401 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3701, r_t_add = 3749, l_f_add = 3702, l_t_add = 3750 WHERE objectid = 5380 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3751, r_t_add = 3799, l_f_add = 3752, l_t_add = 3800 WHERE objectid = 5358 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3801, r_t_add = 3839, l_f_add = 3802, l_t_add = 3840 WHERE objectid = 5336 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3841, r_t_add = 3849, l_f_add = 3842, l_t_add = 3850 WHERE objectid = 5312 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3851, r_t_add = 3899, l_f_add = 3852, l_t_add = 3900 WHERE objectid = 5313 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3901, r_t_add = 3919, l_f_add = 3902, l_t_add = 3920 WHERE objectid = 5284 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3921, r_t_add = 3999, l_f_add = 3922, l_t_add = 4000 WHERE objectid = 5285 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 4001, r_t_add = 4049, l_f_add = 4002, l_t_add = 4050 WHERE objectid = 5254 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 4051, r_t_add = 4099, l_f_add = 4052, l_t_add = 4100 WHERE objectid = 5255 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 4101, r_t_add = 4149, l_f_add = 4102, l_t_add = 4150 WHERE objectid = 5229 AND UPPER("street_nam") = 'ARMENIA';
+--UPDATE base.calles SET r_f_add = 3901, r_t_add = 3949, l_f_add = 3902, l_t_add = 3950 WHERE objectid = 5367 AND UPPER("street_nam") = 'GERVASIO MENDEZ';
+--UPDATE base.calles SET r_f_add = 3951, r_t_add = 3999, l_f_add = 3952, l_t_add = 4000 WHERE objectid = 5339 AND UPPER("street_nam") = 'GERVASIO MENDEZ';
+--UPDATE base.calles SET r_f_add = 4001, r_t_add = 4099, l_f_add = 4002, l_t_add = 4100 WHERE objectid = 5320 AND UPPER("street_nam") = 'GERVASIO MENDEZ';
+--UPDATE base.calles SET r_f_add = 5201, r_t_add = 5289, l_f_add = 5202, l_t_add = 5290 WHERE objectid = 6329 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 4701, r_t_add = 4799, l_f_add = 4702, l_t_add = 4800 WHERE objectid = 6320 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4889, l_f_add = 4802, l_t_add = 4890 WHERE objectid = 6323 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 4891, r_t_add = 4899, l_f_add = 4892, l_t_add = 4900 WHERE objectid = 6324 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4989, l_f_add = 4902, l_t_add = 4990 WHERE objectid = 6322 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 4991, r_t_add = 4999, l_f_add = 4992, l_t_add = 5000 WHERE objectid = 6321 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5001, r_t_add = 5039, l_f_add = 5002, l_t_add = 5040 WHERE objectid = 6325 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5041, r_t_add = 5099, l_f_add = 5042, l_t_add = 5100 WHERE objectid = 6326 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5101, r_t_add = 5109, l_f_add = 5102, l_t_add = 5110 WHERE objectid = 6327 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5111, r_t_add = 5199, l_f_add = 5112, l_t_add = 5200 WHERE objectid = 6328 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4949, l_f_add = 4902, l_t_add = 4950 WHERE objectid = 5205 AND UPPER("street_nam") = 'HIPOLITO BOUCHARD';
+--UPDATE base.calles SET r_f_add = 4951, r_t_add = 4999, l_f_add = 4952, l_t_add = 5000 WHERE objectid = 5226 AND UPPER("street_nam") = 'HIPOLITO BOUCHARD';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4849, l_f_add = 4802, l_t_add = 4850 WHERE objectid = 5178 AND UPPER("street_nam") = 'HIPOLITO BOUCHARD';
+--UPDATE base.calles SET r_f_add = 4851, r_t_add = 4899, l_f_add = 4852, l_t_add = 4900 WHERE objectid = 5194 AND UPPER("street_nam") = 'HIPOLITO BOUCHARD';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4949, l_f_add = 4902, l_t_add = 4950 WHERE objectid = 5231 AND UPPER("street_nam") = 'MANUEL DIAZ VELEZ';
+--UPDATE base.calles SET r_f_add = 4951, r_t_add = 4999, l_f_add = 4952, l_t_add = 5000 WHERE objectid = 5247 AND UPPER("street_nam") = 'MANUEL DIAZ VELEZ';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4849, l_f_add = 4802, l_t_add = 4850 WHERE objectid = 5192 AND UPPER("street_nam") = 'MANUEL DIAZ VELEZ';
+--UPDATE base.calles SET r_f_add = 4851, r_t_add = 4899, l_f_add = 4852, l_t_add = 4900 WHERE objectid = 5225 AND UPPER("street_nam") = 'MANUEL DIAZ VELEZ';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4949, l_f_add = 4902, l_t_add = 4950 WHERE objectid = 5262 AND UPPER("street_nam") = 'SEBASTIAN GABOTO';
+--UPDATE base.calles SET r_f_add = 4951, r_t_add = 4999, l_f_add = 4952, l_t_add = 5000 WHERE objectid = 5281 AND UPPER("street_nam") = 'SEBASTIAN GABOTO';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4849, l_f_add = 4802, l_t_add = 4850 WHERE objectid = 5223 AND UPPER("street_nam") = 'SEBASTIAN GABOTO';
+--UPDATE base.calles SET r_f_add = 4851, r_t_add = 4899, l_f_add = 4852, l_t_add = 4900 WHERE objectid = 5250 AND UPPER("street_nam") = 'SEBASTIAN GABOTO';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4949, l_f_add = 4902, l_t_add = 4950 WHERE objectid = 5290 AND UPPER("street_nam") = 'GUILLERMO WHITE';
+--UPDATE base.calles SET r_f_add = 4951, r_t_add = 4999, l_f_add = 4952, l_t_add = 5000 WHERE objectid = 5303 AND UPPER("street_nam") = 'GUILLERMO WHITE';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4849, l_f_add = 4802, l_t_add = 4850 WHERE objectid = 5268 AND UPPER("street_nam") = 'GUILLERMO WHITE';
+--UPDATE base.calles SET r_f_add = 4851, r_t_add = 4899, l_f_add = 4852, l_t_add = 4900 WHERE objectid = 5273 AND UPPER("street_nam") = 'GUILLERMO WHITE';
+--UPDATE base.calles SET r_f_add = 1401, r_t_add = 1449, l_f_add = 1402, l_t_add = 1450 WHERE objectid = 588 AND UPPER("street_nam") = 'ALEJANDRO M AGUADO';
+--UPDATE base.calles SET r_f_add = 901, r_t_add = 999, l_f_add = 902, l_t_add = 1000 WHERE objectid = 395 AND UPPER("street_nam") = 'USPALLATA';
+--UPDATE base.calles SET r_f_add = 5551, r_t_add = 5599, l_f_add = 5552, l_t_add = 5600 WHERE objectid = 639 AND UPPER("street_nam") = 'BAHIA BLANCA';
+--UPDATE base.calles SET r_f_add = 5601, r_t_add = 5699, l_f_add = 5602, l_t_add = 5700 WHERE objectid = 689 AND UPPER("street_nam") = 'BAHIA BLANCA';
+--UPDATE base.calles SET r_f_add = 5501, r_t_add = 5549, l_f_add = 5502, l_t_add = 5550 WHERE objectid = 1927 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 5551, r_t_add = 5599, l_f_add = 5552, l_t_add = 5600 WHERE objectid = 1928 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 5601, r_t_add = 5699, l_f_add = 5602, l_t_add = 5700 WHERE objectid = 1929 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 5701, r_t_add = 6089, l_f_add = 5702, l_t_add = 6090 WHERE objectid = 1930 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 6091, r_t_add = 6099, l_f_add = 6092, l_t_add = 7000 WHERE objectid = 1931 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 6101, r_t_add = 6199, l_f_add = 6102, l_t_add = 6200 WHERE objectid = 1932 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 6201, r_t_add = 6299, l_f_add = 6202, l_t_add = 6300 WHERE objectid = 1933 AND UPPER("street_nam") = 'LUIS M DRAGO';
+--UPDATE base.calles SET r_f_add = 3601, r_t_add = 3649, l_f_add = 3602, l_t_add = 3650 WHERE objectid = 5394 AND UPPER("street_nam") = 'LEANDRO N ALEM';
+--UPDATE base.calles SET r_f_add = 3651, r_t_add = 3699, l_f_add = 3652, l_t_add = 3700 WHERE objectid = 5354 AND UPPER("street_nam") = 'LEANDRO N ALEM';
+--UPDATE base.calles SET r_f_add = 3701, r_t_add = 3799, l_f_add = 3702, l_t_add = 3800 WHERE objectid = 5332 AND UPPER("street_nam") = 'LEANDRO N ALEM';
+--UPDATE base.calles SET r_f_add = 3601, r_t_add = 3649, l_f_add = 3602, l_t_add = 3650 WHERE objectid = 5419 AND UPPER("street_nam") = 'BERNARDINO RIVADAVIA';
+--UPDATE base.calles SET r_f_add = 3651, r_t_add = 3699, l_f_add = 3652, l_t_add = 3700 WHERE objectid = 5379 AND UPPER("street_nam") = 'BERNARDINO RIVADAVIA';
+--UPDATE base.calles SET r_f_add = 3701, r_t_add = 3749, l_f_add = 3702, l_t_add = 3750 WHERE objectid = 5352 AND UPPER("street_nam") = 'BERNARDINO RIVADAVIA';
+--UPDATE base.calles SET r_f_add = 4701, r_t_add = 4799, l_f_add = 4702, l_t_add = 4800 WHERE objectid = 5215 AND UPPER("street_nam") = 'LUIS PIEDRABUENA';
+--UPDATE base.calles SET r_f_add = 4601, r_t_add = 4699, l_f_add = 4602, l_t_add = 4700 WHERE objectid = 5195 AND UPPER("street_nam") = 'LUIS PIEDRABUENA';
+--UPDATE base.calles SET r_f_add = 4501, r_t_add = 4599, l_f_add = 4502, l_t_add = 4600 WHERE objectid = 5179 AND UPPER("street_nam") = 'LUIS PIEDRABUENA';
+--UPDATE base.calles SET r_f_add = 4401, r_t_add = 4499, l_f_add = 4402, l_t_add = 4500 WHERE objectid = 5160 AND UPPER("street_nam") = 'LUIS PIEDRABUENA';
+--UPDATE base.calles SET r_f_add = 4361, r_t_add = 4399, l_f_add = 4362, l_t_add = 4400 WHERE objectid = 5119 AND UPPER("street_nam") = 'LUIS PIEDRABUENA';
+--UPDATE base.calles SET r_f_add = 4341, r_t_add = 4359, l_f_add = 4342, l_t_add = 4360 WHERE objectid = 5112 AND UPPER("street_nam") = 'LUIS PIEDRABUENA';
+--UPDATE base.calles SET r_f_add = 4301, r_t_add = 4339, l_f_add = 4302, l_t_add = 4340 WHERE objectid = 5083 AND UPPER("street_nam") = 'LUIS PIEDRABUENA';
+--UPDATE base.calles SET r_f_add = 4701, r_t_add = 4799, l_f_add = 4702, l_t_add = 4800 WHERE objectid = 5185 AND UPPER("street_nam") = 'MANUEL DIAZ VELEZ';
+--UPDATE base.calles SET r_f_add = 4601, r_t_add = 4699, l_f_add = 4602, l_t_add = 4700 WHERE objectid = 5169 AND UPPER("street_nam") = 'MANUEL DIAZ VELEZ';
+--UPDATE base.calles SET r_f_add = 4501, r_t_add = 4599, l_f_add = 4502, l_t_add = 4600 WHERE objectid = 5148 AND UPPER("street_nam") = 'MANUEL DIAZ VELEZ';
+--UPDATE base.calles SET r_f_add = 2051, r_t_add = 2199, l_f_add = 2052, l_t_add = 2200 WHERE objectid = 2503 AND UPPER("street_nam") = 'FLORIDA';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 4144 AND UPPER("street_nam") = 'FLORIDA';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 2672 AND UPPER("street_nam") = 'FLORIDA';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2449, l_f_add = 2402, l_t_add = 2450 WHERE objectid = 2676 AND UPPER("street_nam") = 'FLORIDA';
+--UPDATE base.calles SET r_f_add = 2451, r_t_add = 2499, l_f_add = 2452, l_t_add = 2500 WHERE objectid = 2682 AND UPPER("street_nam") = 'FLORIDA';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2049, l_f_add = 2002, l_t_add = 2050 WHERE objectid = 3549 AND UPPER("street_nam") = 'BUENOS AIRES';
+--UPDATE base.calles SET r_f_add = 2051, r_t_add = 2199, l_f_add = 2052, l_t_add = 2200 WHERE objectid = 2278 AND UPPER("street_nam") = 'BUENOS AIRES';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2049, l_f_add = 2002, l_t_add = 2050 WHERE objectid = 2677 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 2051, r_t_add = 2099, l_f_add = 2052, l_t_add = 2100 WHERE objectid = 2679 AND UPPER("street_nam") = 'HIPOLITO YRIGOYEN';
+--UPDATE base.calles SET r_f_add = 1401, r_t_add = 1599, l_f_add = 1402, l_t_add = 1600 WHERE objectid = 2788 AND UPPER("street_nam") = 'ITALIA';
+--UPDATE base.calles SET r_f_add = 1601, r_t_add = 1699, l_f_add = 1602, l_t_add = 1700 WHERE objectid = 2790 AND UPPER("street_nam") = 'ITALIA';
+--UPDATE base.calles SET r_f_add = 1701, r_t_add = 1749, l_f_add = 1702, l_t_add = 1750 WHERE objectid = 2794 AND UPPER("street_nam") = 'ITALIA';
+--UPDATE base.calles SET r_f_add = 1751, r_t_add = 1799, l_f_add = 1752, l_t_add = 1800 WHERE objectid = 2795 AND UPPER("street_nam") = 'ITALIA';
+--UPDATE base.calles SET r_f_add = 1801, r_t_add = 1849, l_f_add = 1802, l_t_add = 1850 WHERE objectid = 2797 AND UPPER("street_nam") = 'ITALIA';
+--UPDATE base.calles SET r_f_add = 1851, r_t_add = 1899, l_f_add = 1852, l_t_add = 1900 WHERE objectid = 2925 AND UPPER("street_nam") = 'ITALIA';
+--UPDATE base.calles SET r_f_add = 1401, r_t_add = 1499, l_f_add = 1402, l_t_add = 1500 WHERE objectid = 2782 AND UPPER("street_nam") = 'ESMERALDA';
+--UPDATE base.calles SET r_f_add = 1501, r_t_add = 1599, l_f_add = 1502, l_t_add = 1600 WHERE objectid = 2784 AND UPPER("street_nam") = 'ESMERALDA';
+--UPDATE base.calles SET r_f_add = 1601, r_t_add = 1699, l_f_add = 1602, l_t_add = 1700 WHERE objectid = 2786 AND UPPER("street_nam") = 'ESMERALDA';
+--UPDATE base.calles SET r_f_add = 1701, r_t_add = 1799, l_f_add = 1702, l_t_add = 1800 WHERE objectid = 2792 AND UPPER("street_nam") = 'ESMERALDA';
+--UPDATE base.calles SET r_f_add = 1801, r_t_add = 1849, l_f_add = 1802, l_t_add = 1850 WHERE objectid = 4082 AND UPPER("street_nam") = 'ESMERALDA';
+--UPDATE base.calles SET r_f_add = 1851, r_t_add = 1899, l_f_add = 1852, l_t_add = 1900 WHERE objectid = 4081 AND UPPER("street_nam") = 'ESMERALDA';
+--UPDATE base.calles SET r_f_add = 601, r_t_add = 699, l_f_add = 602, l_t_add = 700 WHERE objectid = 3895 AND UPPER("street_nam") = 'MATIAS STURIZA';
+--UPDATE base.calles SET r_f_add = 551, r_t_add = 599, l_f_add = 552, l_t_add = 600 WHERE objectid = 2067 AND UPPER("street_nam") = 'MATIAS STURIZA';
+--UPDATE base.calles SET r_f_add = 501, r_t_add = 549, l_f_add = 502, l_t_add = 550 WHERE objectid = 2066 AND UPPER("street_nam") = 'MATIAS STURIZA';
+--UPDATE base.calles SET r_f_add = 401, r_t_add = 499, l_f_add = 402, l_t_add = 500 WHERE objectid = 2072 AND UPPER("street_nam") = 'MATIAS STURIZA';
+--UPDATE base.calles SET r_f_add = 301, r_t_add = 399, l_f_add = 302, l_t_add = 400 WHERE objectid = 4125 AND UPPER("street_nam") = 'MATIAS STURIZA';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2699, l_f_add = 2602, l_t_add = 2700 WHERE objectid = 3023 AND UPPER("street_nam") = 'LA RIOJA';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2599, l_f_add = 2502, l_t_add = 2600 WHERE objectid = 3034 AND UPPER("street_nam") = 'LA RIOJA';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2499, l_f_add = 2402, l_t_add = 2500 WHERE objectid = 3890 AND UPPER("street_nam") = 'LA RIOJA';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 3889 AND UPPER("street_nam") = 'LA RIOJA';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 2043 AND UPPER("street_nam") = 'LA RIOJA';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2899, l_f_add = 2802, l_t_add = 2900 WHERE objectid = 1295 AND UPPER("street_nam") = 'FELIX BOGADO';
+--UPDATE base.calles SET r_f_add = 2751, r_t_add = 2799, l_f_add = 2752, l_t_add = 2800 WHERE objectid = 1260 AND UPPER("street_nam") = 'FELIX BOGADO';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2749, l_f_add = 2702, l_t_add = 2750 WHERE objectid = 1239 AND UPPER("street_nam") = 'FELIX BOGADO';
+--UPDATE base.calles SET r_f_add = 2651, r_t_add = 2699, l_f_add = 2652, l_t_add = 2700 WHERE objectid = 1225 AND UPPER("street_nam") = 'FELIX BOGADO';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2649, l_f_add = 2602, l_t_add = 2650 WHERE objectid = 1202 AND UPPER("street_nam") = 'FELIX BOGADO';
+--UPDATE base.calles SET r_f_add = 2551, r_t_add = 2599, l_f_add = 2552, l_t_add = 2600 WHERE objectid = 1167 AND UPPER("street_nam") = 'FELIX BOGADO';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 1074 AND UPPER("street_nam") = 'FELIX BOGADO';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2249, l_f_add = 2202, l_t_add = 2250 WHERE objectid = 1011 AND UPPER("street_nam") = 'FELIX BOGADO';
+--UPDATE base.calles SET r_f_add = 2251, r_t_add = 2299, l_f_add = 2252, l_t_add = 2300 WHERE objectid = 1053 AND UPPER("street_nam") = 'FELIX BOGADO';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2149, l_f_add = 2102, l_t_add = 2150 WHERE objectid = 953 AND UPPER("street_nam") = 'FELIX BOGADO';
+--UPDATE base.calles SET r_f_add = 2151, r_t_add = 2199, l_f_add = 2152, l_t_add = 2200 WHERE objectid = 990 AND UPPER("street_nam") = 'FELIX BOGADO';
+--UPDATE base.calles SET r_f_add = 1851, r_t_add = 1899, l_f_add = 1852, l_t_add = 1900 WHERE objectid = 831 AND UPPER("street_nam") = 'FELIX BOGADO';
+--UPDATE base.calles SET r_f_add = 1711, r_t_add = 1849, l_f_add = 1712, l_t_add = 1850 WHERE objectid = 744 AND UPPER("street_nam") = 'FELIX BOGADO';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2849, l_f_add = 2802, l_t_add = 2850 WHERE objectid = 3722 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 2851, r_t_add = 2899, l_f_add = 2852, l_t_add = 2900 WHERE objectid = 3718 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 2901, r_t_add = 2929, l_f_add = 2902, l_t_add = 2930 WHERE objectid = 4222 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 2921, r_t_add = 2999, l_f_add = 2922, l_t_add = 3000 WHERE objectid = 4223 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3099, l_f_add = 3002, l_t_add = 3100 WHERE objectid = 3745 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3199, l_f_add = 3102, l_t_add = 3200 WHERE objectid = 5460 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3299, l_f_add = 3202, l_t_add = 3300 WHERE objectid = 6215 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3399, l_f_add = 3302, l_t_add = 3400 WHERE objectid = 5386 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 3401, r_t_add = 3499, l_f_add = 3402, l_t_add = 3500 WHERE objectid = 5346 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 3501, r_t_add = 3599, l_f_add = 3502, l_t_add = 3600 WHERE objectid = 5301 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 3601, r_t_add = 3699, l_f_add = 3602, l_t_add = 3700 WHERE objectid = 5265 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2899, l_f_add = 2802, l_t_add = 2900 WHERE id = 6392 AND UPPER("street_nam") = 'CAZADORES DE COQUIMBO';
+--UPDATE base.calles SET r_f_add = 2901, r_t_add = 2929, l_f_add = 2902, l_t_add = 2930 WHERE objectid = 3775 AND UPPER("street_nam") = 'CAZADORES DE COQUIMBO';
+--UPDATE base.calles SET r_f_add = 2921, r_t_add = 2999, l_f_add = 2922, l_t_add = 3000 WHERE objectid = 4175 AND UPPER("street_nam") = 'CAZADORES DE COQUIMBO';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3099, l_f_add = 3002, l_t_add = 3100 WHERE objectid = 3233 AND UPPER("street_nam") = 'CAZADORES DE COQUIMBO';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3199, l_f_add = 3102, l_t_add = 3200 WHERE objectid = 5437 AND UPPER("street_nam") = 'CAZADORES DE COQUIMBO';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3299, l_f_add = 3202, l_t_add = 3300 WHERE objectid = 6218 AND UPPER("street_nam") = 'CAZADORES DE COQUIMBO';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3399, l_f_add = 3302, l_t_add = 3400 WHERE objectid = 6216 AND UPPER("street_nam") = 'CAZADORES DE COQUIMBO';
+--UPDATE base.calles SET r_f_add = 3401, r_t_add = 3499, l_f_add = 3402, l_t_add = 3500 WHERE objectid = 5325 AND UPPER("street_nam") = 'CAZADORES DE COQUIMBO';
+--UPDATE base.calles SET r_f_add = 3501, r_t_add = 3599, l_f_add = 3502, l_t_add = 3600 WHERE objectid = 5287 AND UPPER("street_nam") = 'CAZADORES DE COQUIMBO';
+--UPDATE base.calles SET r_f_add = 3601, r_t_add = 3699, l_f_add = 3602, l_t_add = 3700 WHERE objectid = 5240 AND UPPER("street_nam") = 'CAZADORES DE COQUIMBO';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2849, l_f_add = 2802, l_t_add = 2850 WHERE objectid = 3749 AND UPPER("street_nam") = 'JULIAN S AGUERO';
+--UPDATE base.calles SET r_f_add = 2851, r_t_add = 2899, l_f_add = 2852, l_t_add = 2900 WHERE objectid = 4224 AND UPPER("street_nam") = 'JULIAN S AGUERO';
+--UPDATE base.calles SET r_f_add = 2901, r_t_add = 2999, l_f_add = 2902, l_t_add = 3000 WHERE objectid = 3235 AND UPPER("street_nam") = 'JULIAN S AGUERO';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3099, l_f_add = 3002, l_t_add = 3100 WHERE objectid = 3215 AND UPPER("street_nam") = 'JULIAN S AGUERO';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3199, l_f_add = 3102, l_t_add = 3200 WHERE objectid = 5422 AND UPPER("street_nam") = 'JULIAN S AGUERO';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3299, l_f_add = 3202, l_t_add = 3300 WHERE objectid = 5392 AND UPPER("street_nam") = 'JULIAN S AGUERO';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3399, l_f_add = 3302, l_t_add = 3400 WHERE objectid = 5348 AND UPPER("street_nam") = 'JULIAN S AGUERO';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3049, l_f_add = 3002, l_t_add = 3050 WHERE objectid = 3720 AND UPPER("street_nam") = 'JUAN B CABRAL';
+--UPDATE base.calles SET r_f_add = 3051, r_t_add = 3099, l_f_add = 3052, l_t_add = 3100 WHERE objectid = 3716 AND UPPER("street_nam") = 'JUAN B CABRAL';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3199, l_f_add = 3102, l_t_add = 3200 WHERE objectid = 5483 AND UPPER("street_nam") = 'JUAN B CABRAL';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3299, l_f_add = 3202, l_t_add = 3300 WHERE objectid = 5470 AND UPPER("street_nam") = 'JUAN B CABRAL';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3399, l_f_add = 3302, l_t_add = 3400 WHERE objectid = 5424 AND UPPER("street_nam") = 'JUAN B CABRAL';
+--UPDATE base.calles SET r_f_add = 3401, r_t_add = 3499, l_f_add = 3402, l_t_add = 3500 WHERE objectid = 5383 AND UPPER("street_nam") = 'JUAN B CABRAL';
+--UPDATE base.calles SET r_f_add = 3501, r_t_add = 3599, l_f_add = 3502, l_t_add = 3600 WHERE objectid = 5299 AND UPPER("street_nam") = 'JUAN B CABRAL';
+--UPDATE base.calles SET r_f_add = 3601, r_t_add = 3699, l_f_add = 3602, l_t_add = 3700 WHERE objectid = 5296 AND UPPER("street_nam") = 'JUAN B CABRAL';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4899, l_f_add = 4802, l_t_add = 4900 WHERE objectid = 5559 AND UPPER("street_nam") = 'EDUARDO SIVORI';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4929, l_f_add = 4902, l_t_add = 4930 WHERE objectid = 5560 AND UPPER("street_nam") = 'EDUARDO SIVORI';
+--UPDATE base.calles SET r_f_add = 4931, r_t_add = 4949, l_f_add = 4932, l_t_add = 4950 WHERE objectid = 5581 AND UPPER("street_nam") = 'EDUARDO SIVORI';
+--UPDATE base.calles SET r_f_add = 4951, r_t_add = 4999, l_f_add = 4952, l_t_add = 5000 WHERE objectid = 5594 AND UPPER("street_nam") = 'EDUARDO SIVORI';
+--UPDATE base.calles SET r_f_add = 2901, r_t_add = 2999, l_f_add = 2902, l_t_add = 3000 WHERE objectid = 5794 AND UPPER("street_nam") = 'CARLOS TEJEDOR';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3099, l_f_add = 3002, l_t_add = 3100 WHERE objectid = 5743 AND UPPER("street_nam") = 'CARLOS TEJEDOR';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3099, l_f_add = 3002, l_t_add = 3100 WHERE objectid = 5743 AND UPPER("street_nam") = 'CARLOS TEJEDOR';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3199, l_f_add = 3102, l_t_add = 3200 WHERE objectid = 5654 AND UPPER("street_nam") = 'CARLOS TEJEDOR';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3249, l_f_add = 3202, l_t_add = 3250 WHERE objectid = 5650 AND UPPER("street_nam") = 'CARLOS TEJEDOR';
+--UPDATE base.calles SET r_f_add = 3251, r_t_add = 3299, l_f_add = 3252, l_t_add = 3300 WHERE objectid = 5615 AND UPPER("street_nam") = 'CARLOS TEJEDOR';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3349, l_f_add = 3302, l_t_add = 3350 WHERE objectid = 5589 AND UPPER("street_nam") = 'CARLOS TEJEDOR';
+--UPDATE base.calles SET r_f_add = 3351, r_t_add = 3399, l_f_add = 3352, l_t_add = 3400 WHERE objectid = 5563 AND UPPER("street_nam") = 'CARLOS TEJEDOR';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2899, l_f_add = 2802, l_t_add = 2900 WHERE objectid = 5859 AND UPPER("street_nam") = 'GERVASIO MENDEZ';
+--UPDATE base.calles SET r_f_add = 2901, r_t_add = 2949, l_f_add = 2902, l_t_add = 2950 WHERE objectid = 5833 AND UPPER("street_nam") = 'GERVASIO MENDEZ';
+--UPDATE base.calles SET r_f_add = 3081, r_t_add = 3099, l_f_add = 3082, l_t_add = 3100 WHERE objectid = 5724 AND UPPER("street_nam") = 'GERVASIO MENDEZ';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3199, l_f_add = 3102, l_t_add = 3200 WHERE objectid = 5725 AND UPPER("street_nam") = 'GERVASIO MENDEZ';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3249, l_f_add = 3202, l_t_add = 3250 WHERE objectid = 5686 AND UPPER("street_nam") = 'GERVASIO MENDEZ';
+--UPDATE base.calles SET r_f_add = 3251, r_t_add = 3299, l_f_add = 3252, l_t_add = 3300 WHERE objectid = 5643 AND UPPER("street_nam") = 'GERVASIO MENDEZ';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3349, l_f_add = 3302, l_t_add = 3350 WHERE objectid = 6227 AND UPPER("street_nam") = 'GERVASIO MENDEZ';
+--UPDATE base.calles SET r_f_add = 3351, r_t_add = 3399, l_f_add = 3352, l_t_add = 3400 WHERE objectid = 5596 AND UPPER("street_nam") = 'GERVASIO MENDEZ';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3199, l_f_add = 3102, l_t_add = 3200 WHERE objectid = 5746 AND UPPER("street_nam") = 'ANTARTIDA ARGENTINA';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3249, l_f_add = 3202, l_t_add = 3250 WHERE objectid = 5727 AND UPPER("street_nam") = 'ANTARTIDA ARGENTINA';
+--UPDATE base.calles SET r_f_add = 3251, r_t_add = 3299, l_f_add = 3252, l_t_add = 3300 WHERE objectid = 5683 AND UPPER("street_nam") = 'ANTARTIDA ARGENTINA';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3349, l_f_add = 3302, l_t_add = 3350 WHERE objectid = 5651 AND UPPER("street_nam") = 'ANTARTIDA ARGENTINA';
+--UPDATE base.calles SET r_f_add = 3351, r_t_add = 3399, l_f_add = 3352, l_t_add = 3400 WHERE objectid = 5627 AND UPPER("street_nam") = 'ANTARTIDA ARGENTINA';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3249, l_f_add = 3202, l_t_add = 3250 WHERE objectid = 5760 AND UPPER("street_nam") = 'CORNELIO SAAVEDRA';
+--UPDATE base.calles SET r_f_add = 3251, r_t_add = 3299, l_f_add = 3252, l_t_add = 3300 WHERE objectid = 5728 AND UPPER("street_nam") = 'CORNELIO SAAVEDRA';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3349, l_f_add = 3302, l_t_add = 3350 WHERE objectid = 5693 AND UPPER("street_nam") = 'CORNELIO SAAVEDRA';
+--UPDATE base.calles SET r_f_add = 3351, r_t_add = 3399, l_f_add = 3352, l_t_add = 3400 WHERE objectid = 5670 AND UPPER("street_nam") = 'CORNELIO SAAVEDRA';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3299, l_f_add = 3202, l_t_add = 3300 WHERE objectid = 5744 AND UPPER("street_nam") = 'GERVASIO POSADAS';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3349, l_f_add = 3302, l_t_add = 3350 WHERE objectid = 5731 AND UPPER("street_nam") = 'GERVASIO POSADAS';
+--UPDATE base.calles SET r_f_add = 3351, r_t_add = 3399, l_f_add = 3352, l_t_add = 3400 WHERE objectid = 5720 AND UPPER("street_nam") = 'GERVASIO POSADAS';
+--UPDATE base.calles SET r_f_add = 6101, r_t_add = 6149, l_f_add = 6102, l_t_add = 6150 WHERE objectid = 5879 AND UPPER("street_nam") = 'JUAN J CASTELLI';
+--UPDATE base.calles SET r_f_add = 6151, r_t_add = 6199, l_f_add = 6152, l_t_add = 6200 WHERE objectid = 5919 AND UPPER("street_nam") = 'JUAN J CASTELLI';
+--UPDATE base.calles SET r_f_add = 6001, r_t_add = 6079, l_f_add = 6002, l_t_add = 6080 WHERE objectid = 5799 AND UPPER("street_nam") = 'JUAN J CASTELLI';
+--UPDATE base.calles SET r_f_add = 6081, r_t_add = 6089, l_f_add = 6082, l_t_add = 6090 WHERE objectid = 5813 AND UPPER("street_nam") = 'JUAN J CASTELLI';
+--UPDATE base.calles SET r_f_add = 6091, r_t_add = 6099, l_f_add = 6092, l_t_add = 6100 WHERE objectid = 5812 AND UPPER("street_nam") = 'JUAN J CASTELLI';
+--UPDATE base.calles SET r_f_add = 5901, r_t_add = 5999, l_f_add = 5902, l_t_add = 6000 WHERE objectid = 5785 AND UPPER("street_nam") = 'JUAN J CASTELLI';
+--UPDATE base.calles SET r_f_add = 2651, r_t_add = 2699, l_f_add = 2652, l_t_add = 2700 WHERE objectid = 6087 AND UPPER("street_nam") = 'INDEPENDENCIA';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2724, l_f_add = 2702, l_t_add = 2725 WHERE objectid = 6038 AND UPPER("street_nam") = 'INDEPENDENCIA';
+--UPDATE base.calles SET r_f_add = 2726, r_t_add = 2749, l_f_add = 2727, l_t_add = 2750 WHERE objectid = 6024 AND UPPER("street_nam") = 'INDEPENDENCIA';
+--UPDATE base.calles SET r_f_add = 6001, r_t_add = 6049, l_f_add = 6002, l_t_add = 6050 WHERE objectid = 6165 AND UPPER("street_nam") = 'JURAMENTO';
+--UPDATE base.calles SET r_f_add = 5801, r_t_add = 5899, l_f_add = 5802, l_t_add = 5900 WHERE objectid = 6144 AND UPPER("street_nam") = 'JURAMENTO';
+--UPDATE base.calles SET r_f_add = 5701, r_t_add = 5799, l_f_add = 5702, l_t_add = 5800 WHERE objectid = 6138 AND UPPER("street_nam") = 'JURAMENTO';
+--UPDATE base.calles SET r_f_add = 5601, r_t_add = 5699, l_f_add = 5602, l_t_add = 5700 WHERE objectid = 6120 AND UPPER("street_nam") = 'JURAMENTO';
+--UPDATE base.calles SET r_f_add = 5551, r_t_add = 5599, l_f_add = 5552, l_t_add = 5600 WHERE objectid = 6105 AND UPPER("street_nam") = 'JURAMENTO';
+--UPDATE base.calles SET r_f_add = 5501, r_t_add = 5549, l_f_add = 5502, l_t_add = 5550 WHERE objectid = 6093 AND UPPER("street_nam") = 'JURAMENTO';
+--UPDATE base.calles SET r_f_add = 5801, r_t_add = 5999, l_f_add = 5802, l_t_add = 6000 WHERE objectid = 6200 AND UPPER("street_nam") = 'DALMACIO VELEZ SARSFIELD';
+--UPDATE base.calles SET r_f_add = 5701, r_t_add = 5799, l_f_add = 5702, l_t_add = 5800 WHERE objectid = 6183 AND UPPER("street_nam") = 'DALMACIO VELEZ SARSFIELD';
+--UPDATE base.calles SET r_f_add = 5601, r_t_add = 5679, l_f_add = 5602, l_t_add = 5680 WHERE objectid = 6162 AND UPPER("street_nam") = 'DALMACIO VELEZ SARSFIELD';
+--UPDATE base.calles SET r_f_add = 5681, r_t_add = 5699, l_f_add = 5682, l_t_add = 5700 WHERE objectid = 6184 AND UPPER("street_nam") = 'DALMACIO VELEZ SARSFIELD';
+--UPDATE base.calles SET r_f_add = 5551, r_t_add = 5599, l_f_add = 5552, l_t_add = 5600 WHERE objectid = 6164 AND UPPER("street_nam") = 'DALMACIO VELEZ SARSFIELD';
+--UPDATE base.calles SET r_f_add = 5501, r_t_add = 5549, l_f_add = 5502, l_t_add = 5550 WHERE objectid = 6151 AND UPPER("street_nam") = 'DALMACIO VELEZ SARSFIELD';
+--UPDATE base.calles SET r_f_add = 5801, r_t_add = 5879, l_f_add = 5802, l_t_add = 5880 WHERE objectid = 6157 AND UPPER("street_nam") = 'JOSE HERNANDEZ';
+--UPDATE base.calles SET r_f_add = 5881, r_t_add = 5899, l_f_add = 5882, l_t_add = 6000 WHERE objectid = 6356 AND UPPER("street_nam") = 'JOSE HERNANDEZ';
+--UPDATE base.calles SET r_f_add = 5701, r_t_add = 5799, l_f_add = 5702, l_t_add = 5800 WHERE objectid = 6159 AND UPPER("street_nam") = 'JOSE HERNANDEZ';
+--UPDATE base.calles SET r_f_add = 5601, r_t_add = 5699, l_f_add = 5602, l_t_add = 5700 WHERE objectid = 6146 AND UPPER("street_nam") = 'JOSE HERNANDEZ';
+--UPDATE base.calles SET r_f_add = 5551, r_t_add = 5599, l_f_add = 5552, l_t_add = 5600 WHERE objectid = 6141 AND UPPER("street_nam") = 'JOSE HERNANDEZ';
+--UPDATE base.calles SET r_f_add = 5501, r_t_add = 5549, l_f_add = 5502, l_t_add = 5550 WHERE objectid = 6125 AND UPPER("street_nam") = 'JOSE HERNANDEZ';
+--UPDATE base.calles SET r_f_add = 5601, r_t_add = 5699, l_f_add = 5602, l_t_add = 5700 WHERE objectid = 373 AND UPPER("street_nam") = 'NICARAGUA';
+--UPDATE base.calles SET r_f_add = 5551, r_t_add = 5599, l_f_add = 5552, l_t_add = 5600 WHERE objectid = 372 AND UPPER("street_nam") = 'NICARAGUA';
+--UPDATE base.calles SET r_f_add = 5501, r_t_add = 5549, l_f_add = 5502, l_t_add = 5550 WHERE objectid = 332 AND UPPER("street_nam") = 'NICARAGUA';
+--UPDATE base.calles SET r_f_add = 5601, r_t_add = 5699, l_f_add = 5602, l_t_add = 5700 WHERE objectid = 476 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 5551, r_t_add = 5599, l_f_add = 5552, l_t_add = 5600 WHERE objectid = 434 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 5501, r_t_add = 5549, l_f_add = 5502, l_t_add = 5550 WHERE objectid = 397 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 5601, r_t_add = 5699, l_f_add = 5602, l_t_add = 5700 WHERE objectid = 539 AND UPPER("street_nam") = 'MANUEL BELZU';
+--UPDATE base.calles SET r_f_add = 5551, r_t_add = 5599, l_f_add = 5552, l_t_add = 5600 WHERE objectid = 496 AND UPPER("street_nam") = 'MANUEL BELZU';
+--UPDATE base.calles SET r_f_add = 5501, r_t_add = 5549, l_f_add = 5502, l_t_add = 5550 WHERE objectid = 467 AND UPPER("street_nam") = 'MANUEL BELZU';
+--UPDATE base.calles SET r_f_add = 5701, r_t_add = 5799, l_f_add = 5702, l_t_add = 5800 WHERE objectid = 612 AND UPPER("street_nam") = 'CARLOS VILLATE';
+--UPDATE base.calles SET r_f_add = 5601, r_t_add = 5699, l_f_add = 5602, l_t_add = 5700 WHERE objectid = 569 AND UPPER("street_nam") = 'CARLOS VILLATE';
+--UPDATE base.calles SET r_f_add = 5501, r_t_add = 5599, l_f_add = 5502, l_t_add = 5600 WHERE objectid = 535 AND UPPER("street_nam") = 'CARLOS VILLATE';
+--UPDATE base.calles SET r_f_add = 5201, r_t_add = 5299, l_f_add = 5202, l_t_add = 5300 WHERE objectid = 1646 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 5101, r_t_add = 5199, l_f_add = 5102, l_t_add = 5200 WHERE objectid = 1610 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 5001, r_t_add = 5049, l_f_add = 5002, l_t_add = 5050 WHERE objectid = 1555 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 5051, r_t_add = 5099, l_f_add = 5052, l_t_add = 5100 WHERE objectid = 1589 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4999, l_f_add = 4902, l_t_add = 5000 WHERE objectid = 1556 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4849, l_f_add = 4802, l_t_add = 4850 WHERE objectid = 1496 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 4851, r_t_add = 4859, l_f_add = 4852, l_t_add = 4860 WHERE objectid = 1495 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 4861, r_t_add = 4899, l_f_add = 4862, l_t_add = 4900 WHERE objectid = 1525 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 5201, r_t_add = 5299, l_f_add = 5202, l_t_add = 5300 WHERE objectid = 1913 AND UPPER("street_nam") = 'MARTIN M DE GUEMES';
+--UPDATE base.calles SET r_f_add = 5101, r_t_add = 5199, l_f_add = 5102, l_t_add = 5200 WHERE objectid = 1653 AND UPPER("street_nam") = 'MARTIN M DE GUEMES';
+--UPDATE base.calles SET r_f_add = 5001, r_t_add = 5099, l_f_add = 5002, l_t_add = 5100 WHERE objectid = 1630 AND UPPER("street_nam") = 'MARTIN M DE GUEMES';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4999, l_f_add = 4902, l_t_add = 5000 WHERE objectid = 1604 AND UPPER("street_nam") = 'MARTIN M DE GUEMES';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4849, l_f_add = 4802, l_t_add = 4850 WHERE objectid = 1551 AND UPPER("street_nam") = 'MARTIN M DE GUEMES';
+--UPDATE base.calles SET r_f_add = 4851, r_t_add = 4899, l_f_add = 4852, l_t_add = 4900 WHERE objectid = 1584 AND UPPER("street_nam") = 'MARTIN M DE GUEMES';
+--UPDATE base.calles SET r_f_add = 5201, r_t_add = 5299, l_f_add = 5202, l_t_add = 5300 WHERE objectid = 1720 AND UPPER("street_nam") = 'JUAN G DE LAS HERAS';
+--UPDATE base.calles SET r_f_add = 5101, r_t_add = 5199, l_f_add = 5102, l_t_add = 5200 WHERE objectid = 1687 AND UPPER("street_nam") = 'JUAN G DE LAS HERAS';
+--UPDATE base.calles SET r_f_add = 5001, r_t_add = 5099, l_f_add = 5002, l_t_add = 5100 WHERE objectid = 1657 AND UPPER("street_nam") = 'JUAN G DE LAS HERAS';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4999, l_f_add = 4902, l_t_add = 5000 WHERE objectid = 1638 AND UPPER("street_nam") = 'JUAN G DE LAS HERAS';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4849, l_f_add = 4802, l_t_add = 4850 WHERE objectid = 1592 AND UPPER("street_nam") = 'JUAN G DE LAS HERAS';
+--UPDATE base.calles SET r_f_add = 4851, r_t_add = 4899, l_f_add = 4852, l_t_add = 4900 WHERE objectid = 1608 AND UPPER("street_nam") = 'JUAN G DE LAS HERAS';
+--UPDATE base.calles SET r_f_add = 5201, r_t_add = 5299, l_f_add = 5202, l_t_add = 5300 WHERE objectid = 1909 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 5101, r_t_add = 5199, l_f_add = 5102, l_t_add = 5200 WHERE objectid = 1721 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 5001, r_t_add = 5099, l_f_add = 5002, l_t_add = 5100 WHERE objectid = 1692 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4999, l_f_add = 4902, l_t_add = 5000 WHERE objectid = 1672 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4849, l_f_add = 4802, l_t_add = 4850 WHERE objectid = 1623 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 4851, r_t_add = 4899, l_f_add = 4852, l_t_add = 4900 WHERE objectid = 1642 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 5201, r_t_add = 5299, l_f_add = 5202, l_t_add = 5300 WHERE objectid = 1776 AND UPPER("street_nam") = 'JOSE MOLDES';
+--UPDATE base.calles SET r_f_add = 5101, r_t_add = 5149, l_f_add = 5102, l_t_add = 5150 WHERE objectid = 1748 AND UPPER("street_nam") = 'JOSE MOLDES';
+--UPDATE base.calles SET r_f_add = 5151, r_t_add = 5199, l_f_add = 5152, l_t_add = 5200 WHERE objectid = 1749 AND UPPER("street_nam") = 'JOSE MOLDES';
+--UPDATE base.calles SET r_f_add = 5001, r_t_add = 5019, l_f_add = 5002, l_t_add = 5020 WHERE objectid = 1713 AND UPPER("street_nam") = 'JOSE MOLDES';
+--UPDATE base.calles SET r_f_add = 5021, r_t_add = 5089, l_f_add = 5022, l_t_add = 5090 WHERE objectid = 1730 AND UPPER("street_nam") = 'JOSE MOLDES';
+--UPDATE base.calles SET r_f_add = 5091, r_t_add = 5099, l_f_add = 5092, l_t_add = 5100 WHERE objectid = 1731 AND UPPER("street_nam") = 'JOSE MOLDES';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4949, l_f_add = 4902, l_t_add = 4950 WHERE objectid = 1699 AND UPPER("street_nam") = 'JOSE MOLDES';
+--UPDATE base.calles SET r_f_add = 4951, r_t_add = 4999, l_f_add = 4952, l_t_add = 5000 WHERE objectid = 1698 AND UPPER("street_nam") = 'JOSE MOLDES';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4849, l_f_add = 4802, l_t_add = 4850 WHERE objectid = 1664 AND UPPER("street_nam") = 'JOSE MOLDES';
+--UPDATE base.calles SET r_f_add = 4851, r_t_add = 4899, l_f_add = 4852, l_t_add = 4900 WHERE objectid = 1662 AND UPPER("street_nam") = 'JOSE MOLDES';
+--UPDATE base.calles SET r_f_add = 5201, r_t_add = 5299, l_f_add = 5202, l_t_add = 5300 WHERE objectid = 1905 AND UPPER("street_nam") = 'AGUSTIN ALVAREZ';
+--UPDATE base.calles SET r_f_add = 5101, r_t_add = 5149, l_f_add = 5102, l_t_add = 5150 WHERE objectid = 1774 AND UPPER("street_nam") = 'AGUSTIN ALVAREZ';
+--UPDATE base.calles SET r_f_add = 5151, r_t_add = 5199, l_f_add = 5152, l_t_add = 5200 WHERE objectid = 1789 AND UPPER("street_nam") = 'AGUSTIN ALVAREZ';
+--UPDATE base.calles SET r_f_add = 5001, r_t_add = 5099, l_f_add = 5002, l_t_add = 5100 WHERE objectid = 1764 AND UPPER("street_nam") = 'AGUSTIN ALVAREZ';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4999, l_f_add = 4902, l_t_add = 5000 WHERE objectid = 1754 AND UPPER("street_nam") = 'AGUSTIN ALVAREZ';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4899, l_f_add = 4802, l_t_add = 4900 WHERE objectid = 1735 AND UPPER("street_nam") = 'AGUSTIN ALVAREZ';
+--UPDATE base.calles SET r_f_add = 5201, r_t_add = 5249, l_f_add = 5202, l_t_add = 5250 WHERE objectid = 1812 AND UPPER("street_nam") = 'ADOLFO ALSINA';
+--UPDATE base.calles SET r_f_add = 5251, r_t_add = 5299, l_f_add = 5252, l_t_add = 5300 WHERE objectid = 1904 AND UPPER("street_nam") = 'ADOLFO ALSINA';
+--UPDATE base.calles SET r_f_add = 5101, r_t_add = 5199, l_f_add = 5102, l_t_add = 5200 WHERE objectid = 1813 AND UPPER("street_nam") = 'ADOLFO ALSINA';
+--UPDATE base.calles SET r_f_add = 5001, r_t_add = 5099, l_f_add = 5002, l_t_add = 5100 WHERE objectid = 1800 AND UPPER("street_nam") = 'ADOLFO ALSINA';
+--UPDATE base.calles SET r_f_add = 601, r_t_add = 699, l_f_add = 602, l_t_add = 700 WHERE objectid = 1361 AND UPPER("street_nam") = 'BOLIVIA';
+--UPDATE base.calles SET r_f_add = 701, r_t_add = 749, l_f_add = 702, l_t_add = 750 WHERE objectid = 1288 AND UPPER("street_nam") = 'BOLIVIA';
+--UPDATE base.calles SET r_f_add = 751, r_t_add = 799, l_f_add = 752, l_t_add = 800 WHERE objectid = 1182 AND UPPER("street_nam") = 'BOLIVIA';
+--UPDATE base.calles SET r_f_add = 601, r_t_add = 699, l_f_add = 602, l_t_add = 700 WHERE objectid = 1324 AND UPPER("street_nam") = 'PERU';
+--UPDATE base.calles SET r_f_add = 701, r_t_add = 799, l_f_add = 702, l_t_add = 800 WHERE objectid = 1245 AND UPPER("street_nam") = 'PERU';
+--UPDATE base.calles SET r_f_add = 801, r_t_add = 849, l_f_add = 802, l_t_add = 850 WHERE objectid = 1175 AND UPPER("street_nam") = 'PERU';
+--UPDATE base.calles SET r_f_add = 851, r_t_add = 899, l_f_add = 852, l_t_add = 900 WHERE objectid = 1127 AND UPPER("street_nam") = 'PERU';
+--UPDATE base.calles SET r_f_add = 4901, r_t_add = 4999, l_f_add = 4902, l_t_add = 5000 WHERE objectid = 1787 AND UPPER("street_nam") = 'ADOLFO ALSINA';
+--UPDATE base.calles SET r_f_add = 4801, r_t_add = 4899, l_f_add = 4802, l_t_add = 4900 WHERE objectid = 1773 AND UPPER("street_nam") = 'ADOLFO ALSINA';
+--UPDATE base.calles SET r_f_add = 4501, r_t_add = 4549, l_f_add = 4502, l_t_add = 4550 WHERE objectid = 1350 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 4301, r_t_add = 4379, l_f_add = 4302, l_t_add = 4380 WHERE objectid = 1333 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 4381, r_t_add = 4399, l_f_add = 4382, l_t_add = 4400 WHERE objectid = 1351 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 4201, r_t_add = 4249, l_f_add = 4202, l_t_add = 4250 WHERE objectid = 1303 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 4251, r_t_add = 4269, l_f_add = 4252, l_t_add = 4270 WHERE objectid = 1304 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 4271, r_t_add = 4299, l_f_add = 4272, l_t_add = 4300 WHERE objectid = 1334 AND UPPER("street_nam") = 'CARLOS F MELO';
+--UPDATE base.calles SET r_f_add = 4601, r_t_add = 4649, l_f_add = 4602, l_t_add = 4650 WHERE objectid = 1487 AND UPPER("street_nam") = 'MARTIN M DE GUEMES';
+--UPDATE base.calles SET r_f_add = 4651, r_t_add = 4699, l_f_add = 4652, l_t_add = 4700 WHERE objectid = 1497 AND UPPER("street_nam") = 'MARTIN M DE GUEMES';
+--UPDATE base.calles SET r_f_add = 4501, r_t_add = 4599, l_f_add = 4502, l_t_add = 4600 WHERE objectid = 1461 AND UPPER("street_nam") = 'MARTIN M DE GUEMES';
+--UPDATE base.calles SET r_f_add = 4301, r_t_add = 4399, l_f_add = 4302, l_t_add = 4400 WHERE objectid = 1439 AND UPPER("street_nam") = 'MARTIN M DE GUEMES';
+--UPDATE base.calles SET r_f_add = 4201, r_t_add = 4249, l_f_add = 4202, l_t_add = 4250 WHERE objectid = 1387 AND UPPER("street_nam") = 'MARTIN M DE GUEMES';
+--UPDATE base.calles SET r_f_add = 4251, r_t_add = 4299, l_f_add = 4252, l_t_add = 4300 WHERE objectid = 1419 AND UPPER("street_nam") = 'MARTIN M DE GUEMES';
+--UPDATE base.calles SET r_f_add = 3901, r_t_add = 3999, l_f_add = 3902, l_t_add = 4000 WHERE objectid = 1325 AND UPPER("street_nam") = 'JUAN G DE LAS HERAS';
+--UPDATE base.calles SET r_f_add = 4001, r_t_add = 4049, l_f_add = 4002, l_t_add = 4050 WHERE objectid = 1356 AND UPPER("street_nam") = 'JUAN G DE LAS HERAS';
+--UPDATE base.calles SET r_f_add = 4051, r_t_add = 4099, l_f_add = 4052, l_t_add = 4100 WHERE objectid = 1383 AND UPPER("street_nam") = 'JUAN G DE LAS HERAS';
+--UPDATE base.calles SET r_f_add = 3601, r_t_add = 3699, l_f_add = 3602, l_t_add = 3700 WHERE objectid = 1221 AND UPPER("street_nam") = 'JUAN G DE LAS HERAS';
+--UPDATE base.calles SET r_f_add = 3501, r_t_add = 3599, l_f_add = 3502, l_t_add = 3600 WHERE objectid = 1192 AND UPPER("street_nam") = 'JUAN G DE LAS HERAS';
+--UPDATE base.calles SET r_f_add = 1, r_t_add = 99, l_f_add = 2, l_t_add = 100 WHERE objectid = 1728 AND UPPER("street_nam") = 'EMILIO ZORRAQUIN';
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 149, l_f_add = 102, l_t_add = 150 WHERE objectid = 1751 AND UPPER("street_nam") = 'EMILIO ZORRAQUIN';
+--UPDATE base.calles SET r_f_add = 151, r_t_add = 199, l_f_add = 152, l_t_add = 200 WHERE objectid = 1784 AND UPPER("street_nam") = 'EMILIO ZORRAQUIN';
+--UPDATE base.calles SET r_f_add = 601, r_t_add = 699, l_f_add = 602, l_t_add = 700 WHERE objectid = 1242 AND UPPER("street_nam") = 'ESTADOS UNIDOS';
+--UPDATE base.calles SET r_f_add = 701, r_t_add = 799, l_f_add = 702, l_t_add = 800 WHERE objectid = 1191 AND UPPER("street_nam") = 'ESTADOS UNIDOS';
+--UPDATE base.calles SET r_f_add = 801, r_t_add = 849, l_f_add = 802, l_t_add = 850 WHERE objectid = 1075 AND UPPER("street_nam") = 'ESTADOS UNIDOS';
+--UPDATE base.calles SET r_f_add = 851, r_t_add = 899, l_f_add = 852, l_t_add = 950 WHERE objectid = 1064 AND UPPER("street_nam") = 'ESTADOS UNIDOS';
+--UPDATE base.calles SET r_f_add = 611, r_t_add = 689, l_f_add = 612, l_t_add = 690 WHERE objectid = 1146 AND UPPER("street_nam") = 'BARTOLOME MITRE';
+--UPDATE base.calles SET r_f_add = 691, r_t_add = 699, l_f_add = 692, l_t_add = 700 WHERE objectid = 1135 AND UPPER("street_nam") = 'BARTOLOME MITRE';
+--UPDATE base.calles SET r_f_add = 701, r_t_add = 749, l_f_add = 702, l_t_add = 750 WHERE objectid = 1117 AND UPPER("street_nam") = 'BARTOLOME MITRE';
+--UPDATE base.calles SET r_f_add = 751, r_t_add = 799, l_f_add = 752, l_t_add = 800 WHERE objectid = 1085 AND UPPER("street_nam") = 'BARTOLOME MITRE';
+--UPDATE base.calles SET r_f_add = 801, r_t_add = 809, l_f_add = 802, l_t_add = 810 WHERE objectid = 1054 AND UPPER("street_nam") = 'BARTOLOME MITRE';
+--UPDATE base.calles SET r_f_add = 811, r_t_add = 849, l_f_add = 812, l_t_add = 850 WHERE objectid = 1013 AND UPPER("street_nam") = 'BARTOLOME MITRE';
+--UPDATE base.calles SET r_f_add = 851, r_t_add = 899, l_f_add = 852, l_t_add = 900 WHERE objectid = 1005 AND UPPER("street_nam") = 'BARTOLOME MITRE';
+--UPDATE base.calles SET r_f_add = 3401, r_t_add = 3449, l_f_add = 3402, l_t_add = 3450 WHERE objectid = 3612 AND UPPER("street_nam") = 'JOSE DE SAN MARTIN';
+--UPDATE base.calles SET r_f_add = 3451, r_t_add = 3499, l_f_add = 3452, l_t_add = 3500 WHERE objectid = 3645 AND UPPER("street_nam") = 'JOSE DE SAN MARTIN';
+--UPDATE base.calles SET r_f_add = 3501, r_t_add = 3599, l_f_add = 3502, l_t_add = 3600 WHERE objectid = 438 AND UPPER("street_nam") = 'JOSE DE SAN MARTIN';
+--UPDATE base.calles SET r_f_add = 1901, r_t_add = 1949, l_f_add = 1902, l_t_add = 1950 WHERE objectid = 312 AND UPPER("street_nam") = 'LEANDRO N ALEM';
+--UPDATE base.calles SET r_f_add = 1951, r_t_add = 1999, l_f_add = 1952, l_t_add = 2000 WHERE objectid = 299 AND UPPER("street_nam") = 'LEANDRO N ALEM';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2049, l_f_add = 2002, l_t_add = 2050 WHERE objectid = 254 AND UPPER("street_nam") = 'LEANDRO N ALEM';
+--UPDATE base.calles SET r_f_add = 2051, r_t_add = 2099, l_f_add = 2052, l_t_add = 2100 WHERE objectid = 214 AND UPPER("street_nam") = 'LEANDRO N ALEM';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2199, l_f_add = 2102, l_t_add = 2200 WHERE objectid = 171 AND UPPER("street_nam") = 'LEANDRO N ALEM';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 127 AND UPPER("street_nam") = 'LEANDRO N ALEM';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2349, l_f_add = 2302, l_t_add = 2350 WHERE objectid = 67 AND UPPER("street_nam") = 'LEANDRO N ALEM';
+--UPDATE base.calles SET r_f_add = 2351, r_t_add = 2399, l_f_add = 2352, l_t_add = 2400 WHERE objectid = 36 AND UPPER("street_nam") = 'LEANDRO N ALEM';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2449, l_f_add = 2402, l_t_add = 2450 WHERE objectid = 24 AND UPPER("street_nam") = 'LEANDRO N ALEM';
+--UPDATE base.calles SET r_f_add = 2451, r_t_add = 2499, l_f_add = 2452, l_t_add = 2500 WHERE objectid = 14 AND UPPER("street_nam") = 'LEANDRO N ALEM';
+--UPDATE base.calles SET r_f_add = 1901, r_t_add = 1949, l_f_add = 1902, l_t_add = 1950 WHERE objectid = 343 AND UPPER("street_nam") = 'CARREGAL';
+--UPDATE base.calles SET r_f_add = 1951, r_t_add = 1999, l_f_add = 1952, l_t_add = 2000 WHERE objectid = 280 AND UPPER("street_nam") = 'CARREGAL';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2049, l_f_add = 2002, l_t_add = 2050 WHERE objectid = 207 AND UPPER("street_nam") = 'CARREGAL';
+--UPDATE base.calles SET r_f_add = 2051, r_t_add = 2099, l_f_add = 2052, l_t_add = 2100 WHERE objectid = 173 AND UPPER("street_nam") = 'CARREGAL';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2199, l_f_add = 2102, l_t_add = 2200 WHERE objectid = 131 AND UPPER("street_nam") = 'CARREGAL';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 92 AND UPPER("street_nam") = 'CARREGAL';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2349, l_f_add = 2302, l_t_add = 2350 WHERE objectid = 56 AND UPPER("street_nam") = 'CARREGAL';
+--UPDATE base.calles SET r_f_add = 2351, r_t_add = 2399, l_f_add = 2352, l_t_add = 2400 WHERE objectid = 27 AND UPPER("street_nam") = 'CARREGAL';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2449, l_f_add = 2402, l_t_add = 2450 WHERE objectid = 15 AND UPPER("street_nam") = 'CARREGAL';
+--UPDATE base.calles SET r_f_add = 2451, r_t_add = 2499, l_f_add = 2452, l_t_add = 2500 WHERE objectid = 6 AND UPPER("street_nam") = 'CARREGAL';
+--UPDATE base.calles SET r_f_add = 4001, r_t_add = 4099, l_f_add = 4002, l_t_add = 4100 WHERE objectid = 281 AND UPPER("street_nam") = 'ITALIA';
+--UPDATE base.calles SET r_f_add = 4101, r_t_add = 4149, l_f_add = 4102, l_t_add = 4150 WHERE objectid = 340 AND UPPER("street_nam") = 'ITALIA';
+--UPDATE base.calles SET r_f_add = 4151, r_t_add = 4199, l_f_add = 4152, l_t_add = 4200 WHERE objectid = 383 AND UPPER("street_nam") = 'ITALIA';
+--UPDATE base.calles SET r_f_add = 3701, r_t_add = 3799, l_f_add = 3702, l_t_add = 3800 WHERE objectid = 99 AND UPPER("street_nam") = 'ANTONIO MALAVER';
+--UPDATE base.calles SET r_f_add = 3801, r_t_add = 3899, l_f_add = 3802, l_t_add = 3900 WHERE objectid = 130 AND UPPER("street_nam") = 'ANTONIO MALAVER';
+--UPDATE base.calles SET r_f_add = 3901, r_t_add = 3999, l_f_add = 3902, l_t_add = 4000 WHERE objectid = 170 AND UPPER("street_nam") = 'ANTONIO MALAVER';
+--UPDATE base.calles SET r_f_add = 4001, r_t_add = 4069, l_f_add = 4002, l_t_add = 4070 WHERE objectid = 181 AND UPPER("street_nam") = 'ANTONIO MALAVER';
+--UPDATE base.calles SET r_f_add = 4071, r_t_add = 4099, l_f_add = 4072, l_t_add = 4100 WHERE objectid = 212 AND UPPER("street_nam") = 'ANTONIO MALAVER';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2199, l_f_add = 2102, l_t_add = 2200 WHERE objectid = 182 AND UPPER("street_nam") = 'BERNARDINO RIVADAVIA';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 156 AND UPPER("street_nam") = 'BERNARDINO RIVADAVIA';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2349, l_f_add = 2302, l_t_add = 2350 WHERE objectid = 86 AND UPPER("street_nam") = 'BERNARDINO RIVADAVIA';
+--UPDATE base.calles SET r_f_add = 2351, r_t_add = 2399, l_f_add = 2352, l_t_add = 2400 WHERE objectid = 52 AND UPPER("street_nam") = 'BERNARDINO RIVADAVIA';
+--UPDATE base.calles SET r_f_add = 501, r_t_add = 549, l_f_add = 502, l_t_add = 550 WHERE objectid = 1650 AND UPPER("street_nam") = 'TALCAHUANO';
+--UPDATE base.calles SET r_f_add = 551, r_t_add = 599, l_f_add = 552, l_t_add = 600 WHERE objectid = 1603 AND UPPER("street_nam") = 'TALCAHUANO';
+--UPDATE base.calles SET r_f_add = 601, r_t_add = 699, l_f_add = 602, l_t_add = 700 WHERE objectid = 1554 AND UPPER("street_nam") = 'TALCAHUANO';
+--UPDATE base.calles SET r_f_add = 4401, r_t_add = 4499, l_f_add = 4402, l_t_add = 4500 WHERE objectid = 919 AND UPPER("street_nam") = 'JOSE DE SAN MARTIN';
+--UPDATE base.calles SET r_f_add = 4501, r_t_add = 4519, l_f_add = 4502, l_t_add = 4520 WHERE objectid = 918 AND UPPER("street_nam") = 'JOSE DE SAN MARTIN';
+--UPDATE base.calles SET r_f_add = 4521, r_t_add = 4599, l_f_add = 4522, l_t_add = 4600 WHERE objectid = 950 AND UPPER("street_nam") = 'JOSE DE SAN MARTIN';
+--UPDATE base.calles SET r_f_add = 4601, r_t_add = 4649, l_f_add = 4602, l_t_add = 4650 WHERE objectid = 999 AND UPPER("street_nam") = 'JOSE DE SAN MARTIN';
+--UPDATE base.calles SET r_f_add = 4651, r_t_add = 4699, l_f_add = 4652, l_t_add = 4700 WHERE objectid = 1026 AND UPPER("street_nam") = 'JOSE DE SAN MARTIN';
+--UPDATE base.calles SET r_f_add = 4701, r_t_add = 4719, l_f_add = 4702, l_t_add = 4720 WHERE objectid = 1048 AND UPPER("street_nam") = 'JOSE DE SAN MARTIN';
+--UPDATE base.calles SET r_f_add = 4721, r_t_add = 4799, l_f_add = 4722, l_t_add = 4800 WHERE objectid = 1112 AND UPPER("street_nam") = 'JOSE DE SAN MARTIN';
+--UPDATE base.calles SET r_f_add = 3501, r_t_add = 3599, l_f_add = 3502, l_t_add = 3600 WHERE objectid = 3529 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 3601, r_t_add = 3699, l_f_add = 3602, l_t_add = 3700 WHERE objectid = 3808 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 3701, r_t_add = 3799, l_f_add = 3702, l_t_add = 3800 WHERE objectid = 2755 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 3801, r_t_add = 3849, l_f_add = 3802, l_t_add = 3850 WHERE objectid = 2761 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 3851, r_t_add = 3899, l_f_add = 3852, l_t_add = 3900 WHERE objectid = 3806 AND UPPER("street_nam") = 'GUILLERMO MARCONI';
+--UPDATE base.calles SET r_f_add = 3501, r_t_add = 3599, l_f_add = 3502, l_t_add = 3600 WHERE objectid = 2745 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 3601, r_t_add = 3699, l_f_add = 3602, l_t_add = 3700 WHERE objectid = 2748 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 3701, r_t_add = 3799, l_f_add = 3702, l_t_add = 3800 WHERE objectid = 2750 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 3801, r_t_add = 3849, l_f_add = 3802, l_t_add = 3850 WHERE objectid = 2753 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 3851, r_t_add = 3899, l_f_add = 3852, l_t_add = 3900 WHERE objectid = 2757 AND UPPER("street_nam") = 'FERNAN F DE AMADOR';
+--UPDATE base.calles SET r_f_add = 3501, r_t_add = 3599, l_f_add = 3502, l_t_add = 3600 WHERE objectid = 4063 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 3601, r_t_add = 3699, l_f_add = 3602, l_t_add = 3700 WHERE objectid = 2744 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 3701, r_t_add = 3799, l_f_add = 3702, l_t_add = 3800 WHERE objectid = 2747 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 3801, r_t_add = 3829, l_f_add = 3802, l_t_add = 3830 WHERE objectid = 3811 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 3831, r_t_add = 3849, l_f_add = 3832, l_t_add = 3850 WHERE objectid = 3810 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 3851, r_t_add = 3899, l_f_add = 3852, l_t_add = 3900 WHERE objectid = 3814 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 3701, r_t_add = 3799, l_f_add = 3702, l_t_add = 3800 WHERE objectid = 2763 AND UPPER("street_nam") = 'MANUEL BELZU';
+--UPDATE base.calles SET r_f_add = 3801, r_t_add = 3849, l_f_add = 3802, l_t_add = 3850 WHERE objectid = 2769 AND UPPER("street_nam") = 'MANUEL BELZU';
+--UPDATE base.calles SET r_f_add = 3851, r_t_add = 3899, l_f_add = 3852, l_t_add = 3900 WHERE objectid = 3247 AND UPPER("street_nam") = 'MANUEL BELZU';
+--UPDATE base.calles SET r_f_add = 3701, r_t_add = 3799, l_f_add = 3702, l_t_add = 3800 WHERE objectid = 3784 AND UPPER("street_nam") = 'CARLOS VILLATE';
+--UPDATE base.calles SET r_f_add = 3801, r_t_add = 3849, l_f_add = 3802, l_t_add = 3850 WHERE objectid = 3251 AND UPPER("street_nam") = 'CARLOS VILLATE';
+--UPDATE base.calles SET r_f_add = 3851, r_t_add = 3899, l_f_add = 3852, l_t_add = 3900 WHERE objectid = 3253 AND UPPER("street_nam") = 'CARLOS VILLATE';
+--UPDATE base.calles SET r_f_add = 3901, r_t_add = 3949, l_f_add = 3902, l_t_add = 3550 WHERE objectid = 3255 AND UPPER("street_nam") = 'CARLOS VILLATE';
+--UPDATE base.calles SET r_f_add = 3951, r_t_add = 3999, l_f_add = 3952, l_t_add = 4000 WHERE objectid = 3262 AND UPPER("street_nam") = 'CARLOS VILLATE';
+--UPDATE base.calles SET r_f_add = 4001, r_t_add = 4099, l_f_add = 4002, l_t_add = 4100 WHERE objectid = 3801 AND UPPER("street_nam") = 'CARLOS VILLATE';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2249, l_f_add = 2202, l_t_add = 2250 WHERE objectid = 3783 AND UPPER("street_nam") = 'JUJUY';
+--UPDATE base.calles SET r_f_add = 2251, r_t_add = 2299, l_f_add = 2252, l_t_add = 2300 WHERE objectid = 2764 AND UPPER("street_nam") = 'JUJUY';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 2756 AND UPPER("street_nam") = 'JUJUY';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2249, l_f_add = 2202, l_t_add = 2250 WHERE objectid = 3252 AND UPPER("street_nam") = 'JULIAN S AGUERO';
+--UPDATE base.calles SET r_f_add = 2251, r_t_add = 2299, l_f_add = 2252, l_t_add = 2300 WHERE objectid = 2768 AND UPPER("street_nam") = 'JULIAN S AGUERO';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 2762 AND UPPER("street_nam") = 'JULIAN S AGUERO';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2249, l_f_add = 2202, l_t_add = 2250 WHERE objectid = 3252 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 2251, r_t_add = 2269, l_f_add = 2252, l_t_add = 2270 WHERE objectid = 3248 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 2271, r_t_add = 2299, l_f_add = 2272, l_t_add = 2300 WHERE objectid = 3246 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2349, l_f_add = 2302, l_t_add = 2350 WHERE objectid = 3805 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 2351, r_t_add = 2399, l_f_add = 2352, l_t_add = 2400 WHERE objectid = 2758 AND UPPER("street_nam") = 'AMARO AVALOS';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2249, l_f_add = 2202, l_t_add = 2250 WHERE objectid = 3647 AND UPPER("street_nam") = 'ESTANISLAO DEL CAMPO';
+--UPDATE base.calles SET r_f_add = 2251, r_t_add = 2299, l_f_add = 2252, l_t_add = 2300 WHERE objectid = 3807 AND UPPER("street_nam") = 'ESTANISLAO DEL CAMPO';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 3809 AND UPPER("street_nam") = 'ESTANISLAO DEL CAMPO';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2249, l_f_add = 2202, l_t_add = 2250 WHERE objectid = 3473 AND UPPER("street_nam") = 'IGNACIO WARNES';
+--UPDATE base.calles SET r_f_add = 2251, r_t_add = 2299, l_f_add = 2252, l_t_add = 2300 WHERE objectid = 3469 AND UPPER("street_nam") = 'IGNACIO WARNES';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 3468 AND UPPER("street_nam") = 'IGNACIO WARNES';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2249, l_f_add = 2202, l_t_add = 2250 WHERE objectid = 3478 AND UPPER("street_nam") = 'VALLE GRANDE';
+--UPDATE base.calles SET r_f_add = 2251, r_t_add = 2299, l_f_add = 2252, l_t_add = 2300 WHERE objectid = 3664 AND UPPER("street_nam") = 'VALLE GRANDE';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 3665 AND UPPER("street_nam") = 'VALLE GRANDE';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2249, l_f_add = 2202, l_t_add = 2250 WHERE objectid = 3660 AND UPPER("street_nam") = 'FRANCISCO BEIRO';
+--UPDATE base.calles SET r_f_add = 2251, r_t_add = 2299, l_f_add = 2252, l_t_add = 2300 WHERE objectid = 3520 AND UPPER("street_nam") = 'FRANCISCO BEIRO';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2389, l_f_add = 2302, l_t_add = 2390 WHERE objectid = 3513 AND UPPER("street_nam") = 'FRANCISCO BEIRO';
+--UPDATE base.calles SET r_f_add = 2391, r_t_add = 2399, l_f_add = 2392, l_t_add = 2400 WHERE objectid = 3511 AND UPPER("street_nam") = 'FRANCISCO BEIRO';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2249, l_f_add = 2202, l_t_add = 2250 WHERE objectid = 3528 AND UPPER("street_nam") = 'MANUEL ROSETTI';
+--UPDATE base.calles SET r_f_add = 2251, r_t_add = 2299, l_f_add = 2252, l_t_add = 2300 WHERE objectid = 3524 AND UPPER("street_nam") = 'MANUEL ROSETTI';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 3519 AND UPPER("street_nam") = 'MANUEL ROSETTI';
+--UPDATE base.calles SET r_f_add = 2901, r_t_add = 2979, l_f_add = 2902, l_t_add = 2980 WHERE objectid = 4162 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 2981, r_t_add = 2999, l_f_add = 2982, l_t_add = 3000 WHERE objectid = 3818 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3089, l_f_add = 3002, l_t_add = 3090 WHERE objectid = 3817 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 3091, r_t_add = 3099, l_f_add = 3092, l_t_add = 3100 WHERE objectid = 3816 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3169, l_f_add = 3102, l_t_add = 3170 WHERE objectid = 3815 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 3171, r_t_add = 3199, l_f_add = 3172, l_t_add = 3200 WHERE objectid = 3820 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3249, l_f_add = 3202, l_t_add = 3250 WHERE objectid = 3819 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 3251, r_t_add = 3299, l_f_add = 3252, l_t_add = 3300 WHERE objectid = 3653 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3399, l_f_add = 3302, l_t_add = 3400 WHERE objectid = 3650 AND UPPER("street_nam") = 'MARCELINO UGARTE';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2349, l_f_add = 2302, l_t_add = 2350 WHERE objectid = 3121 AND UPPER("street_nam") = 'ENTRE RIOS';
+--UPDATE base.calles SET r_f_add = 2351, r_t_add = 2399, l_f_add = 2352, l_t_add = 2400 WHERE objectid = 3130 AND UPPER("street_nam") = 'ENTRE RIOS';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2499, l_f_add = 2402, l_t_add = 2500 WHERE objectid = 3141 AND UPPER("street_nam") = 'ENTRE RIOS';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2599, l_f_add = 2502, l_t_add = 2600 WHERE objectid = 2587 AND UPPER("street_nam") = 'ENTRE RIOS';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2699, l_f_add = 2602, l_t_add = 2700 WHERE objectid = 3166 AND UPPER("street_nam") = 'ENTRE RIOS';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2799, l_f_add = 2702, l_t_add = 2800 WHERE objectid = 3178 AND UPPER("street_nam") = 'ENTRE RIOS';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2899, l_f_add = 2802, l_t_add = 2900 WHERE objectid = 4097 AND UPPER("street_nam") = 'ENTRE RIOS';
+--UPDATE base.calles SET r_f_add = 2901, r_t_add = 2999, l_f_add = 2902, l_t_add = 3000 WHERE objectid = 4099 AND UPPER("street_nam") = 'ENTRE RIOS';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3099, l_f_add = 3002, l_t_add = 3100 WHERE objectid = 3230 AND UPPER("street_nam") = 'ENTRE RIOS';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3199, l_f_add = 3102, l_t_add = 3200 WHERE objectid = 4166 AND UPPER("street_nam") = 'ENTRE RIOS';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3299, l_f_add = 3202, l_t_add = 3300 WHERE objectid = 3823 AND UPPER("street_nam") = 'ENTRE RIOS';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3399, l_f_add = 3302, l_t_add = 3400 WHERE objectid = 3628 AND UPPER("street_nam") = 'ENTRE RIOS';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2699, l_f_add = 2602, l_t_add = 2700 WHERE objectid = 3627 AND UPPER("street_nam") = 'MANUEL ROSETTI';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2749, l_f_add = 2702, l_t_add = 2750 WHERE objectid = 4177 AND UPPER("street_nam") = 'MANUEL ROSETTI';
+--UPDATE base.calles SET r_f_add = 2751, r_t_add = 2799, l_f_add = 2752, l_t_add = 2800 WHERE objectid = 3238 AND UPPER("street_nam") = 'MANUEL ROSETTI';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2699, l_f_add = 2602, l_t_add = 2700 WHERE objectid = 3822 AND UPPER("street_nam") = 'FRANCISCO UZAL';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2749, l_f_add = 2702, l_t_add = 2750 WHERE objectid = 4165 AND UPPER("street_nam") = 'FRANCISCO UZAL';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2049, l_f_add = 2002, l_t_add = 2050 WHERE objectid = 3552 AND UPPER("street_nam") = 'POTOSI';
+--UPDATE base.calles SET r_f_add = 2051, r_t_add = 2099, l_f_add = 2052, l_t_add = 2100 WHERE objectid = 2295 AND UPPER("street_nam") = 'POTOSI';
+--UPDATE base.calles SET r_f_add = 2751, r_t_add = 2799, l_f_add = 2752, l_t_add = 2800 WHERE objectid = 3222 AND UPPER("street_nam") = 'FRANCISCO UZAL';
+--UPDATE base.calles SET r_f_add = 801, r_t_add = 899, l_f_add = 802, l_t_add = 900 WHERE objectid = 3029 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 901, r_t_add = 979, l_f_add = 902, l_t_add = 980 WHERE objectid = 3033 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 981, r_t_add = 999, l_f_add = 982, l_t_add = 1000 WHERE objectid = 3035 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 1001, r_t_add = 1099, l_f_add = 1002, l_t_add = 1100 WHERE objectid = 3041 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 1101, r_t_add = 1199, l_f_add = 1102, l_t_add = 1200 WHERE objectid = 3047 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 1201, r_t_add = 1299, l_f_add = 1202, l_t_add = 1300 WHERE objectid = 4193 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 1301, r_t_add = 1399, l_f_add = 1302, l_t_add = 1400 WHERE objectid = 3063 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 1401, r_t_add = 1499, l_f_add = 1402, l_t_add = 1500 WHERE objectid = 3070 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 1501, r_t_add = 1599, l_f_add = 1502, l_t_add = 1600 WHERE objectid = 3075 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 1601, r_t_add = 1699, l_f_add = 1602, l_t_add = 1700 WHERE objectid = 2895 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 1701, r_t_add = 1799, l_f_add = 1702, l_t_add = 1800 WHERE objectid = 2896 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 1801, r_t_add = 1899, l_f_add = 1802, l_t_add = 1900 WHERE objectid = 2450 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 1901, r_t_add = 1999, l_f_add = 1902, l_t_add = 2000 WHERE objectid = 2453 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2099, l_f_add = 2002, l_t_add = 2100 WHERE objectid = 2456 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2199, l_f_add = 2102, l_t_add = 2200 WHERE objectid = 2268 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 2272 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2349, l_f_add = 2302, l_t_add = 2350 WHERE objectid = 3099 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 2351, r_t_add = 2399, l_f_add = 2352, l_t_add = 2400 WHERE objectid = 3102 AND UPPER("street_nam") = 'RICARDO GUTIERREZ';
+--UPDATE base.calles SET r_f_add = 801, r_t_add = 899, l_f_add = 802, l_t_add = 900 WHERE objectid = 3019 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 901, r_t_add = 999, l_f_add = 902, l_t_add = 1000 WHERE objectid = 3026 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 1001, r_t_add = 1099, l_f_add = 1002, l_t_add = 1100 WHERE objectid = 3031 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 1101, r_t_add = 1199, l_f_add = 1102, l_t_add = 1200 WHERE objectid = 4094 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 1201, r_t_add = 1299, l_f_add = 1202, l_t_add = 1300 WHERE objectid = 4095 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 1301, r_t_add = 1399, l_f_add = 1302, l_t_add = 1400 WHERE objectid = 3049 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 1401, r_t_add = 1499, l_f_add = 1402, l_t_add = 1500 WHERE objectid = 3056 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 1501, r_t_add = 1599, l_f_add = 1502, l_t_add = 1600 WHERE objectid = 3067 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 1601, r_t_add = 1699, l_f_add = 1602, l_t_add = 1700 WHERE objectid = 3879 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 1701, r_t_add = 1799, l_f_add = 1702, l_t_add = 1800 WHERE objectid = 2846 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 1801, r_t_add = 1899, l_f_add = 1802, l_t_add = 1900 WHERE objectid = 2849 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 1901, r_t_add = 1999, l_f_add = 1902, l_t_add = 2000 WHERE objectid = 2894 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2099, l_f_add = 2002, l_t_add = 2100 WHERE objectid = 3785 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2199, l_f_add = 2102, l_t_add = 2200 WHERE objectid = 2256 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 2260 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2319, l_f_add = 2302, l_t_add = 2320 WHERE objectid = 2262 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 2321, r_t_add = 2349, l_f_add = 2322, l_t_add = 2350 WHERE objectid = 2264 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 2351, r_t_add = 2399, l_f_add = 2352, l_t_add = 2400 WHERE objectid = 4111 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 651, r_t_add = 699, l_f_add = 652, l_t_add = 700 WHERE objectid = 3006 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 701, r_t_add = 799, l_f_add = 702, l_t_add = 800 WHERE objectid = 4190 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 801, r_t_add = 899, l_f_add = 802, l_t_add = 900 WHERE objectid = 3008 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 901, r_t_add = 999, l_f_add = 902, l_t_add = 1000 WHERE objectid = 2661 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 1001, r_t_add = 1099, l_f_add = 1002, l_t_add = 1100 WHERE objectid = 4090 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 1101, r_t_add = 1199, l_f_add = 1102, l_t_add = 1200 WHERE objectid = 3021 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 1201, r_t_add = 1299, l_f_add = 1202, l_t_add = 1300 WHERE objectid = 3027 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 1301, r_t_add = 1399, l_f_add = 1302, l_t_add = 1400 WHERE objectid = 3032 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 1401, r_t_add = 1499, l_f_add = 1402, l_t_add = 1500 WHERE objectid = 3037 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 1501, r_t_add = 1599, l_f_add = 1502, l_t_add = 1600 WHERE objectid = 2836 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 1601, r_t_add = 1699, l_f_add = 1602, l_t_add = 1700 WHERE objectid = 2840 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 1701, r_t_add = 1799, l_f_add = 1702, l_t_add = 1800 WHERE objectid = 2842 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 1801, r_t_add = 1899, l_f_add = 1802, l_t_add = 1900 WHERE objectid = 2845 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 1901, r_t_add = 1999, l_f_add = 1902, l_t_add = 2000 WHERE objectid = 2848 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 2001, r_t_add = 2099, l_f_add = 2002, l_t_add = 2100 WHERE objectid = 3788 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2199, l_f_add = 2102, l_t_add = 2200 WHERE objectid = 3787 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 4213 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2319, l_f_add = 2302, l_t_add = 2320 WHERE objectid = 4214 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 2321, r_t_add = 2349, l_f_add = 2322, l_t_add = 2350 WHERE objectid = 3098 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 2351, r_t_add = 2399, l_f_add = 2352, l_t_add = 2400 WHERE objectid = 4086 AND UPPER("street_nam") = 'ROQUE SAENZ PENA';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2249, l_f_add = 2202, l_t_add = 2250 WHERE objectid = 2083 AND UPPER("street_nam") = 'JUAN DE GARAY';
+--UPDATE base.calles SET r_f_add = 2251, r_t_add = 2299, l_f_add = 2252, l_t_add = 2300 WHERE objectid = 2858 AND UPPER("street_nam") = 'JUAN DE GARAY';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 3876 AND UPPER("street_nam") = 'JUAN DE GARAY';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2499, l_f_add = 2402, l_t_add = 2500 WHERE objectid = 3875 AND UPPER("street_nam") = 'JUAN DE GARAY';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2599, l_f_add = 2502, l_t_add = 2600 WHERE objectid = 3873 AND UPPER("street_nam") = 'JUAN DE GARAY';
+--UPDATE base.calles SET r_f_add = 2601, r_t_add = 2699, l_f_add = 2602, l_t_add = 2700 WHERE objectid = 3878 AND UPPER("street_nam") = 'JUAN DE GARAY';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2799, l_f_add = 2702, l_t_add = 2800 WHERE objectid = 3880 AND UPPER("street_nam") = 'JUAN DE GARAY';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2949, l_f_add = 2802, l_t_add = 2950 WHERE objectid = 2837 AND UPPER("street_nam") = 'JUAN DE GARAY';
+--UPDATE base.calles SET r_f_add = 2951, r_t_add = 3099, l_f_add = 2952, l_t_add = 3100 WHERE objectid = 2832 AND UPPER("street_nam") = 'JUAN DE GARAY';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3049, l_f_add = 3002, l_t_add = 3050 WHERE objectid = 4839 AND UPPER("street_nam") = 'SALVADOR DEBENEDETTI';
+--UPDATE base.calles SET r_f_add = 3051, r_t_add = 3099, l_f_add = 3052, l_t_add = 3100 WHERE objectid = 4863 AND UPPER("street_nam") = 'SALVADOR DEBENEDETTI';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3149, l_f_add = 3102, l_t_add = 3150 WHERE objectid = 4892 AND UPPER("street_nam") = 'SALVADOR DEBENEDETTI';
+--UPDATE base.calles SET r_f_add = 3151, r_t_add = 3199, l_f_add = 3152, l_t_add = 3200 WHERE objectid = 6245 AND UPPER("street_nam") = 'SALVADOR DEBENEDETTI';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3299, l_f_add = 3202, l_t_add = 3300 WHERE objectid = 6244 AND UPPER("street_nam") = 'SALVADOR DEBENEDETTI';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3399, l_f_add = 3302, l_t_add = 3400 WHERE objectid = 4959 AND UPPER("street_nam") = 'SALVADOR DEBENEDETTI';
+--UPDATE base.calles SET r_f_add = 4001, r_t_add = 4049, l_f_add = 4002, l_t_add = 4050 WHERE objectid = 4349 AND UPPER("street_nam") = 'JOSE M DE ESTRADA';
+--UPDATE base.calles SET r_f_add = 4051, r_t_add = 4099, l_f_add = 4052, l_t_add = 4100 WHERE objectid = 4329 AND UPPER("street_nam") = 'JOSE M DE ESTRADA';
+--UPDATE base.calles SET r_f_add = 4001, r_t_add = 4049, l_f_add = 4002, l_t_add = 4050 WHERE objectid = 4333 AND UPPER("street_nam") = 'SALTA';
+--UPDATE base.calles SET r_f_add = 4051, r_t_add = 4099, l_f_add = 4052, l_t_add = 4100 WHERE objectid = 4318 AND UPPER("street_nam") = 'SALTA';
+--UPDATE base.calles SET r_f_add = 4001, r_t_add = 4049, l_f_add = 4002, l_t_add = 4050 WHERE objectid = 4322 AND UPPER("street_nam") = 'HERNAN WINEBERG';
+--UPDATE base.calles SET r_f_add = 4051, r_t_add = 4099, l_f_add = 4052, l_t_add = 4100 WHERE objectid = 4307 AND UPPER("street_nam") = 'HERNAN WINEBERG';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2499, l_f_add = 2402, l_t_add = 2500 WHERE objectid = 2360 AND UPPER("street_nam") = 'DEL LIBERTADOR';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2649, l_f_add = 2502, l_t_add = 2650 WHERE objectid = 2065 AND UPPER("street_nam") = 'DEL LIBERTADOR';
+--UPDATE base.calles SET r_f_add = 2651, r_t_add = 2699, l_f_add = 2652, l_t_add = 2700 WHERE objectid = 2063 AND UPPER("street_nam") = 'DEL LIBERTADOR';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2849, l_f_add = 2702, l_t_add = 2850 WHERE objectid = 2058 AND UPPER("street_nam") = 'DEL LIBERTADOR';
+--UPDATE base.calles SET r_f_add = 2851, r_t_add = 2899, l_f_add = 2852, l_t_add = 2900 WHERE objectid = 2053 AND UPPER("street_nam") = 'DEL LIBERTADOR';
+--UPDATE base.calles SET r_f_add = 2901, r_t_add = 2949, l_f_add = 2902, l_t_add = 2950 WHERE objectid = 3003 AND UPPER("street_nam") = 'DEL LIBERTADOR';
+--UPDATE base.calles SET r_f_add = 2951, r_t_add = 2999, l_f_add = 2952, l_t_add = 3000 WHERE objectid = 3002 AND UPPER("street_nam") = 'DEL LIBERTADOR';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3099, l_f_add = 3002, l_t_add = 3100 WHERE objectid = 4507 AND UPPER("street_nam") = 'DEL LIBERTADOR';
+--UPDATE base.calles SET r_f_add = 501, r_t_add = 549, l_f_add = 502, l_t_add = 550 WHERE objectid = 2060 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 551, r_t_add = 599, l_f_add = 552, l_t_add = 600 WHERE objectid = 2594 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 401, r_t_add = 499, l_f_add = 402, l_t_add = 500 WHERE objectid = 3898 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 251, r_t_add = 399, l_f_add = 252, l_t_add = 400 WHERE objectid = 3900 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 201, r_t_add = 249, l_f_add = 202, l_t_add = 250 WHERE objectid = 2054 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 199, l_f_add = 102, l_t_add = 200 WHERE objectid = 2073 AND UPPER("street_nam") = 'JUAN B ALBERDI';
+--UPDATE base.calles SET r_f_add = 301, r_t_add = 349, l_f_add = 302, l_t_add = 350 WHERE objectid = 2358 AND UPPER("street_nam") = 'CORRIENTES';
+--UPDATE base.calles SET r_f_add = 351, r_t_add = 399, l_f_add = 352, l_t_add = 400 WHERE objectid = 2375 AND UPPER("street_nam") = 'CORRIENTES';
+--UPDATE base.calles SET r_f_add = 201, r_t_add = 299, l_f_add = 202, l_t_add = 300 WHERE objectid = 2357 AND UPPER("street_nam") = 'CORRIENTES';
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 199, l_f_add = 102, l_t_add = 200 WHERE objectid = 2355 AND UPPER("street_nam") = 'CORRIENTES';
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 299, l_f_add = 102, l_t_add = 300 WHERE objectid = 4499 AND UPPER("street_nam") = 'ROMA';
+--UPDATE base.calles SET r_f_add = 401, r_t_add = 449, l_f_add = 402, l_t_add = 450 WHERE objectid = 4505 AND UPPER("street_nam") = 'ROMA';
+--UPDATE base.calles SET r_f_add = 451, r_t_add = 499, l_f_add = 452, l_t_add = 500 WHERE objectid = 4504 AND UPPER("street_nam") = 'ROMA';
+--UPDATE base.calles SET r_f_add = 501, r_t_add = 549, l_f_add = 502, l_t_add = 550 WHERE objectid = 4513 AND UPPER("street_nam") = 'ROMA';
+--UPDATE base.calles SET r_f_add = 551, r_t_add = 599, l_f_add = 552, l_t_add = 600 WHERE objectid = 4556 AND UPPER("street_nam") = 'ROMA';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2149, l_f_add = 2102, l_t_add = 2150 WHERE objectid = 989 AND UPPER("street_nam") = 'JUAN ZUFRIATEGUI';
+--UPDATE base.calles SET r_f_add = 2151, r_t_add = 2199, l_f_add = 2152, l_t_add = 2200 WHERE objectid = 1010 AND UPPER("street_nam") = 'JUAN ZUFRIATEGUI';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2249, l_f_add = 2202, l_t_add = 2250 WHERE objectid = 1052 AND UPPER("street_nam") = 'JUAN ZUFRIATEGUI';
+--UPDATE base.calles SET r_f_add = 2251, r_t_add = 2299, l_f_add = 2252, l_t_add = 2300 WHERE objectid = 1073 AND UPPER("street_nam") = 'JUAN ZUFRIATEGUI';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 1109 AND UPPER("street_nam") = 'JUAN ZUFRIATEGUI';
+--UPDATE base.calles SET r_f_add = 1301, r_t_add = 1499, l_f_add = 1302, l_t_add = 1500 WHERE objectid = 4575 AND UPPER("street_nam") = 'JUSTO G DE BERMUDEZ';
+--UPDATE base.calles SET r_f_add = 2101, r_t_add = 2149, l_f_add = 2102, l_t_add = 2150 WHERE objectid = 1115 AND UPPER("street_nam") = 'PRIMERA JUNTA';
+--UPDATE base.calles SET r_f_add = 2151, r_t_add = 2199, l_f_add = 2152, l_t_add = 2200 WHERE objectid = 1113 AND UPPER("street_nam") = 'PRIMERA JUNTA';
+--UPDATE base.calles SET r_f_add = 2201, r_t_add = 2299, l_f_add = 2202, l_t_add = 2300 WHERE objectid = 1078 AND UPPER("street_nam") = 'PRIMERA JUNTA';
+--UPDATE base.calles SET r_f_add = 2301, r_t_add = 2399, l_f_add = 2302, l_t_add = 2400 WHERE objectid = 1017 AND UPPER("street_nam") = 'PRIMERA JUNTA';
+--UPDATE base.calles SET r_f_add = 2401, r_t_add = 2499, l_f_add = 2402, l_t_add = 2500 WHERE objectid = 965 AND UPPER("street_nam") = 'PRIMERA JUNTA';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2599, l_f_add = 2502, l_t_add = 2600 WHERE objectid = 900 AND UPPER("street_nam") = 'PRIMERA JUNTA';
+--UPDATE base.calles SET r_f_add = 2501, r_t_add = 2699, l_f_add = 2502, l_t_add = 2700 WHERE objectid = 900 AND UPPER("street_nam") = 'PRIMERA JUNTA';
+--UPDATE base.calles SET r_f_add = 3651, r_t_add = 3799, l_f_add = 3652, l_t_add = 3800 WHERE objectid = 5331 AND UPPER("street_nam") = 'BARTOLOME MITRE';
+--UPDATE base.calles SET r_f_add = 3801, r_t_add = 3849, l_f_add = 3802, l_t_add = 3850 WHERE objectid = 5308 AND UPPER("street_nam") = 'BARTOLOME MITRE';
+--UPDATE base.calles SET r_f_add = 3851, r_t_add = 3899, l_f_add = 3852, l_t_add = 3900 WHERE objectid = 5269 AND UPPER("street_nam") = 'BARTOLOME MITRE';
+--UPDATE base.calles SET r_f_add = 4501, r_t_add = 4549, l_f_add = 4502, l_t_add = 4550 WHERE objectid = 5269 AND UPPER("street_nam") = 'JUSTO G DE BERMUDEZ';
+--UPDATE base.calles SET r_f_add = 4551, r_t_add = 4599, l_f_add = 4552, l_t_add = 4600 WHERE objectid = 5266 AND UPPER("street_nam") = 'JUSTO G DE BERMUDEZ';
+--UPDATE base.calles SET r_f_add = 4601, r_t_add = 4699, l_f_add = 4602, l_t_add = 4700 WHERE objectid = 5309 AND UPPER("street_nam") = 'JUSTO G DE BERMUDEZ';
+--UPDATE base.calles SET r_f_add = 3001, r_t_add = 3049, l_f_add = 3002, l_t_add = 3050 WHERE objectid = 3196 AND UPPER("street_nam") = 'ESTEBAN ECHEVERRIA';
+--UPDATE base.calles SET r_f_add = 3051, r_t_add = 3099, l_f_add = 3052, l_t_add = 3100 WHERE objectid = 3173 AND UPPER("street_nam") = 'ESTEBAN ECHEVERRIA';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3149, l_f_add = 3102, l_t_add = 3150 WHERE objectid = 5373 AND UPPER("street_nam") = 'ESTEBAN ECHEVERRIA';
+--UPDATE base.calles SET r_f_add = 3151, r_t_add = 3199, l_f_add = 3152, l_t_add = 3200 WHERE objectid = 5351 AND UPPER("street_nam") = 'ESTEBAN ECHEVERRIA';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3299, l_f_add = 3202, l_t_add = 3300 WHERE objectid = 5328 AND UPPER("street_nam") = 'ESTEBAN ECHEVERRIA';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3399, l_f_add = 3302, l_t_add = 3400 WHERE objectid = 5314 AND UPPER("street_nam") = 'ESTEBAN ECHEVERRIA';
+--UPDATE base.calles SET r_f_add = 3401, r_t_add = 3449, l_f_add = 3402, l_t_add = 3450 WHERE objectid = 5280 AND UPPER("street_nam") = 'ESTEBAN ECHEVERRIA';
+--UPDATE base.calles SET r_f_add = 3451, r_t_add = 3499, l_f_add = 3452, l_t_add = 3500 WHERE objectid = 5241 AND UPPER("street_nam") = 'ESTEBAN ECHEVERRIA';
+--UPDATE base.calles SET r_f_add = 3501, r_t_add = 3699, l_f_add = 3502, l_t_add = 3700 WHERE objectid = 5221 AND UPPER("street_nam") = 'ESTEBAN ECHEVERRIA';
+--UPDATE base.calles SET r_f_add = 3101, r_t_add = 3199, l_f_add = 3102, l_t_add = 3200 WHERE objectid = 5664 AND UPPER("street_nam") = 'MANUEL BELGRANO';
+--UPDATE base.calles SET r_f_add = 3201, r_t_add = 3249, l_f_add = 3202, l_t_add = 3250 WHERE objectid = 5621 AND UPPER("street_nam") = 'MANUEL BELGRANO';
+--UPDATE base.calles SET r_f_add = 3251, r_t_add = 3299, l_f_add = 3252, l_t_add = 3300 WHERE objectid = 5582 AND UPPER("street_nam") = 'MANUEL BELGRANO';
+--UPDATE base.calles SET r_f_add = 3301, r_t_add = 3219, l_f_add = 3302, l_t_add = 3320 WHERE objectid = 5550 AND UPPER("street_nam") = 'MANUEL BELGRANO';
+--UPDATE base.calles SET r_f_add = 3321, r_t_add = 3399, l_f_add = 3322, l_t_add = 3400 WHERE objectid = 5551 AND UPPER("street_nam") = 'MANUEL BELGRANO';
+--UPDATE base.calles SET r_f_add = 3401, r_t_add = 3449, l_f_add = 3402, l_t_add = 3450 WHERE objectid = 5528 AND UPPER("street_nam") = 'MANUEL BELGRANO';
+--UPDATE base.calles SET r_f_add = 3451, r_t_add = 3499, l_f_add = 3452, l_t_add = 3500 WHERE objectid = 5514 AND UPPER("street_nam") = 'MANUEL BELGRANO';
+--UPDATE base.calles SET r_f_add = 4701, r_t_add = 4799, l_f_add = 4702, l_t_add = 4800 WHERE objectid = 5132 AND UPPER("street_nam") = 'MARIANO MORENO';
+--UPDATE base.calles SET r_f_add = 6701, r_t_add = 6749, l_f_add = 6702, l_t_add = 6750 WHERE objectid = 5978 AND UPPER("street_nam") = 'SANTIAGO DEL ESTERO';
+--UPDATE base.calles SET r_f_add = 6751, r_t_add = 6799, l_f_add = 6752, l_t_add = 6800 WHERE objectid = 6019 AND UPPER("street_nam") = 'SANTIAGO DEL ESTERO';
+--UPDATE base.calles SET r_f_add = 6801, r_t_add = 6899, l_f_add = 6802, l_t_add = 6900 WHERE objectid = 6046 AND UPPER("street_nam") = 'SANTIAGO DEL ESTERO';
+--UPDATE base.calles SET r_f_add = 6701, r_t_add = 6749, l_f_add = 6702, l_t_add = 6750 WHERE objectid = 5923 AND UPPER("street_nam") = 'SANTA FE';
+--UPDATE base.calles SET r_f_add = 6751, r_t_add = 6799, l_f_add = 6752, l_t_add = 6800 WHERE objectid = 5956 AND UPPER("street_nam") = 'SANTA FE';
+--UPDATE base.calles SET r_f_add = 6801, r_t_add = 6899, l_f_add = 6802, l_t_add = 6900 WHERE objectid = 5986 AND UPPER("street_nam") = 'SANTA FE';
+--UPDATE base.calles SET r_f_add = 6701, r_t_add = 6749, l_f_add = 6702, l_t_add = 6750 WHERE objectid = 6030 AND UPPER("street_nam") = 'RAFAEL OBLIGADO';
+--UPDATE base.calles SET r_f_add = 6751, r_t_add = 6799, l_f_add = 6752, l_t_add = 6800 WHERE objectid = 6057 AND UPPER("street_nam") = 'RAFAEL OBLIGADO';
+--UPDATE base.calles SET r_f_add = 6801, r_t_add = 6899, l_f_add = 6802, l_t_add = 6900 WHERE objectid = 6066 AND UPPER("street_nam") = 'RAFAEL OBLIGADO';
+--UPDATE base.calles SET r_f_add = 6701, r_t_add = 6749, l_f_add = 6702, l_t_add = 6750 WHERE objectid = 6109 AND UPPER("street_nam") = 'DOMINGO DE ACASSUSO';
+--UPDATE base.calles SET r_f_add = 6751, r_t_add = 6799, l_f_add = 6752, l_t_add = 6800 WHERE objectid = 6133 AND UPPER("street_nam") = 'DOMINGO DE ACASSUSO';
+--UPDATE base.calles SET r_f_add = 6801, r_t_add = 6899, l_f_add = 6802, l_t_add = 6900 WHERE objectid = 6160 AND UPPER("street_nam") = 'DOMINGO DE ACASSUSO';
+--UPDATE base.calles SET r_f_add = 6151, r_t_add = 6169, l_f_add = 6152, l_t_add = 6170 WHERE objectid = 511 AND UPPER("street_nam") = 'DALMACIO VELEZ SARSFIELD';
+--UPDATE base.calles SET r_f_add = 6171, r_t_add = 6199, l_f_add = 6172, l_t_add = 6200 WHERE objectid = 510 AND UPPER("street_nam") = 'DALMACIO VELEZ SARSFIELD';
+--UPDATE base.calles SET r_f_add = 6201, r_t_add = 6219, l_f_add = 6202, l_t_add = 6220 WHERE objectid = 562 AND UPPER("street_nam") = 'DALMACIO VELEZ SARSFIELD';
+--UPDATE base.calles SET r_f_add = 6221, r_t_add = 6249, l_f_add = 6222, l_t_add = 6250 WHERE objectid = 561 AND UPPER("street_nam") = 'DALMACIO VELEZ SARSFIELD';
+--UPDATE base.calles SET r_f_add = 6251, r_t_add = 6299, l_f_add = 6252, l_t_add = 6300 WHERE objectid = 611 AND UPPER("street_nam") = 'DALMACIO VELEZ SARSFIELD';
+--UPDATE base.calles SET r_f_add = 6301, r_t_add = 6349, l_f_add = 6302, l_t_add = 6350 WHERE objectid = 610 AND UPPER("street_nam") = 'DALMACIO VELEZ SARSFIELD';
+--UPDATE base.calles SET r_f_add = 6351, r_t_add = 6369, l_f_add = 6352, l_t_add = 6370 WHERE objectid = 654 AND UPPER("street_nam") = 'DALMACIO VELEZ SARSFIELD';
+--UPDATE base.calles SET r_f_add = 6371, r_t_add = 6399, l_f_add = 6372, l_t_add = 6400 WHERE objectid = 698 AND UPPER("street_nam") = 'DALMACIO VELEZ SARSFIELD';
+
+--UPDATE base.calles SET r_f_add = 5401, r_t_add = 5549, l_f_add = 5402, l_t_add = 5550 WHERE objectid = 5302 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5551, r_t_add = 5579, l_f_add = 5552, l_t_add = 5580 WHERE objectid = 5343 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5581, r_t_add = 5599, l_f_add = 5582, l_t_add = 5600 WHERE objectid = 6331 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5601, r_t_add = 5649, l_f_add = 5602, l_t_add = 5650 WHERE objectid = 6332 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5651, r_t_add = 5699, l_f_add = 5652, l_t_add = 5700 WHERE objectid = 5405 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5701, r_t_add = 5799, l_f_add = 5702, l_t_add = 5800 WHERE objectid = 6335 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5801, r_t_add = 5899, l_f_add = 5802, l_t_add = 5900 WHERE objectid = 6334 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5801, r_t_add = 5899, l_f_add = 5802, l_t_add = 5900 WHERE objectid = 6334 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 5901, r_t_add = 5999, l_f_add = 5902, l_t_add = 6000 WHERE objectid = 6338 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 6301, r_t_add = 6349, l_f_add = 6302, l_t_add = 6350 WHERE objectid = 6340 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 6351, r_t_add = 6399, l_f_add = 6352, l_t_add = 6400 WHERE objectid = 5653 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 6401, r_t_add = 6499, l_f_add = 6402, l_t_add = 6500 WHERE objectid = 5714 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 6501, r_t_add = 6599, l_f_add = 6502, l_t_add = 6600 WHERE objectid = 5773 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 6601, r_t_add = 6649, l_f_add = 6602, l_t_add = 6650 WHERE objectid = 5818 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 6651, r_t_add = 6699, l_f_add = 6652, l_t_add = 6700 WHERE objectid = 5853 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 6701, r_t_add = 6749, l_f_add = 6702, l_t_add = 6750 WHERE objectid = 5886 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 6751, r_t_add = 6799, l_f_add = 6752, l_t_add = 6800 WHERE objectid = 5907 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 6801, r_t_add = 6899, l_f_add = 6802, l_t_add = 6900 WHERE objectid = 5934 AND UPPER("street_nam") = 'PARANA';
+--UPDATE base.calles SET r_f_add = 3801, r_t_add = 3849, l_f_add = 3802, l_t_add = 3850 WHERE objectid = 5311 AND UPPER("street_nam") = 'MANUEL BELGRANO';
+--UPDATE base.calles SET r_f_add = 3851, r_t_add = 3899, l_f_add = 3852, l_t_add = 3900 WHERE objectid = 5361 AND UPPER("street_nam") = 'MANUEL BELGRANO';
+--UPDATE base.calles SET r_f_add = 3901, r_t_add = 3999, l_f_add = 3902, l_t_add = 4000 WHERE objectid = 5337 AND UPPER("street_nam") = 'MANUEL BELGRANO';
+--UPDATE base.calles SET r_f_add = 3801, r_t_add = 3849, l_f_add = 3802, l_t_add = 3850 WHERE objectid = 5335 AND UPPER("street_nam") = 'MARIANO ACHA';
+--UPDATE base.calles SET r_f_add = 3851, r_t_add = 3899, l_f_add = 3852, l_t_add = 3900 WHERE objectid = 5311 AND UPPER("street_nam") = 'MARIANO ACHA';
+--UPDATE base.calles SET r_f_add = 3901, r_t_add = 3999, l_f_add = 3902, l_t_add = 4000 WHERE objectid = 5283 AND UPPER("street_nam") = 'MARIANO ACHA';
+--UPDATE base.calles SET street_nam = 'Juan J Pringles' WHERE street_nam = 'Juan P Pringles';
+--UPDATE base.calles SET street_nam = 'Francisco Beiro' WHERE objectid = 1949;
+--UPDATE base.calles SET r_f_add = 201, r_t_add = 249, l_f_add = 202, l_t_add = 250 WHERE objectid = 1154 AND UPPER("street_nam") = 'FRANCISCO BEIRO';
+--UPDATE base.calles SET r_f_add = 251, r_t_add = 299, l_f_add = 252, l_t_add = 300 WHERE objectid = 1142 AND UPPER("street_nam") = 'FRANCISCO BEIRO';
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 199, l_f_add = 102, l_t_add = 200 WHERE objectid = 1143 AND UPPER("street_nam") = 'VALLE GRANDE';
+--UPDATE base.calles SET r_f_add = 201, r_t_add = 249, l_f_add = 202, l_t_add = 250 WHERE objectid = 1144 AND UPPER("street_nam") = 'VALLE GRANDE';
+--UPDATE base.calles SET r_f_add = 251, r_t_add = 299, l_f_add = 252, l_t_add = 300 WHERE objectid = 1094 AND UPPER("street_nam") = 'VALLE GRANDE';
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 199, l_f_add = 102, l_t_add = 200 WHERE objectid = 1082 AND UPPER("street_nam") = 'IGNACIO WARNES';
+--UPDATE base.calles SET r_f_add = 201, r_t_add = 249, l_f_add = 202, l_t_add = 250 WHERE objectid = 1083 AND UPPER("street_nam") = 'IGNACIO WARNES';
+--UPDATE base.calles SET r_f_add = 251, r_t_add = 299, l_f_add = 252, l_t_add = 300 WHERE objectid = 1024 AND UPPER("street_nam") = 'IGNACIO WARNES';
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 199, l_f_add = 102, l_t_add = 200 WHERE objectid = 1019 AND UPPER("street_nam") = $X$BERNARDO O'HIGGINS$X$;
+--UPDATE base.calles SET r_f_add = 201, r_t_add = 249, l_f_add = 202, l_t_add = 250 WHERE objectid = 1020 AND UPPER("street_nam") = $X$BERNARDO O'HIGGINS$X$;
+--UPDATE base.calles SET r_f_add = 251, r_t_add = 299, l_f_add = 252, l_t_add = 300 WHERE objectid = 971 AND UPPER("street_nam") = $X$BERNARDO O'HIGGINS$X$;
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 199, l_f_add = 102, l_t_add = 200 WHERE objectid = 1957 AND UPPER("street_nam") = 'JUSTO SARMIENTO';
+--UPDATE base.calles SET r_f_add = 201, r_t_add = 249, l_f_add = 202, l_t_add = 250 WHERE objectid = 966 AND UPPER("street_nam") = 'JUSTO SARMIENTO';
+--UPDATE base.calles SET r_f_add = 251, r_t_add = 299, l_f_add = 252, l_t_add = 300 WHERE objectid = 922 AND UPPER("street_nam") = 'JUSTO SARMIENTO';
+--UPDATE base.calles SET r_f_add = 101, r_t_add = 199, l_f_add = 102, l_t_add = 200 WHERE objectid = 915 AND UPPER("street_nam") = 'JUAN B JUSTO';
+--UPDATE base.calles SET r_f_add = 201, r_t_add = 249, l_f_add = 202, l_t_add = 250 WHERE objectid = 916 AND UPPER("street_nam") = 'JUAN B JUSTO';
+--UPDATE base.calles SET r_f_add = 251, r_t_add = 299, l_f_add = 252, l_t_add = 300 WHERE objectid = 869 AND UPPER("street_nam") = 'JUAN B JUSTO';
+--UPDATE base.calles SET r_f_add = 4051, r_t_add = 4099, l_f_add = 4052, l_t_add = 4100 WHERE objectid = 4271 AND UPPER("street_nam") = 'ADA ELFLEIN';
+--UPDATE base.calles SET r_f_add = 4001, r_t_add = 4049, l_f_add = 4002, l_t_add = 4050 WHERE objectid = 4285 AND UPPER("street_nam") = 'ADA ELFLEIN';
+--UPDATE base.calles SET "street_nam" = 'Juan Carlos Cruz' WHERE UPPER("street_nam") = 'BARTOLOME CRUZ';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2749, l_f_add = 2702, l_t_add = 2750 WHERE objectid = 765 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 2751, r_t_add = 2799, l_f_add = 2752, l_t_add = 2800 WHERE objectid = 818 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2899, l_f_add = 2802, l_t_add = 2900 WHERE objectid = 899 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 2901, r_t_add = 2949, l_f_add = 2902, l_t_add = 2950 WHERE objectid = 897 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 2951, r_t_add = 2999, l_f_add = 2952, l_t_add = 3000 WHERE objectid = 1105 AND UPPER("street_nam") = 'JUAN LAVALLE';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2749, l_f_add = 2702, l_t_add = 2750 WHERE objectid = 921 AND UPPER("street_nam") = 'AGUSTIN ALVAREZ';
+--UPDATE base.calles SET r_f_add = 2751, r_t_add = 2799, l_f_add = 2752, l_t_add = 2800 WHERE objectid = 943 AND UPPER("street_nam") = 'AGUSTIN ALVAREZ';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2899, l_f_add = 2802, l_t_add = 2900 WHERE objectid = 977 AND UPPER("street_nam") = 'AGUSTIN ALVAREZ';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2749, l_f_add = 2702, l_t_add = 2750 WHERE objectid = 1006 AND UPPER("street_nam") = 'ADOLFO ALSINA';
+--UPDATE base.calles SET r_f_add = 2751, r_t_add = 2799, l_f_add = 2752, l_t_add = 2800 WHERE objectid = 1039 AND UPPER("street_nam") = 'ADOLFO ALSINA';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2899, l_f_add = 2802, l_t_add = 2900 WHERE objectid = 1040 AND UPPER("street_nam") = 'ADOLFO ALSINA';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2849, l_f_add = 2802, l_t_add = 2850 WHERE objectid = 1170 AND UPPER("street_nam") = 'ARISTOBULO DEL VALLE';
+--UPDATE base.calles SET r_f_add = 2851, r_t_add = 2899, l_f_add = 2852, l_t_add = 2900 WHERE objectid = 1171 AND UPPER("street_nam") = 'ARISTOBULO DEL VALLE';
+--UPDATE base.calles SET r_f_add = 2701, r_t_add = 2749, l_f_add = 2702, l_t_add = 2750 WHERE objectid = 1259 AND UPPER("street_nam") = 'JUAN ZUFRIATEGUI';
+--UPDATE base.calles SET r_f_add = 2751, r_t_add = 2799, l_f_add = 2752, l_t_add = 2800 WHERE objectid = 1292 AND UPPER("street_nam") = 'JUAN ZUFRIATEGUI';
+--UPDATE base.calles SET r_f_add = 2801, r_t_add = 2899, l_f_add = 2802, l_t_add = 2900 WHERE objectid = 1293 AND UPPER("street_nam") = 'JUAN ZUFRIATEGUI';
+
+
+/*
+--UBICACIONES DE COLUMNAS MÚLTIPLES (MAL GEOCODIFICADAS)
+SELECT direccion, count(*), direccion_nor FROM calculos.luminarias_agosto2024
+WHERE latitud = -34.5335373116468 and longitud = -58.4907874837517
+GROUP BY direccion, direccion_nor
+ORDER BY direccion, direccion_nor
+
+SELECT direccion, count(*), direccion_nor FROM calculos.luminarias_agosto2024
+WHERE latitud = -34.5503266511382 and longitud = -58.5071245874189
+GROUP BY direccion, direccion_nor
+ORDER BY direccion, direccion_nor
+
+SELECT direccion, count(*), direccion_nor FROM calculos.luminarias_agosto2024
+WHERE latitud = -34.511334914636 and longitud = -58.4965135713524
+GROUP BY direccion, direccion_nor
+ORDER BY direccion, direccion_nor
+
+SELECT direccion, count(*), direccion_nor FROM calculos.luminarias_agosto2024
+WHERE latitud = -34.5270433523805 and longitud = -58.4738748148083
+GROUP BY direccion, direccion_nor
+ORDER BY direccion, direccion_nor
+
+SELECT direccion, count(*), direccion_nor FROM calculos.luminarias_agosto2024
+WHERE latitud = -34.511334914636 and longitud = -58.4965135713524
+GROUP BY direccion, direccion_nor
+ORDER BY direccion, direccion_nor
+
+
+*/
+
+/*
+SELECT * FROM base.calles WHERE UPPER("street_nam") = 'JOSE DE SAN MARTIN';
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE UPPER("street_nam") = 'JOSE DE SAN MARTIN';
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 568;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 5577;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2467;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2468;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2470;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2043;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2387;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2980;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2985;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2207;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2196;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2193;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2208;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2205;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2198;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 6379;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 6380;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 6381;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 6378;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 6377;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2389;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2960;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2221;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2977;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 3085;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 6376;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 4814;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 4881;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2889;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2833;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 3058;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 3072;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 3080;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 3086;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2255;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2860;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2867;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 4160;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 4161;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2783;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 3192;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 3901;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2960;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2783;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 4161;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 4160;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2867;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2860;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2255;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 3086;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 3080;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 3072;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 3058;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2833;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2889;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 4881;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 4814;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 6376;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 6377;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 6378;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 6379;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 6380;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 6381;
+
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 3085;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2977;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2221;
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 2389;
+
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 4363;
+
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 628;
+
+*/
+
+-- SENTENCIA QUE ELIMINA ESPACIOS EN BLANCO DE LAS DIRECCIONES
+--UPDATE public."DIRECCIONES" SET "CALLE" = TRIM("CALLE");
+/*
+SELECT ST_GEOMETRYTYPE(geom_32721) FROM base.calles
+GROUP BY ST_GEOMETRYTYPE(geom_32721)
+
+SELECT ST_GEOMETRYTYPE(geom) FROM base.calles;
+UPDATE base.calles SET geom = ST_LineMerge(geom);
+UPDATE base.calles SET geom_32721 = ST_LineMerge(geom_32721);
+
+
+SELECT
+id,
+id_identificador,
+direccion as direccion_ori,
+direccion_nor,
+replace(direccion_nor,(case
+when 
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '0' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '1' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '2' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '3' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '4' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '5' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '6' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '7' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '8' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '9'
+then reverse(split_part(reverse(direccion_nor),' ',1))
+end),'') as direccion,
+(case
+when 
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '0' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '1' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '2' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '3' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '4' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '5' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '6' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '7' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '8' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '9'
+then reverse(split_part(reverse(direccion_nor),' ',1))
+end) as altura 
+FROM calculos.luminarias_agosto2024;
+*/
+
+/*
+--NO SE GEOCODIFICAN DIRECCIONES ENCONTRADAS POR GEOCODING INVERSO EN OSM 
+--SE EXCLUYEN PARA REHACER GEOCODING INVERSO PERO POR CALLES DE MVL
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS geo_inverso_rev integer;
+
+UPDATE calculos.luminarias_agosto2024 as c SET
+geo_inverso_rev = 1 FROM
+(SELECT DISTINCT codigo FROM calculos.direcciones
+WHERE "Dirección" = 'NULL' and direccion_inversa is not null
+ORDER BY codigo) AS d
+WHERE c.codigo_unico = d.codigo;
+
+SELECT * FROM calculos.direcciones WHERE codigo = 'cod_11064';
+
+
+--VARIAS COLUMNAS EN UNA MISMA ALTURA
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS columnas_superpuestas integer;
+UPDATE calculos.luminarias_agosto2024 SET columnas_superpuestas = null;
+UPDATE calculos.luminarias_agosto2024 as c SET
+columnas_superpuestas = 1 FROM
+(SELECT distinct a.codigo_unico as codigo FROM 
+calculos.luminarias_agosto2024_geo as a
+RIGHT JOIN
+(SELECT direccion, altura, count(*) as cantidad FROM calculos.luminarias_agosto2024_geo
+WHERE left("descripcion",3) = 'COL' AND geom is not null
+GROUP BY direccion, altura
+HAVING count(*) > 1
+ORDER BY count(*) DESC
+) AS b
+ON a.direccion = b.direccion and a.altura = b.altura
+WHERE a.codigo_unico is not null
+ORDER BY a.codigo_unico) as d
+WHERE c.codigo_unico = d.codigo;
+*/
+
+--CREACIÓN DE CAPA DE DATOS GEOLOCALIZADOS
+drop table if exists calculos.luminarias_agosto2024_geo;
+create table calculos.luminarias_agosto2024_geo as 
+SELECT 
+--EN ESTE SEGMENTO (a) SE INDICAN LOS CAMPOS DE LA CAPA DE DIRECCIONES
+a."id",
+a."id_identificador",
+a."codigo_unico",
+a."direccion",
+a."altura",
+a."descripcion",
+--EN ESTE SEGMENTO (b) SE INDICAN LOS CAMPOS DE LA CAPA DE EJES DE VIAS (VICENTE LOPEZ)
+b."r_f_add",  
+b."r_t_add",
+b."l_f_add",
+b."l_t_add",  
+cast(b."l_t_add" as bigint)-cast(b."r_f_add" as bigint)+1 as largo_calle,
+cast(a."altura" as bigint)-cast(b."r_f_add" as bigint)+1 as interpolar, 
+geom_32721 as geom
+FROM (SELECT
+id,
+descripcion,
+codigo_unico,
+id_identificador,
+direccion as direccion_ori,
+direccion_nor,
+replace(direccion_nor,(case
+when 
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '0' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '1' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '2' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '3' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '4' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '5' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '6' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '7' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '8' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '9'
+then reverse(split_part(reverse(direccion_nor),' ',1))
+end),'') as direccion,
+(case
+when 
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '0' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '1' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '2' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '3' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '4' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '5' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '6' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '7' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '8' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '9'
+then reverse(split_part(reverse(direccion_nor),' ',1))
+end) as altura 
+FROM calculos.luminarias_agosto2024) as a
+left join (
+		  SELECT 
+			"street_nam",
+			(CASE
+			WHEN  r_f_add = 0 AND r_t_add = 0 THEN l_f_add
+			ELSE r_f_add
+			END) AS r_f_add,
+			r_t_add,
+			l_f_add,
+			(CASE
+			WHEN l_t_add = 0 AND l_f_add = 0 THEN r_t_add
+			ELSE l_t_add 
+			END) as l_t_add,
+			geom_32721
+			FROM base.calles
+			ORDER BY 
+			UPPER("street_nam"),
+			r_f_add,
+			r_t_add,
+			l_f_add,
+			l_t_add
+		  ) as b on 
+UPPER(trim(a."direccion"))=UPPER(b."street_nam") where
+(cast(a."altura" as bigint)<=cast(b."l_t_add" as bigint)  and 
+ cast(a."altura" as bigint)>=cast(b."r_f_add" as bigint)) and 
+ b.geom_32721 is not null and
+ a.direccion is not null and 
+ a."altura" not ilike '%-%' and
+ a."altura" is not null and
+ a.codigo_unico is not null
+order by a."id";
+
+--PROCESO PARA RECORTAR EJES DE CALLES EN LOS EXTREMOS (NO FUNCIONA)
+/*
+UPDATE 	calculos.luminarias_agosto2024_geo as c SET 
+geom = d.geom FROM
+		(SELECT 
+		a.id, ST_Difference(a.geom,b.geom) as geom
+		FROM 
+		calculos.luminarias_agosto2024_geo as a,
+		calculos.buffer_recorte as b) as d
+WHERE c.id = d.id;
+*/		
+
+
+--CREACIÓN DE INDICES EN CAPA DE DATOS GEOLOCALIZADOS
+CREATE INDEX luminarias_agosto2024_geo_id on calculos.luminarias_agosto2024_geo (id); 
+CREATE INDEX luminarias_agosto2024_geo_c on calculos.luminarias_agosto2024_geo ("direccion"); 
+CREATE INDEX luminarias_agosto2024_geo_geom ON calculos.luminarias_agosto2024_geo USING GIST (geom); 
+
+
+--DEFINICION DE LADO DE CALLE A GEOLOCALIZAR
+ALTER TABLE calculos.luminarias_agosto2024_geo ADD "lado" varchar; 
+
+update calculos.luminarias_agosto2024_geo set "lado" = 'I'
+where 
+right("altura"::varchar,1) = '1' or
+right("altura"::varchar,1) = '3' or
+right("altura"::varchar,1) = '5' or
+right("altura"::varchar,1) = '7' or
+right("altura"::varchar,1) = '9';
+
+update calculos.luminarias_agosto2024_geo set "lado" = 'D'
+where "lado" is null;  
+
+--AÑADIENDO CAMPO DE GEOLOCALIZACIÓN
+ALTER TABLE calculos.luminarias_agosto2024_geo ADD geom2 geometry; 
+
+
+--CALCULO DE GEOLOCALIZACIÓN MEDIANTE SENTENCIAS SQL POSTGIS
+UPDATE calculos.luminarias_agosto2024_geo AS a SET 
+geom2 = b.geom3 from (
+select 
+id_identificador,
+r_f_add,
+r_t_add,
+l_f_add,
+l_t_add,
+ST_LineInterpolatePoint
+	((
+	case
+	when lado = 'D' AND RIGHT(r_f_add::text,1) = '2' AND r_t_add = 0 then ST_LineMerge(ST_Reverse(ST_OffsetCurve(ST_LineMerge(geom), -7, 'quad_segs=4 join=round')))
+	when lado = 'I' AND RIGHT(r_f_add::text,1) = '1' AND l_f_add = 0 then ST_LineMerge(ST_OffsetCurve(ST_LineMerge(geom), -7, 'quad_segs=4 join=round'))
+	when lado = 'I' AND RIGHT(r_f_add::text,1) = '1' AND (l_f_add <> 0)  then ST_LineMerge(ST_OffsetCurve(ST_LineMerge(geom), -4, 'quad_segs=4 join=round'))
+	when lado = 'D' AND RIGHT(r_f_add::text,1) = '1' AND (l_f_add <> 0) then ST_LineMerge(ST_OffsetCurve(ST_LineMerge(geom), 4, 'quad_segs=4 join=round'))
+	end
+),(interpolar::double precision/largo_calle::double precision)) as geom3
+from calculos.luminarias_agosto2024_geo
+where 
+interpolar::double precision/largo_calle::double precision <= 1
+--and UPPER(trim("direccion")) <> 'CUBA'
+--and UPPER(trim("direccion")) <> 'TAPIALES'
+order by id) as b
+where 
+a.id_identificador = b.id_identificador and
+a.r_f_add = b.r_f_add and
+a.r_t_add = b.r_t_add and
+a.l_f_add = b.l_f_add and
+a.l_t_add = b.l_t_add;
+
+--ELIMINACION DE CAMPOS DE CAMPOS DEL PROCESO DE CALCULOS
+ALTER TABLE calculos.luminarias_agosto2024_geo DROP geom; 
+ALTER TABLE calculos.luminarias_agosto2024_geo DROP "r_f_add"; 
+ALTER TABLE calculos.luminarias_agosto2024_geo DROP "l_t_add"; 
+ALTER TABLE calculos.luminarias_agosto2024_geo DROP largo_calle; 
+ALTER TABLE calculos.luminarias_agosto2024_geo DROP interpolar; 
+ALTER TABLE calculos.luminarias_agosto2024_geo DROP lado; 
+ALTER TABLE calculos.luminarias_agosto2024_geo RENAME COLUMN geom2 to geom; 
+CREATE INDEX luminarias_agosto2024_geo_geom ON calculos.luminarias_agosto2024_geo USING GIST (geom); 
+
+
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS direccion_new character varying;
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS latitud_new double precision;
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS longitud_new double precision;
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS barrio_new character varying;
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS zona_new character varying;
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS geom_new geometry;
+
+UPDATE calculos.luminarias_agosto2024 SET 
+direccion_new = NULL,
+latitud_new = NULL,
+longitud_new = NULL,
+barrio_new = NULL,
+zona_new = NULL,
+geom_new = NULL;
+
+
+UPDATE calculos.luminarias_agosto2024 AS a SET
+direccion_new = b.direccion_new,
+latitud_new = b.latitud_new,
+longitud_new = b.longitud_new, 
+geom_new = b.geom_new FROM
+(SELECT 
+id_identificador,
+concat(direccion,' ',altura) as direccion_new, 
+st_x(st_transform(geom,4326)) as latitud_new,
+st_y(st_transform(geom,4326)) as longitud_new,
+geom as geom_new
+FROM calculos.luminarias_agosto2024_geo
+WHERE geom is not null 
+and codigo_unico not in 
+--NO SE GEOCODIFICAN DIRECCIONES ENCONTRADAS POR GEOCODING INVERSO EN OSM 
+--SE EXCLUYEN PARA REHACER GEOCODING INVERSO PERO POR CALLES DE MVL
+((SELECT DISTINCT codigo FROM calculos.direcciones
+WHERE "Dirección" = 'NULL' and direccion_inversa is not null
+ORDER BY codigo)
+UNION ALL
+--COLUMNAS DOBLES EN UNA MISMA ALTURA
+(SELECT distinct a.codigo_unico as codigo FROM 
+calculos.luminarias_agosto2024_geo as a
+RIGHT JOIN
+(SELECT direccion, altura, count(*) as cantidad FROM calculos.luminarias_agosto2024_geo
+WHERE left("descripcion",3) = 'COL' AND geom is not null
+GROUP BY direccion, altura
+HAVING count(*) > 1
+ORDER BY count(*) DESC
+) AS b
+ON a.direccion = b.direccion and a.altura = b.altura
+WHERE a.codigo_unico is not null
+ORDER BY a.codigo_unico
+)
+)
+) AS b
+WHERE a.id_identificador = b.id_identificador;
+
+
+
+UPDATE calculos.luminarias_agosto2024 AS a SET
+direccion_new = b.direccion_new,
+latitud_new = b.latitud_new,
+longitud_new = b.longitud_new, 
+geom_new = b.geom_new FROM
+(SELECT 
+id_identificador,
+concat(direccion,' ',altura) as direccion_new, 
+st_x(st_transform(geom,4326)) as latitud_new,
+st_y(st_transform(geom,4326)) as longitud_new,
+geom as geom_new
+FROM calculos.luminarias_agosto2024_geo
+WHERE geom is not null 
+) AS b
+WHERE a.id_identificador = b.id_identificador
+and a.geom_new is null 
+and 
+(b.direccion_new ilike '%JUAN B ALBERDI%' or
+b.direccion_new ilike '%BLAS PARERA%');
+
+
+--REVISION MANUAL EN QGIS PARA DETERMINAR UBICACION Y SABER SI EXISTEN CALLES DE MVL
+UPDATE calculos.luminarias_agosto2024 SET
+geom_new = ST_TRANSFORM(ST_SETSRID(ST_MAKEPOINT("longitud"::double precision,"latitud"::double precision),4326),32721)
+WHERE 
+(direccion_nor ILIKE '%arturo illia%' or
+direccion_nor ILIKE '%plaza est. a. del valle%' or
+direccion_nor ILIKE '%paseo vito dumas%' or
+direccion_nor ILIKE '%plaza de los inmigrantes%' or
+direccion_nor ILIKE '%querido' or
+direccion_nor ILIKE '%domingo de acassuso tunel%' or
+direccion_nor ILIKE '%milenio%' or
+direccion_nor ILIKE '%plazoleta uap negrete%' or
+direccion_nor ILIKE '%plaza est. villa adelina%' or
+direccion_nor ILIKE '%plazoleta white%' or
+direccion_nor ILIKE '%pasillo bertoncello%' or
+direccion_nor ILIKE '%plazoleta est. j.b. justo%' or 
+direccion_nor ILIKE '%plaza virgen de la vida%' or
+direccion_nor ILIKE '%plaza vicente lopez%' or 
+direccion_nor ILIKE '%vias tren de la costa%' or
+direccion_nor ILIKE '%plazoleta el ombu%' or
+direccion_nor ILIKE '%barrio habana%' or
+direccion_nor ILIKE '%plaza almafuerte%' or
+direccion_nor ILIKE '%plaza m.m. de guemes%' or
+direccion_nor ILIKE '%plaza palacios%' or
+direccion_nor ILIKE '%plazoleta san lorenzo%' or
+direccion_nor ILIKE '%plazoleta pearson%' or
+direccion_nor ILIKE '%cementerio olivos%' or
+direccion_nor ILIKE '%plaza valdivieso%' or
+direccion_nor ILIKE '%blas parera%' or
+direccion_nor ILIKE '%plaza itacumbu%' or
+direccion_nor ILIKE '%raul ricardo alfonsin%' or
+direccion_nor ILIKE '%vial costero raul alfonsin%' or
+direccion_nor ILIKE '%plaza canchas de basquet%' or
+direccion_nor ILIKE '%plaza juegos laprida%' or
+direccion_nor ILIKE '%parque borges%' or
+direccion_nor ILIKE '%yrigoyen boulevard%')
+and geom_new is null;
+--CALLES QUE NO TIENEN NOMBRE PERO ESTÁN BIEN GEOPOSICIONADAS
+UPDATE calculos.luminarias_agosto2024 SET
+geom_new = ST_TRANSFORM(ST_SETSRID(ST_MAKEPOINT("longitud"::double precision,"latitud"::double precision),4326),32721)
+WHERE 
+direccion_nor = 'ARISTOBULO DEL VALLE 1650' or
+direccion_nor = 'PLAZOLETA JUAN ZUFRIATEGUI Y MITRE';
+--CALLES QUE NO TIENEN EJES PERO ESTÁN BIEN GEOPOSICIONADAS
+UPDATE calculos.luminarias_agosto2024 SET
+geom_new = ST_TRANSFORM(ST_SETSRID(ST_MAKEPOINT("longitud"::double precision,"latitud"::double precision),4326),32721)
+WHERE 
+(direccion_nor = 'MANUEL ROSETTI 101' or
+direccion_nor = 'FELIX BOGADO 2051' or
+direccion_nor = 'FELIX BOGADO 2001' or
+direccion_nor = 'CHACABUCO 40' or
+direccion_nor = 'NICOLAS AVELLANEDA 149' or
+direccion_nor = 'SUIPACHA 135' or
+direccion_nor = 'ADOLFO ALSINA 4895' or
+direccion_nor = 'COSME ARGERICH 3420' or
+direccion_nor = 'JUAN M DE PUEYRREDON 6490' or
+direccion_nor = 'ECHEVERRIA 3850' or
+direccion_nor = 'ECHEVERRIA 3921' or
+direccion_nor = 'ECHEVERRIA - COLECTORA' or
+direccion_nor = 'FELICIANO CHICLANA 5477' or 
+direccion_nor = 'FELICIANO CHICLANA 5491' or
+direccion_nor = 'GUILLERMO MARCONI 6053' or
+direccion_nor = 'BARTOLOME MITRE 1823' or
+direccion_nor = 'COSME ARGERICH 3182' or
+direccion_nor = 'CARLOS F MELO 2095' or
+direccion_nor = 'JUAN ZUFRIATEGUI 587' or
+direccion_nor = 'JUAN ZUFRIATEGUI 557' or
+direccion_nor = 'JUAN ZUFRIATEGUI 617' or
+direccion_nor = 'JUAN ZUFRIATEGUI 629' or
+direccion_nor = 'JUAN ZUFRIATEGUI 665' or
+direccion_nor = 'JUAN ZUFRIATEGUI 689' or
+direccion_nor = 'GUILLERMO BROWN 3639' or
+direccion_nor = 'GUILLERMO BROWN 3748' or
+direccion_nor = 'GUILLERMO BROWN 3751' or
+direccion_nor = 'EDUARDO RAMSEYER 3812' or
+direccion_nor = 'EDUARDO RAMSEYER 3832' or
+direccion_nor = 'EDUARDO RAMSEYER 3864' or
+direccion_nor = 'EDUARDO RAMSEYER 3884' or
+direccion_nor = 'EDUARDO RAMSEYER 3904' or
+direccion_nor = 'EDUARDO RAMSEYER 3926' or
+direccion_nor = 'EDUARDO RAMSEYER 3996' or
+direccion_nor = 'EDUARDO RAMSEYER 4026' or
+direccion_nor = 'EDUARDO RAMSEYER 4046' or
+direccion_nor = 'EDUARDO RAMSEYER 4066' or
+direccion_nor = 'EDUARDO RAMSEYER 4020' or
+direccion_nor = 'EDUARDO RAMSEYER 4030' or
+direccion_nor = 'EDUARDO RAMSEYER 4092' or
+direccion_nor = 'EDUARDO RAMSEYER 4001' or
+direccion_nor = 'EDUARDO RAMSEYER 4100' or
+direccion_nor = 'EDUARDO RAMSEYER 4124' or
+direccion_nor = 'EDUARDO RAMSEYER 4142' or
+direccion_nor = 'EDUARDO RAMSEYER 4150' or
+direccion_nor = 'EDUARDO RAMSEYER 4160' or
+direccion_nor = 'EDUARDO RAMSEYER 4170' or
+direccion_nor = 'EDUARDO RAMSEYER 4180' or
+direccion_nor = 'EDUARDO RAMSEYER 4198' or
+direccion_nor = 'EDUARDO RAMSEYER 4200' or
+direccion_nor = 'FRANCISCO N DE LAPRIDA 37' or
+direccion_nor = 'FRANCISCO N DE LAPRIDA 102' or
+direccion_nor = 'ANFITEATRO PRESIDENTE ARTURO UMBERTO ILLIA' or
+direccion_nor = 'PASEO DE LA COSTA' or
+direccion_nor = 'PARQUE NATURAL LA LUCILA' or
+direccion_nor = 'CAMPO DE GOLF TERCERA EDAD' or
+direccion_nor = 'MANTENIMIENTO M.V.L.' or
+direccion_nor = 'SALTA 2680' or --PLAZA VICENTE LOPEZ Y PLANES
+direccion_nor = 'MUELLE OLIVOS')
+and geom_new is null;
+--LUMINARIAS QUE NO TIENEN EJES NI NOMBRES PERO ESTÁN BIEN GEOPOSICIONADAS
+UPDATE calculos.luminarias_agosto2024 SET
+geom_new = ST_TRANSFORM(ST_SETSRID(ST_MAKEPOINT("longitud"::double precision,"latitud"::double precision),4326),32721)
+WHERE 
+id_identificador = 1259887 or
+id_identificador = 1259893 or
+id_identificador = 1245682 or
+id_identificador = 1245225 or
+id_identificador = 1245227 or
+id_identificador = 1248551 or
+id_identificador = 1248546 or
+id_identificador = 1248549 or
+id_identificador = 1248557 or
+id_identificador = 1248548 or
+id_identificador = 1248556 or
+id_identificador = 1263896 or
+id_identificador = 1263892 or
+id_identificador = 1263893 or
+id_identificador = 1263894 or
+id_identificador = 1263898 or
+id_identificador = 1263897 or
+id_identificador = 1263899 or
+id_identificador = 1263902 or
+id_identificador = 1235313 or
+id_identificador = 1235296 or
+id_identificador = 1235100 or
+id_identificador = 1235137 or
+id_identificador = 1235099 or
+id_identificador = 1235362 or
+id_identificador = 1235360 or
+id_identificador = 1235136 or
+id_identificador = 1256217 or
+id_identificador = 1256227 or
+id_identificador = 1255586 or
+id_identificador = 1385570 or
+id_identificador = 1385571 or
+id_identificador = 1256309 or
+id_identificador = 1255473 or
+id_identificador = 1258130 or
+id_identificador = 1258126 or
+id_identificador = 1258509 or
+id_identificador = 1258504 or
+id_identificador = 1258120 or
+id_identificador = 1256205 or
+id_identificador = 1258504 or
+id_identificador = 1258509 or
+id_identificador = 1258223 or
+id_identificador = 1258224 or
+id_identificador = 1258227;
+--SELECT * FROM calculos.luminarias_agosto2024 WHERE direccion_nor ILIKE '%milenio%';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'ARTURO ILLIA' WHERE direccion_nor ILIKE '%arturo illia%';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PLAZA ESTACION ARISTOBULO DEL VALLE' WHERE direccion_nor ILIKE '%plaza est. a. del valle%' or id_identificador = 1256217 or id_identificador = 1256227;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PASEO VITO DUMAS' WHERE direccion_nor ILIKE '%paseo vito dumas%';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PLAZA DE LOS INMIGRANTES' WHERE direccion_nor ILIKE '%plaza de los inmigrantes%';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PLAZOLETA INTENDENTE VICENTE LOPEZ QUERIDO' WHERE direccion_nor ILIKE '%querido';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'DOMINGO DE ACASSUSO TUNEL' WHERE direccion_nor ILIKE '%domingo de acassuso tunel%';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PLAZA MILENIO' WHERE direccion_nor ILIKE '%milenio%';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PLAZA ESTACION VILLA ADELINA' WHERE direccion_nor ILIKE '%plaza est. villa adelina%';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PLAZA ESTACION VILLA ADELINA' WHERE id_identificador = 1259887 or id_identificador = 1259893;;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PLAZOLETA ESTACION JUAN B JUSTO' WHERE direccion_nor ILIKE '%plazoleta est. j.b. justo%';
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PLAZOLETA ESTACION JUAN B JUSTO' WHERE id_identificador = 1245682 or id_identificador = 1245225 or id_identificador = 1245227;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PLAZOLETA EL OMBU' WHERE id_identificador = 1263896 or id_identificador = 1263892 or id_identificador = 1263893 or id_identificador = 1263894 or id_identificador = 1263898;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAS TREN DE LA COSTA' WHERE id_identificador = 1248551 or id_identificador = 1248546 or id_identificador = 1248549 or id_identificador = 1248557 or id_identificador = 1248548 or id_identificador = 1248556 or id_identificador = 1263897 or id_identificador = 1263899 or id_identificador = 1263902;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PLAZA M.M. DE GUEMES' WHERE id_identificador = 1235313 or id_identificador = 1235296;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PASO BAJO NIVEL MUNRO' WHERE id_identificador = 1235100 or id_identificador = 1235137 or id_identificador = 1235099 or id_identificador = 1235362 or id_identificador = 1235360 or id_identificador = 1235136;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'PLAZA JUEGOS LAPRIDA' WHERE id_identificador = 1255586 or id_identificador = 1385570 or id_identificador = 1385571 or id_identificador = 1256309;
+UPDATE calculos.luminarias_agosto2024 SET direccion_nor = 'VIAL COSTERO RAUL ALFONSIN' WHERE id_identificador = 1255473 or id_identificador = 1258130 or id_identificador = 1258126 or id_identificador = 1258509 or id_identificador = 1258504 or id_identificador = 1258120 or id_identificador = 1256205 or id_identificador = 1258504 or id_identificador = 1258509 or id_identificador = 1258223 or id_identificador = 1258224 or id_identificador = 1258227;
+UPDATE calculos.luminarias_agosto2024 SET direccion_new = direccion_nor WHERE direccion_new is null and geom_new is not null and direccion_nor is not null;
+--CALCULOS PARA VISUALIZACIÓN EN QGIS
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS geom geometry;
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS geom_line geometry;
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS distancia double precision;
+
+UPDATE calculos.luminarias_agosto2024 SET 
+geom = NULL,
+geom_line = NULL,
+distancia = NULL;
+
+UPDATE calculos.luminarias_agosto2024 SET
+geom = ST_TRANSFORM(ST_SETSRID(ST_MAKEPOINT("longitud"::double precision,"latitud"::double precision),4326),32721);
+
+UPDATE calculos.luminarias_agosto2024 SET
+geom_line = ST_MAKELINE(geom,geom_new),
+distancia = ST_DISTANCE(geom,geom_new)
+WHERE geom_new  IS NOT NULL;
+
+
+--ASIGNANDO NUEVO BARRIO EN FUNCION DE NUEVA LOCALIZACION
+UPDATE calculos.luminarias_agosto2024 as c SET
+barrio_new = d."NOMBRE"  FROM
+(SELECT a.id, upper(a."Barrio") as barrio, b."NOMBRE" FROM 
+calculos.luminarias_agosto2024 as a,
+base.barrios as b
+WHERE ST_INTERSECTS(ST_TRANSFORM(a.geom_new,4326),b.geom)) as d
+WHERE c.id = d.id;
+
+--ASIGNANDO NUEVA ZONA SI APLICA EN FUNCION DE NUEVA LOCALIZACION
+update calculos.luminarias_agosto2024 set 
+zona_new = 'AUSOL' where id in (select a.id from 
+calculos.luminarias_agosto2024 as a,
+base.ausol_poligono as b
+where ST_INTERSECTS(ST_TRANSFORM(a.geom,4326),b.geom));
+
+update calculos.luminarias_agosto2024 set 
+zona_new = 'MANTELECTRIC' where zona_new is null;
+
+
+--DEFINIENDO LOS QUE SE HICIERON CON GEOCODIFICACIÓN INVERSA EN LA TABLA DE MUNIDIGITAL 
+--PARA NO GEOCODIFICAR DIRECTAMENTE CON CALLEJERO MVL... SE CONSIDERARÁN SU UBICACIÓN REAL
+--COMO POSICIÓN PARA DETERMINAR SU CALLE Y ALTURA
+
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS geocodificado character varying;
+UPDATE calculos.luminarias_octubre2024 SET geocodificado = null;
+UPDATE calculos.luminarias_agosto2024 SET geocodificado = 'SI' where geom_new is not null;
+UPDATE calculos.luminarias_agosto2024 SET geocodificado = 'GEOINVERSO MVL' where
+codigo_unico IN (SELECT codigo FROM calculos.direcciones
+WHERE "Dirección" = 'NULL' and direccion_inversa is not null
+ORDER BY codigo);
+UPDATE calculos.luminarias_agosto2024 SET geocodificado = 'NO' where geocodificado is null;
+
+/*
+SELECT DISTINCT direccion_nor FROM calculos.luminarias_agosto2024 
+WHERE geom_new IS  NULL
+ORDER BY direccion_nor
+
+*/
+

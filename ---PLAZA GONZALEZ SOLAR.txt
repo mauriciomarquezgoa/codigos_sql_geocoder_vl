@@ -1,0 +1,157 @@
+---PLAZA GONZALEZ SOLAR
+
+(SELECT * FROM calculos.luminarias_octubre2024 
+WHERE 
+direccion_nor ILIKE '%solar%' 
+and direccion_nor ILIKE '%plaza%'
+--and left("descripcion",3) = 'COL'
+ORDER BY id_identificador);
+
+(SELECT a.* FROM 
+calculos.luminarias_octubre2024 AS a,
+base.plazas AS b
+WHERE ST_INTERSECTS(a.geom,b.geom) and b.nombre = 'PLAZA GONZALEZ SOLAR'
+--AND descripcion = 'luminaria '
+ORDER BY a.id_identificador);
+
+UPDATE calculos.luminarias_octubre2024 AS d SET
+codigo_unico = null,
+activo_eliminar = 0,
+geocodificado = 'NO'
+FROM
+(SELECT a.* FROM 
+calculos.luminarias_octubre2024 AS a,
+base.plazas AS b
+WHERE ST_INTERSECTS(a.geom,b.geom) and b.nombre = 'PLAZA GONZALEZ SOLAR'
+--AND descripcion = 'luminaria '
+ORDER BY a.id_identificador) as e
+WHERE d.codigo_unico = e.codigo_unico;
+
+UPDATE calculos.luminarias_octubre2024 AS d SET
+latitud_new = null,
+longitud_new = null,
+zona_new = null,
+geom_new = null,
+geom_line = null,
+distancia = null,
+direccion_new = null,
+geocodificado = 'NO'
+FROM
+(SELECT * FROM calculos.luminarias_octubre2024 
+WHERE 
+direccion_nor ILIKE '%solar%' 
+and direccion_nor ILIKE '%plaza%'
+--and left("descripcion",3) = 'COL'
+ORDER BY id_identificador) as e
+WHERE d.id_identificador = e.id_identificador;
+
+
+DO
+$do$
+BEGIN 
+   FOR i IN 1..(SELECT COUNT(*) FROM calculos.luminarias_octubre2024 WHERE direccion_nor ILIKE '%solar%' and direccion_nor ILIKE '%plaza%') LOOP
+			WITH 
+			coordenadas_incorrectas as 
+			(SELECT * FROM calculos.luminarias_octubre2024 
+			WHERE 
+			direccion_nor ILIKE '%solar%' and geom_new is null and direccion_nor ILIKE '%plaza%'
+			--and left("descripcion",3) = 'COL'
+			ORDER BY id_identificador), 
+			coordenadas_correctas as 
+			(SELECT a.* FROM 
+			calculos.luminarias_octubre2024 AS a,
+			base.plazas AS b
+			WHERE ST_INTERSECTS(a.geom,b.geom) and b.nombre = 'PLAZA GONZALEZ SOLAR'
+			--AND descripcion = 'luminaria '
+			ORDER BY a.id_identificador)
+			UPDATE calculos.luminarias_octubre2024 SET
+			latitud_new = 
+			(SELECT 
+			(ARRAY_AGG(latitud))[1]
+			FROM coordenadas_correctas where activo_eliminar = 0),
+			longitud_new = (SELECT 
+			(ARRAY_AGG(longitud))[1]
+			FROM coordenadas_correctas where activo_eliminar = 0),
+			direccion_new = (SELECT 
+			(ARRAY_AGG(direccion))[1]
+			FROM coordenadas_correctas where activo_eliminar = 0),
+			geocodificado = 'RELEVAMIENTO PLAZAS'
+
+			WHERE 
+			id_identificador = (SELECT 
+			(ARRAY_AGG(id_identificador))[1] as id_identificador
+			FROM coordenadas_incorrectas where geom_new is null ORDER BY id_identificador);
+
+			WITH 
+			coordenadas_incorrectas as 
+			(SELECT * FROM calculos.luminarias_octubre2024 
+			WHERE 
+			direccion_nor ILIKE '%solar%' and geom_new is null and direccion_nor ILIKE '%plaza%'
+			--and left("descripcion",3) = 'COL'
+			ORDER BY id_identificador), 
+			coordenadas_correctas as 
+			(SELECT a.* FROM 
+			calculos.luminarias_octubre2024 AS a,
+			base.plazas AS b
+			WHERE ST_INTERSECTS(a.geom,b.geom) and b.nombre = 'PLAZA GONZALEZ SOLAR'
+			--AND descripcion = 'luminaria '
+			ORDER BY a.id_identificador)
+			UPDATE calculos.luminarias_octubre2024 SET
+			codigo_unico = (SELECT (ARRAY_AGG(id_identificador))[1] as id_identificador
+			FROM coordenadas_incorrectas where geom_new is null
+			ORDER BY id_identificador),
+			activo_eliminar = 1
+			WHERE 
+			id_identificador = (SELECT 
+			(ARRAY_AGG(id_identificador))[1] as id_identificador
+			FROM coordenadas_correctas where activo_eliminar = 0 ORDER BY id_identificador);
+
+			WITH 
+			coordenadas_incorrectas as 
+			(SELECT * FROM calculos.luminarias_octubre2024 
+			WHERE 
+			direccion_nor ILIKE '%solar%' and geom_new is null and direccion_nor ILIKE '%plaza%'
+			--and left("descripcion",3) = 'COL'
+			ORDER BY id_identificador), 
+			coordenadas_correctas as 
+			(SELECT a.* FROM 
+			calculos.luminarias_octubre2024 AS a,
+			base.plazas AS b
+			WHERE ST_INTERSECTS(a.geom,b.geom) and b.nombre = 'PLAZA GONZALEZ SOLAR'
+			--AND descripcion = 'luminaria '
+			ORDER BY a.id_identificador)
+			UPDATE calculos.luminarias_octubre2024 SET
+			geom_new = ST_TRANSFORM(ST_SETSRID(ST_MAKEPOINT((SELECT 
+			(ARRAY_AGG(longitud))[1]
+			FROM coordenadas_correctas where geocodificado = 'NO')::double precision,(SELECT 
+			(ARRAY_AGG(latitud))[1]																					 
+			FROM coordenadas_correctas where geocodificado = 'NO')::double precision),4326),32721)
+			WHERE 
+			id_identificador = (SELECT 
+			(ARRAY_AGG(id_identificador))[1] as id_identificador
+			FROM coordenadas_incorrectas where geom_new is null ORDER BY id_identificador);
+			
+			WITH 
+			coordenadas_incorrectas as 
+			(SELECT * FROM calculos.luminarias_octubre2024 
+			WHERE 
+			direccion_nor ILIKE '%rubio' and geom_new is null and direccion_nor ILIKE '%plaza%'
+			--and left("descripcion",3) = 'COL'
+			ORDER BY id_identificador), 
+			coordenadas_correctas as 
+			(SELECT a.* FROM 
+			calculos.luminarias_octubre2024 AS a,
+			base.plazas AS b
+			WHERE ST_INTERSECTS(a.geom,b.geom) and b.nombre = 'PLAZA GONZALEZ SOLAR'
+			--AND descripcion = 'luminaria '
+			ORDER BY a.id_identificador)
+			UPDATE calculos.luminarias_octubre2024 SET
+			geocodificado = 'A ELIMINAR'
+			WHERE 
+			id_identificador = (SELECT 
+			(ARRAY_AGG(id_identificador))[1] as id_identificador
+			FROM coordenadas_correctas where geocodificado = 'NO' ORDER BY id_identificador);
+			
+   END LOOP;
+END
+$do$;

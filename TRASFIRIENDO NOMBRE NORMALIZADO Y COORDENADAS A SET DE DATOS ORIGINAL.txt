@@ -1,0 +1,21 @@
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS direccion_new character varying;
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS latitud_new double precision;
+ALTER TABLE calculos.luminarias_agosto2024 ADD COLUMN IF NOT EXISTS longitud_new double precision;
+
+UPDATE calculos.luminarias_agosto2024 SET 
+direccion_new = NULL,
+latitud_new = NULL,
+longitud_new = NULL;
+
+UPDATE calculos.luminarias_agosto2024 AS a SET
+direccion_new = b.direccion_new,
+latitud_new = b.latitud_new,
+longitud_new = b.longitud_new FROM
+(SELECT 
+id_identificador,
+concat(direccion,' ',altura) as direccion_new, 
+st_x(st_transform(geom,4326)) as latitud_new,
+st_y(st_transform(geom,4326)) as longitud_new
+FROM calculos.luminarias_agosto2024_geo
+WHERE geom IS NOT NULL) AS b
+WHERE a.id_identificador = b.id_identificador;

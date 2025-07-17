@@ -1,0 +1,29 @@
+SELECT * FROM calculos.calles_transito;
+
+UPDATE calculos.calles_transito SET "Calle" = UPPER("Calle");
+UPDATE calculos.calles_transito SET "REG" = UPPER("REG");
+UPDATE calculos.calles_transito SET "M" = UPPER("M");
+UPDATE calculos.calles_transito SET "Boca calle" = UPPER("Boca calle");
+UPDATE calculos.calles_transito SET "Tipo de calle" = UPPER("Tipo de calle");
+UPDATE calculos.calles_transito SET "REPARAR CON" = UPPER("REPARAR CON");
+UPDATE calculos.calles_transito SET "Cordon /Sellado" = UPPER("Cordon /Sellado");
+UPDATE calculos.calles_transito SET "Observaciones" = UPPER("Observaciones");
+UPDATE calculos.calles_transito SET "barrio" = UPPER("barrio");
+
+
+SELECT "Calle", MIN("Desde") as inicial, MAX("Hasta") as final FROM calculos.calles_transito
+GROUP BY "Calle"
+ORDER BY "Calle";
+
+ALTER TABLE calculos.calles_transito ADD COLUMN nombre_calle_nor character varying;
+
+SELECT 
+UPPER("street_nam") as nombre_oficial, 
+MIN("l_t_add") as inicial_izq, 
+MAX("l_f_add") as final_izq, 
+MIN("r_t_add") as inicial_der, 
+MAX("r_f_add") as final_der 
+FROM base.calles
+GROUP BY UPPER("street_nam")
+ORDER BY UPPER("street_nam");
+

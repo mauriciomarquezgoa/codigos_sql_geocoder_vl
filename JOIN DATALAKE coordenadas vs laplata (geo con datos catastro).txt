@@ -1,0 +1,46 @@
+DROP TABLE IF EXISTS calculos.coordenadas_laplata;
+CREATE TABLE calculos.coordenadas_laplata AS
+(select 
+a.id as gid,
+a.c_cuenta,
+a.n_circ_cat,
+a.c_seccion_cat,
+a.n_fraccion_cat,
+a.d_lfraccion_cat,
+a.n_manz_cat,
+a.d_lmanz_cat,
+a.n_parc_cat,
+a.d_lparc_cat,
+a.d_nomencla,
+a.s_ph,
+a.c_cou,
+a.n_superf,
+a.x_coord,
+a.y_coord,
+b.*,
+a.geom
+ from 
+base.coordenadas_202410211009 as a
+left join
+calculos.laplata_202411071151 as b
+on 
+a.n_circ_cat = b.circ and
+a.c_seccion_cat = TRIM(b.secc) and
+TRIM(a.n_fraccion_cat) = replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(b.fraccion::character varying,'1','I'),'2','II'),'3','III'),'4','IV'),'5','V'),'6','VI'),'7','VII'),'8','VIII'),'9','IX'),'I0','X') and
+coalesce(a.n_manz_cat,0) = coalesce(b.mzna,0) and
+coalesce(a.n_parc_cat,0) = coalesce(b.parc,0) and
+TRIM(a.d_lparc_cat) = TRIM(b.dparc)
+WHERE
+a.c_seccion_cat IS NOT NULL OR
+b.secc IS NOT NULL OR
+a.n_fraccion_cat IS NOT NULL OR
+b.fraccion IS NOT NULL);
+
+
+DELETE FROM calculos.coordenadas_laplata WHERE geom IN 
+(
+SELECT geom from (SELECT geom, count(*) FROM 
+calculos.coordenadas_laplata
+group by geom
+having count(*) > 1
+order by count(*) desc));

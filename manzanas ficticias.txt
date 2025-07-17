@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS calculos.manzanas_ficticias;
+CREATE TABLE calculos.manzanas_ficticias AS
+(SELECT substr(cca,29,4), ST_BUFFER(ST_BUFFER(ST_UNION(geom),3),-3) as geom FROM base.parcelas_arba
+GROUP BY substr(cca,29,4)
+ORDER BY substr(cca,29,4) ASC);

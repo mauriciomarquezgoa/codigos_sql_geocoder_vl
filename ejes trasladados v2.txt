@@ -1,0 +1,590 @@
+---
+-----------GENERANDO CAPA DE RECORTE
+
+/*
+DROP TABLE IF EXISTS base.vertices_recorte;
+CREATE TABLE base.vertices_recorte AS
+SELECT 
+st_buffer(the_geom,10) as geom 
+FROM base.calles_vertices_pgr;
+ALTER TABLE base.vertices_recorte ADD COLUMN id SERIAL PRIMARY KEY;
+CREATE INDEX vertices_recorte_geom ON base.vertices_recorte USING GIST (geom); 
+*/
+
+--UPDATE base.calles SET geom_32721 = ST_TRANSFORM(geom,32721) WHERE objectid = 9007;
+
+
+DROP TABLE IF EXISTS base.vertices_recorte_unidos;
+CREATE TABLE base.vertices_recorte_unidos AS
+SELECT 
+st_union(geom) as geom
+FROM base.vertices_recorte;
+--ALTER TABLE base.vertices_recorte_unidos DROP COLUMN id;
+ALTER TABLE base.vertices_recorte_unidos ADD COLUMN id SERIAL PRIMARY KEY;
+CREATE INDEX vertices_recorte_unidos_geom ON base.vertices_recorte_unidos USING GIST (geom); 
+
+
+--RECORTE
+
+DROP TABLE IF EXISTS base.manzanas_recorte_buffer;
+CREATE TABLE base.manzanas_recorte_buffer AS
+(SELECT st_difference(a.geom, b.geom) as geom FROM 
+base.manzanas_recorte as a
+LEFT JOIN 
+base.vertices_recorte_unidos as b
+ON
+ST_Intersects(a.geom, b.geom));
+ALTER TABLE base.manzanas_recorte_buffer ADD COLUMN id SERIAL PRIMARY KEY;
+CREATE INDEX manzanas_recorte_buffer_geom ON base.manzanas_recorte_buffer USING GIST (geom); 
+
+--UPDATE base.calles SET geom_32721 = ST_TRANSFORM(geom,32721) WHERE objectid = 4599;
+--UPDATE base.calles SET geom_32721 = ST_TRANSFORM(geom,32721) WHERE objectid > 9003;
+--UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) WHERE objectid = 6098;
+
+/*
+DROP TABLE IF EXISTS base.manzanas_recorte;
+CREATE TABLE base.manzanas_recorte AS
+(SELECT ST_UNION(ST_BUFFER(geom,7)) AS geom FROM base.manzanas_leandro);
+
+ALTER TABLE base.manzanas_recorte ADD COLUMN id SERIAL PRIMARY KEY;
+CREATE INDEX manzanas_recorte_geom ON base.manzanas_recorte USING GIST (geom); 
+
+DROP TABLE IF EXISTS base.manzanas_recorte2;
+CREATE TABLE base.manzanas_recorte2 AS
+(SELECT ST_Simplify(ST_BUFFER(ST_UNION(ST_BUFFER(geom,1)),-1), 0.1) AS geom FROM base.manzanas_recorte);
+ALTER TABLE base.manzanas_recorte2 ADD COLUMN id SERIAL PRIMARY KEY;
+CREATE INDEX manzanas_recorte2_geom ON base.manzanas_recorte2 USING GIST (geom); 
+
+DROP TABLE IF EXISTS base.manzanas_recorte;
+CREATE TABLE base.manzanas_recorte AS
+(SELECT * FROM base.manzanas_recorte2);
+CREATE INDEX manzanas_recorte_geom ON base.manzanas_recorte USING GIST (geom); 
+ALTER TABLE base.manzanas_recorte DROP COLUMN id;
+ALTER TABLE base.manzanas_recorte ADD COLUMN id SERIAL PRIMARY KEY;
+
+*/
+
+DROP TABLE IF EXISTS calculos.calles_lados;
+CREATE TABLE calculos.calles_lados AS
+(SELECT 
+a.id,
+a.objectid,
+a.street_nam,
+a.pre_type,
+a.pre_dir,
+a.l_f_add,
+a.l_t_add,
+a.r_f_add,
+a.r_t_add, 
+ST_Intersection(a.derecho,b.geom) as geom_derecho,
+ST_Intersection(a.izquierdo,b.geom) as geom_izquierdo
+FROM 
+(SELECT
+id,
+objectid,
+street_nam,
+pre_type,
+pre_dir,
+l_f_add,
+l_t_add,
+r_f_add,
+r_t_add,
+(
+	case
+	when l_f_add = 0 and l_t_add = 0 and r_f_add > 900 and r_t_add < 1700 and UPPER("street_nam") = 'MAIPU' then (ST_OffsetCurve(geom_32721, -19, 'quad_segs=4 join=round'))
+	when l_f_add = 0 and l_t_add = 0 and r_f_add > 1700 and r_t_add < 1800 and UPPER("street_nam") = 'MAIPU' then (ST_OffsetCurve(geom_32721, -16, 'quad_segs=4 join=round'))
+	when l_f_add = 0 and l_t_add = 0 and r_f_add > 1800 and r_t_add < 2200 and UPPER("street_nam") = 'MAIPU' then (ST_OffsetCurve(geom_32721, -14, 'quad_segs=4 join=round'))
+	when l_f_add = 0 and l_t_add = 0 and r_f_add > 2200 and r_t_add < 3200 and UPPER("street_nam") = 'MAIPU' then (ST_OffsetCurve(geom_32721, -7, 'quad_segs=4 join=round'))
+	when l_f_add = 0 and l_t_add = 0 and r_f_add < 900 and UPPER("street_nam") = 'MAIPU' then (ST_OffsetCurve(geom_32721, -17, 'quad_segs=4 join=round'))
+	when l_f_add = 0 and l_t_add = 0 and r_f_add > 3200 and UPPER("street_nam") = 'MAIPU' then (ST_OffsetCurve(geom_32721, -18, 'quad_segs=4 join=round'))
+	when r_f_add > 100 AND UPPER("street_nam") = 'MIGUEL DE AZCUENAGA' then (ST_OffsetCurve(geom_32721, -28, 'quad_segs=4 join=round'))
+	when r_f_add > 0 and r_t_add < 100 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, -14, 'quad_segs=4 join=round'))
+	when r_f_add > 100 and r_t_add < 600 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, -13, 'quad_segs=4 join=round'))
+	when r_f_add > 600 and r_t_add < 2000 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, -12, 'quad_segs=4 join=round'))
+	when r_f_add > 2000 and r_t_add < 2400 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, -18, 'quad_segs=4 join=round'))
+	when r_f_add > 2400 and r_t_add < 2650 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, -15, 'quad_segs=4 join=round'))
+	when r_f_add > 2650 and r_t_add < 3000 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, -13, 'quad_segs=4 join=round'))
+	when r_f_add > 3000 and r_t_add < 3700 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, -7, 'quad_segs=4 join=round'))
+	when r_f_add > 3700 and r_t_add < 3752 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, -8, 'quad_segs=4 join=round'))
+	when r_f_add > 3752 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, -8, 'quad_segs=4 join=round'))
+	when r_f_add > 1899 and r_t_add < 2501 and UPPER("street_nam") = 'ALEXANDER FLEMING' then (ST_OffsetCurve(geom_32721, -10, 'quad_segs=4 join=round'))
+	when r_f_add > 3001 and r_t_add < 4301 and UPPER("street_nam") = 'FRANCISCO UZAL' then (ST_OffsetCurve(geom_32721, -8, 'quad_segs=4 join=round'))
+	when r_f_add > 1800 and r_t_add < 1901 and UPPER("street_nam") = 'JUAN DIAZ DE SOLIS' then (ST_OffsetCurve(geom_32721, -14, 'quad_segs=4 join=round'))
+	when r_f_add > 1 and r_t_add < 301 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, -8, 'quad_segs=4 join=round'))
+	when r_f_add > 301 and r_t_add < 601 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, -6, 'quad_segs=4 join=round'))
+	when r_f_add > 601 and r_t_add < 691 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, -10, 'quad_segs=4 join=round'))
+	when r_f_add > 691 and r_t_add < 901 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, -12, 'quad_segs=4 join=round'))
+	when r_f_add > 1200 and r_t_add < 1300 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, -16, 'quad_segs=4 join=round'))
+	when r_f_add > 1300 and r_t_add < 1500 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, -14, 'quad_segs=4 join=round'))
+	when r_f_add > 1500 and r_t_add < 1801 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, -8, 'quad_segs=4 join=round'))
+	when r_f_add > 1801 and r_t_add < 1850 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, -8, 'quad_segs=4 join=round'))
+	when r_f_add > 1850 and r_t_add < 1950 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, -11, 'quad_segs=4 join=round'))
+	when r_f_add > 1950 and r_t_add < 2000 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, -12, 'quad_segs=4 join=round'))
+	when r_f_add > 2000 and r_t_add < 2200 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, -7, 'quad_segs=4 join=round'))
+	when r_f_add > 2200 and r_t_add < 3150 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, -9, 'quad_segs=4 join=round'))
+	when r_f_add > 3150 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, -8, 'quad_segs=4 join=round'))
+	when r_f_add > 3900 and UPPER("street_nam") = 'SAN JUAN B DE LASALLE' then (ST_OffsetCurve(geom_32721, -25, 'quad_segs=4 join=round'))
+	when r_f_add > 4650 and UPPER("street_nam") = 'HIPOLITO YRIGOYEN' then (ST_OffsetCurve(geom_32721, -6, 'quad_segs=4 join=round'))
+	when r_f_add > 3200 and UPPER("street_nam") = 'PRIMERA JUNTA' then (ST_OffsetCurve(geom_32721, -7, 'quad_segs=4 join=round'))
+	when r_f_add > 1500 and r_t_add < 1800 and UPPER("street_nam") = 'ARISTOBULO DEL VALLE' then (ST_OffsetCurve(geom_32721, -8, 'quad_segs=4 join=round'))
+	when r_f_add > 0 and UPPER("street_nam") = 'RAUL RICARDO ALFONSIN' then (ST_OffsetCurve(geom_32721, -13, 'quad_segs=4 join=round'))
+	when UPPER("street_nam") <> 'MAIPU' AND UPPER("street_nam") <> 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, -4, 'quad_segs=4 join=round'))
+	end
+) AS derecho,
+(
+	case
+	when r_f_add = 0 and r_t_add = 0 and l_t_add < 1301 and UPPER("street_nam") = 'MAIPU' then (ST_OffsetCurve(geom_32721, 7, 'quad_segs=4 join=round'))
+	when r_f_add = 0 and r_t_add = 0 and l_f_add > 1301 and l_t_add < 1801 and UPPER("street_nam") = 'MAIPU' then (ST_OffsetCurve(geom_32721, 11, 'quad_segs=4 join=round'))
+	when r_f_add = 0 and r_t_add = 0 and l_f_add > 1701 and l_t_add < 2301 and UPPER("street_nam") = 'MAIPU' then (ST_OffsetCurve(geom_32721, 8, 'quad_segs=4 join=round'))
+	when r_f_add = 0 and r_t_add = 0 and l_f_add > 2301 and l_t_add < 3501 and UPPER("street_nam") = 'MAIPU' then (ST_OffsetCurve(geom_32721, 8, 'quad_segs=4 join=round'))
+	when r_f_add = 0 and r_t_add = 0 and l_f_add > 3501 and UPPER("street_nam") = 'MAIPU' then (ST_OffsetCurve(geom_32721, 8.5, 'quad_segs=4 join=round'))
+	when l_f_add > 0 and l_f_add < 301 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, 11, 'quad_segs=4 join=round'))
+	when l_f_add > 301 and l_t_add < 701 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, 9, 'quad_segs=4 join=round'))
+	when l_f_add > 701 and l_t_add < 2001 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, 11, 'quad_segs=4 join=round'))
+	when l_f_add > 2001 and l_t_add < 2701 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, 15, 'quad_segs=4 join=round'))
+	when l_f_add > 2701 and l_t_add < 2901 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, 13, 'quad_segs=4 join=round'))
+	when l_f_add > 2901 and l_t_add < 3401 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, 5, 'quad_segs=4 join=round'))
+	when l_f_add > 3401 and UPPER("street_nam") = 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, 8.5, 'quad_segs=4 join=round'))
+	when l_f_add > 2251 and l_t_add < 2401 and UPPER("street_nam") = 'ALEXANDER FLEMING' then (ST_OffsetCurve(geom_32721, 10, 'quad_segs=4 join=round'))
+	when l_f_add > 401 and l_t_add < 601 and UPPER("street_nam") = 'HIPOLITO YRIGOYEN' then (ST_OffsetCurve(geom_32721, 40, 'quad_segs=4 join=round'))
+	when l_f_add > 1901 and l_t_add < 2401 and UPPER("street_nam") = 'HIPOLITO YRIGOYEN' then (ST_OffsetCurve(geom_32721, 8, 'quad_segs=4 join=round'))
+	when l_f_add > 4301 and UPPER("street_nam") = 'HIPOLITO YRIGOYEN' then (ST_OffsetCurve(geom_32721, 8, 'quad_segs=4 join=round'))
+	when l_f_add > 2301 and l_t_add < 2501 and UPPER("street_nam") = 'BAUTISTA BAIGORRIA' then (ST_OffsetCurve(geom_32721, 6, 'quad_segs=4 join=round'))
+	when l_f_add > 2201 and l_t_add < 2401 and UPPER("street_nam") = 'JUAN DIAZ DE SOLIS' then (ST_OffsetCurve(geom_32721, 8, 'quad_segs=4 join=round'))
+	when l_f_add > 4701 and l_t_add < 5201 and UPPER("street_nam") = 'EDUARDO SIVORI' then (ST_OffsetCurve(geom_32721, 8, 'quad_segs=4 join=round'))
+	when l_f_add > 3001 and l_t_add < 4301 and UPPER("street_nam") = 'FRANCISCO UZAL' then (ST_OffsetCurve(geom_32721, 8, 'quad_segs=4 join=round'))
+	when l_f_add > 1801 and l_t_add < 1901 and UPPER("street_nam") = 'JUAN DIAZ DE SOLIS' then (ST_OffsetCurve(geom_32721, 14, 'quad_segs=4 join=round'))
+	when l_f_add > 1 and l_t_add < 601 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, 12, 'quad_segs=4 join=round'))
+	when l_f_add > 601 and l_t_add < 691 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, 10, 'quad_segs=4 join=round'))
+	when l_f_add > 1001 and l_t_add < 1201 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, 8, 'quad_segs=4 join=round'))
+	when l_f_add > 1201 and l_t_add < 1301 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, 10, 'quad_segs=4 join=round'))
+	when l_f_add > 1301 and l_t_add < 1501 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, 16, 'quad_segs=4 join=round'))
+	when l_f_add > 1501 and l_t_add < 1801 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, 14, 'quad_segs=4 join=round'))
+	when l_f_add > 1801 and l_t_add < 1851 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, 8, 'quad_segs=4 join=round'))
+	when l_f_add > 1851 and l_t_add < 1951 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, 8, 'quad_segs=4 join=round'))
+	when l_f_add > 1951 and l_t_add < 2001 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, 14, 'quad_segs=4 join=round'))
+	when l_f_add > 2001 and l_t_add < 2201 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, 18, 'quad_segs=4 join=round'))
+	when l_f_add > 2201 and l_t_add < 2351 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, 16, 'quad_segs=4 join=round'))
+	when l_f_add > 2301 and l_t_add < 3151 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, 12, 'quad_segs=4 join=round'))
+	when l_f_add > 3151 and UPPER("street_nam") = 'BARTOLOME MITRE' then (ST_OffsetCurve(geom_32721, 10, 'quad_segs=4 join=round'))
+	when l_f_add > 3801 and UPPER("street_nam") = 'MANUELA PEDRAZA' then (ST_OffsetCurve(geom_32721, 8, 'quad_segs=4 join=round'))
+	when l_f_add > 801 and l_t_add < 1261 and UPPER("street_nam") = 'CORRIENTES' then (ST_OffsetCurve(geom_32721, 7, 'quad_segs=4 join=round'))
+	when l_f_add > 0 and l_t_add < 1401 and UPPER("street_nam") = 'PARANA' then (ST_OffsetCurve(geom_32721, 8, 'quad_segs=4 join=round'))
+	when l_f_add > 3750 and l_t_add < 4001 and UPPER("street_nam") = 'PARANA' then (ST_OffsetCurve(geom_32721, 10, 'quad_segs=4 join=round'))
+	when l_f_add > 0 and UPPER("street_nam") = 'RAUL RICARDO ALFONSIN' then (ST_OffsetCurve(geom_32721, 13, 'quad_segs=4 join=round'))
+	when UPPER("street_nam") <> 'MAIPU' AND UPPER("street_nam") <> 'DEL LIBERTADOR' then (ST_OffsetCurve(geom_32721, 4, 'quad_segs=4 join=round'))
+	end
+) AS izquierdo
+FROM base.calles
+WHERE UPPER("street_nam") <> 'SIN NOMBRE') as a,
+base.manzanas_recorte_buffer as b
+--WHERE 
+order by
+a.street_nam,
+a.pre_type,
+a.pre_dir,
+a.l_f_add,
+a.l_t_add,
+a.r_f_add,
+a.r_t_add);
+
+UPDATE calculos.calles_lados SET geom_izquierdo = null WHERE objectid = 3096;
+UPDATE calculos.calles_lados SET geom_izquierdo = null, geom_derecho = null WHERE objectid = 6345;
+UPDATE calculos.calles_lados SET geom_izquierdo = null, geom_derecho = null WHERE objectid = 6343;
+UPDATE calculos.calles_lados SET geom_izquierdo = null, geom_derecho = null WHERE objectid = 6342;
+
+
+
+ALTER TABLE calculos.calles_lados ADD COLUMN IF NOT EXISTS lado1 character varying;
+ALTER TABLE calculos.calles_lados ADD COLUMN IF NOT EXISTS lado2 character varying;
+
+UPDATE calculos.calles_lados AS a SET
+lado1 = b.lado1, lado2 = b.lado2 FROM
+(SELECT * FROM calculos.lados) AS b
+WHERE coalesce(a.objectid,0) = coalesce(b.objectid,0) and a.street_nam = b.street_nam;
+
+--SELECT * FROM calculos.lados WHERE objectid = 5267;
+--UPDATE calculos.lados SET lado2 = 'IMPAR', lado1 = 'PAR' WHERE objectid = 4351;
+--INSERT INTO calculos.lados VALUES (9015,'Raul Ricardo Alfonsin','PAR','IMPAR');
+--DELETE FROM calculos.lados WHERE objectid = 9002;
+--UPDATE calculos.lados SET street_nam = 'Blas Parera' WHERE objectid = 1345;
+
+/*
+ALTER TABLE calculos.calles_lados ADD COLUMN lado1 character varying;
+ALTER TABLE calculos.calles_lados ADD COLUMN lado2 character varying;
+*/
+
+DROP TABLE IF EXISTS base.calles_21042025;
+CREATE TABLE base.calles_21042025 AS
+(SELECT 
+objectid,
+street_nam,
+pre_type,
+pre_dir,
+0 as r_f_add,
+0 as r_t_add,
+l_f_add,
+l_t_add,
+geom_izquierdo as geom
+FROM calculos.calles_lados
+WHERE lado1 = 'PAR'
+ORDER BY street_nam,
+pre_type,
+pre_dir,
+l_f_add,
+l_t_add)
+UNION ALL
+(SELECT 
+objectid,
+street_nam,
+pre_type,
+pre_dir,
+r_f_add,
+r_t_add,
+0 as l_f_add,
+0 as l_t_add,
+geom_derecho as geom
+FROM calculos.calles_lados
+WHERE lado2 = 'IMPAR'
+ORDER BY street_nam,
+pre_type,
+pre_dir,
+r_f_add,
+r_t_add);
+ALTER TABLE base.calles_21042025 ADD COLUMN id SERIAL PRIMARY KEY;
+CREATE INDEX calles_21042025_geom ON base.calles_21042025 USING GIST (geom); 
+
+DELETE FROM base.calles_21042025 WHERE ST_LENGTH(GEOM) = 0;
+
+/*
+DROP TABLE IF EXISTS calculos.lados;
+CREATE TABLE calculos.lados AS
+(SELECT objectid, street_nam, lado1, lado2 FROM calculos.calles_lados
+ORDER BY objectid, street_nam);
+*/
+
+/*
+--AJUSTANDO VEREDAS QUE QUEDARON VACIAS
+SELECT street_nam, ARRAY_AGG(altura) FROM 
+(SELECT d.*, c.geom_new 
+FROM calculos2.calles_con_alturas as c
+RIGHT JOIN
+(SELECT * FROM
+((SELECT street_nam, altura-2 as altura FROM calculos2.calles_con_alturas
+WHERE direccion_new is null
+ORDER BY altura)
+UNION ALL
+(SELECT street_nam, altura+2 as altura FROM calculos2.calles_con_alturas
+WHERE direccion_new is null
+ORDER BY altura)) as a
+ORDER BY street_nam, altura) as d
+ON c.street_nam = d.street_nam and c.altura = d.altura
+ORDER BY street_nam, altura) AS e
+WHERE geom_new is not null
+GROUP BY street_nam
+ORDER BY street_nam;
+*/
+
+UPDATE base.calles_21042025 SET r_f_add = 6801 where street_nam = '5 De Julio' and r_f_add = 6811;
+UPDATE base.calles_21042025 SET l_f_add = 6802 where street_nam = '5 De Julio' and l_f_add = 6812;
+UPDATE base.calles_21042025 SET l_t_add = 2450 where street_nam = 'Alexander Fleming' and l_t_add = 2440;
+UPDATE base.calles_21042025 SET l_f_add = 2000 where street_nam = 'Antonio Malaver' and l_f_add = 2052;
+UPDATE base.calles_21042025 SET r_f_add = 2401 where street_nam = 'Antonio Malaver' and r_f_add = 2411;
+UPDATE base.calles_21042025 SET l_f_add = 2402 where street_nam = 'Antonio Malaver' and l_f_add = 2412;
+UPDATE base.calles_21042025 SET r_t_add = 199 where street_nam = 'Bartolome Mitre' and r_t_add = 179;
+UPDATE base.calles_21042025 SET l_t_add = 200 where street_nam = 'Bartolome Mitre' and l_t_add = 180;
+UPDATE base.calles_21042025 SET r_f_add = 601 where street_nam = 'Bartolome Mitre' and r_f_add = 611;
+UPDATE base.calles_21042025 SET l_f_add = 602 where street_nam = 'Bartolome Mitre' and l_f_add = 612;
+UPDATE base.calles_21042025 SET r_t_add = 699 where street_nam = 'Bartolome Mitre' and r_t_add = 689;
+UPDATE base.calles_21042025 SET l_t_add = 700 where street_nam = 'Bartolome Mitre' and l_t_add = 690;
+UPDATE base.calles_21042025 SET r_t_add = 3049 where street_nam = 'Bartolome Mitre' and r_t_add = 3099;
+UPDATE base.calles_21042025 SET r_f_add = 3051 where street_nam = 'Bartolome Mitre' and r_f_add = 3101 and objectid = 3740;
+UPDATE base.calles_21042025 SET r_t_add = 3099 where street_nam = 'Bartolome Mitre' and r_t_add = 3149 and objectid = 3740;
+UPDATE base.calles_21042025 SET r_f_add = 3101 where street_nam = 'Bartolome Mitre' and r_f_add = 3151 and objectid = 4068;
+UPDATE base.calles_21042025 SET r_f_add = 3101 where street_nam = 'Blas Parera' and r_f_add = 3121;
+UPDATE base.calles_21042025 SET r_t_add = 3299 where street_nam = 'Blas Parera' and r_t_add = 3279;
+UPDATE base.calles_21042025 SET r_t_add = 3399 where street_nam = 'Blas Parera' and r_t_add = 3379;
+UPDATE base.calles_21042025 SET r_t_add = 3499 where street_nam = 'Blas Parera' and r_t_add = 3479;
+UPDATE base.calles_21042025 SET r_t_add = 2479 where street_nam = 'Blas Parera' and r_t_add = 2499;
+UPDATE base.calles_21042025 SET r_f_add = 2481 where street_nam = 'Blas Parera' and r_f_add = 2501;
+UPDATE base.calles_21042025 SET r_t_add = 2499 where street_nam = 'Blas Parera' and r_t_add = 2529;
+UPDATE base.calles_21042025 SET r_f_add = 2501 where street_nam = 'Blas Parera' and r_f_add = 2531;
+UPDATE base.calles_21042025 SET l_t_add = 2700 where street_nam = 'Carlos F Melo' and l_t_add = 2680;
+UPDATE base.calles_21042025 SET l_t_add = 4198 where street_nam = 'Carlos F Melo' and l_t_add = 4180;
+UPDATE base.calles_21042025 SET r_f_add = 4201 where street_nam = 'Carlos F Melo' and r_f_add = 4213;
+UPDATE base.calles_21042025 SET l_t_add = 4201 where street_nam = 'Del Libertador' and r_f_add = 4213;
+UPDATE base.calles_21042025 SET l_f_add = 1702 where street_nam = 'Felix Bogado' and l_f_add = 1712;
+UPDATE base.calles_21042025 SET r_t_add = 1849 where street_nam = 'Gaspar Campos' and r_t_add = 1839;
+UPDATE base.calles_21042025 SET l_t_add = 1850 where street_nam = 'Gaspar Campos' and l_t_add = 1840;
+UPDATE base.calles_21042025 SET l_f_add = 4400 where street_nam = 'Hipolito Bouchard' and l_f_add = 4422;
+UPDATE base.calles_21042025 SET r_t_add = 5099 where street_nam = 'Jose Moldes' and r_t_add = 5087;
+UPDATE base.calles_21042025 SET l_f_add = 5200 where street_nam = 'Jose Moldes' and l_f_add = 5258;
+UPDATE base.calles_21042025 SET r_f_add = 3601 where street_nam = 'Juan Zufriategui' and r_f_add = 3621;
+UPDATE base.calles_21042025 SET l_f_add = 3602 where street_nam = 'Juan Zufriategui' and l_f_add = 3622;
+UPDATE base.calles_21042025 SET r_f_add = 2701 where street_nam = 'La Rioja' and r_f_add = 2731;
+UPDATE base.calles_21042025 SET l_f_add = 2702 where street_nam = 'La Rioja' and l_f_add = 2732;
+UPDATE base.calles_21042025 SET r_f_add = 2701 where street_nam = 'Manuel Diaz Velez' and r_f_add = 2731;
+UPDATE base.calles_21042025 SET l_f_add = 2702 where street_nam = 'Manuel Diaz Velez' and l_f_add = 2722;
+UPDATE base.calles_21042025 SET r_t_add = 2699 where street_nam = 'Manuel Diaz Velez' and r_t_add = 2685;
+UPDATE base.calles_21042025 SET r_t_add = 2999 where street_nam = 'Manuel Rosetti' and r_t_add = 2979;
+UPDATE base.calles_21042025 SET l_t_add = 3000 where street_nam = 'Manuel Rosetti' and l_t_add = 2980;
+UPDATE base.calles_21042025 SET r_f_add = 2201 where street_nam = 'Mariano Pelliza' and r_f_add = 2211;
+UPDATE base.calles_21042025 SET l_f_add = 2202 where street_nam = 'Mariano Pelliza' and l_f_add = 2212;
+UPDATE base.calles_21042025 SET l_t_add = 1200 where street_nam = 'Mariquita Sanchez De Thompson' and l_t_add = 1080;
+UPDATE base.calles_21042025 SET r_t_add = 1149 where street_nam = 'Mariquita Sanchez De Thompson' and r_t_add = 1139;
+UPDATE base.calles_21042025 SET l_t_add = 1600 where street_nam = 'Parana' and l_t_add = 1580;
+UPDATE base.calles_21042025 SET l_t_add = 1700 where street_nam = 'Parana' and l_t_add = 1690;
+UPDATE base.calles_21042025 SET l_t_add = 1800 where street_nam = 'Parana' and l_t_add = 1780;
+UPDATE base.calles_21042025 SET l_f_add = 1902 where street_nam = 'Parana' and l_f_add = 1922;
+UPDATE base.calles_21042025 SET l_f_add = 2102 where street_nam = 'Parana' and l_f_add = 2112;
+UPDATE base.calles_21042025 SET l_t_add = 2300 where street_nam = 'Parana' and l_t_add = 2290;
+UPDATE base.calles_21042025 SET l_t_add = 2500 where street_nam = 'Parana' and l_t_add = 2490;
+UPDATE base.calles_21042025 SET l_t_add = 2600 where street_nam = 'Parana' and l_t_add = 2590;
+UPDATE base.calles_21042025 SET l_f_add = 3002 where street_nam = 'Parana' and l_f_add = 3022;
+UPDATE base.calles_21042025 SET l_t_add = 4400 where street_nam = 'Parana' and l_t_add = 4390;
+UPDATE base.calles_21042025 SET l_t_add = 4900 where street_nam = 'Mariano Moreno' and l_t_add = 4880;
+UPDATE base.calles_21042025 SET l_f_add = 5102 where street_nam = 'Mariano Moreno' and l_f_add = 5112;
+UPDATE base.calles_21042025 SET l_t_add = 5300 where street_nam = 'Mariano Moreno' and l_t_add = 5290;
+UPDATE base.calles_21042025 SET l_t_add = 1100 where street_nam = 'Patricios' and l_t_add = 1080;
+UPDATE base.calles_21042025 SET r_t_add = 1099 where street_nam = 'Patricios' and r_t_add = 1079;
+UPDATE base.calles_21042025 SET r_f_add = 3401 where street_nam = 'Salvador Debenedetti' and r_f_add = 3411;
+UPDATE base.calles_21042025 SET l_f_add = 3402 where street_nam = 'Salvador Debenedetti' and l_f_add = 3412;
+UPDATE base.calles_21042025 SET r_t_add = 3899 where street_nam = 'San Juan B De Lasalle' and r_t_add = 3869;
+UPDATE base.calles_21042025 SET l_t_add = 1100 where street_nam = 'Tupac Amaru' and l_t_add = 1080;
+UPDATE base.calles_21042025 SET r_t_add = 1099 where street_nam = 'Tupac Amaru' and r_t_add = 1079;
+UPDATE base.calles_21042025 SET r_f_add = 4101 where street_nam = 'Del Libertador' and r_f_add = 4123;
+UPDATE base.calles_21042025 SET l_t_add = 4050 where street_nam = 'Del Libertador' and l_t_add = 4020;
+UPDATE base.calles_21042025 SET l_t_add = 2400 where street_nam = 'Francisco Beiro' and l_t_add = 2390;
+UPDATE base.calles_21042025 SET r_t_add = 2399 where street_nam = 'Francisco Beiro' and r_t_add = 2389;
+UPDATE base.calles_21042025 SET l_f_add = 4402 where street_nam = 'Hipolito Yrigoyen' and l_f_add = 4412;
+UPDATE base.calles_21042025 SET r_f_add = 4401 where street_nam = 'Hipolito Yrigoyen' and r_f_add = 4411;
+UPDATE base.calles_21042025 SET l_f_add = 4502 where street_nam = 'Hipolito Yrigoyen' and l_f_add = 4512;
+UPDATE base.calles_21042025 SET r_f_add = 4501 where street_nam = 'Hipolito Yrigoyen' and r_f_add = 4511;
+UPDATE base.calles_21042025 SET l_t_add = 6100 where street_nam = 'Juan J Castelli' and l_t_add = 6080;
+UPDATE base.calles_21042025 SET l_t_add = 1700 where street_nam = 'Mariano Pelliza' and l_t_add = 1690;
+UPDATE base.calles_21042025 SET r_t_add = 1699 where street_nam = 'Mariano Pelliza' and r_t_add = 1689;
+UPDATE base.calles_21042025 SET l_t_add = 2100 where street_nam = 'Mariano Pelliza' and l_t_add = 2090;
+UPDATE base.calles_21042025 SET r_t_add = 2099 where street_nam = 'Mariano Pelliza' and r_t_add = 2089;
+UPDATE base.calles_21042025 SET l_t_add = 6200 where street_nam = 'Rafael Obligado' and l_t_add = 6196;
+UPDATE base.calles_21042025 SET r_t_add = 6199 where street_nam = 'Rafael Obligado' and r_t_add = 6181;
+UPDATE base.calles_21042025 SET r_f_add = 4521 where street_nam = 'Francisco N De Laprida' and r_f_add = 4501 and objectid = 1723;
+UPDATE base.calles_21042025 SET r_t_add = 4499 where street_nam = 'Francisco N De Laprida' and r_t_add = 4449;
+UPDATE base.calles_21042025 SET r_f_add = 4501 where street_nam = 'Francisco N De Laprida' and r_f_add = 4451;
+UPDATE base.calles_21042025 SET r_t_add = 4519 where street_nam = 'Francisco N De Laprida' and r_t_add = 4499 and objectid = 1724;
+UPDATE base.calles_21042025 SET l_t_add = 4578 where street_nam = 'Francisco N De Laprida' and l_t_add = 4600;
+UPDATE base.calles_21042025 SET l_t_add = 4600 where street_nam = 'Francisco N De Laprida' and l_t_add = 4620;
+UPDATE base.calles_21042025 SET l_f_add = 4580 where street_nam = 'Francisco N De Laprida' and l_f_add = 4602;
+UPDATE base.calles_21042025 SET r_t_add = 4699 where street_nam = 'Francisco N De Laprida' and r_t_add = 4649;
+UPDATE base.calles_21042025 SET r_f_add = 4601 where street_nam = 'Francisco N De Laprida' and r_f_add = 4621;
+UPDATE base.calles_21042025 SET l_f_add = 4602 where street_nam = 'Francisco N De Laprida' and l_f_add = 4622;
+UPDATE base.calles_21042025 SET r_f_add = 4701 where street_nam = 'Francisco N De Laprida' and r_f_add = 4651;
+UPDATE base.calles_21042025 SET r_t_add = 4719 where street_nam = 'Francisco N De Laprida' and r_t_add = 4699 and objectid = 1761;
+UPDATE base.calles_21042025 SET r_f_add = 4721 where street_nam = 'Francisco N De Laprida' and r_f_add = 4701 and objectid = 1777;
+UPDATE base.calles_21042025 SET r_t_add = 4889 where street_nam = 'Francisco N De Laprida' and r_t_add = 4899;
+UPDATE base.calles_21042025 SET r_f_add = 4891 where street_nam = 'Francisco N De Laprida' and r_f_add = 4901;
+UPDATE base.calles_21042025 SET r_t_add = 4899 where street_nam = 'Francisco N De Laprida' and r_t_add = 4949;
+UPDATE base.calles_21042025 SET r_f_add = 4901 where street_nam = 'Francisco N De Laprida' and r_f_add = 4951;
+UPDATE base.calles_21042025 SET l_t_add = 4780 where street_nam = 'Ramon B Castro' and l_t_add = 4800;
+UPDATE base.calles_21042025 SET l_f_add = 4782 where street_nam = 'Ramon B Castro' and l_f_add = 4802;
+UPDATE base.calles_21042025 SET l_t_add = 4800 where street_nam = 'Ramon B Castro' and l_t_add = 4900;
+UPDATE base.calles_21042025 SET l_f_add = 4802 where street_nam = 'Ramon B Castro' and l_f_add = 4902;
+UPDATE base.calles_21042025 SET l_t_add = 4860 where street_nam = 'Ramon B Castro' and l_t_add = 4950;
+UPDATE base.calles_21042025 SET l_f_add = 4862 where street_nam = 'Ramon B Castro' and l_f_add = 4952;
+UPDATE base.calles_21042025 SET l_t_add = 4900 where street_nam = 'Ramon B Castro' and l_t_add = 5000;
+UPDATE base.calles_21042025 SET l_f_add = 4902 where street_nam = 'Ramon B Castro' and l_f_add = 5002;
+UPDATE base.calles_21042025 SET l_t_add = 4990 where street_nam = 'Ramon B Castro' and l_t_add = 5090;
+UPDATE base.calles_21042025 SET l_f_add = 4992 where street_nam = 'Ramon B Castro' and l_f_add = 5092;
+UPDATE base.calles_21042025 SET l_t_add = 5000 where street_nam = 'Ramon B Castro' and l_t_add = 5100;
+UPDATE base.calles_21042025 SET l_f_add = 5002 where street_nam = 'Ramon B Castro' and l_f_add = 5102;
+UPDATE base.calles_21042025 SET r_f_add = 5021 where street_nam = 'Ramon B Castro' and r_f_add = 5101;
+UPDATE base.calles_21042025 SET r_f_add = 5001 where street_nam = 'Ramon B Castro' and r_f_add = 5091;
+UPDATE base.calles_21042025 SET r_t_add = 5019 where street_nam = 'Ramon B Castro' and r_t_add = 5099;
+UPDATE base.calles_21042025 SET r_f_add = 4901 where street_nam = 'Ramon B Castro' and r_f_add = 4951;
+UPDATE base.calles_21042025 SET r_t_add = 4949 where street_nam = 'Ramon B Castro' and r_t_add = 4999;
+UPDATE base.calles_21042025 SET r_f_add = 4951 where street_nam = 'Ramon B Castro' and r_f_add = 5001 and objectid = 5506;
+UPDATE base.calles_21042025 SET r_t_add = 4999 where street_nam = 'Ramon B Castro' and r_t_add = 5089;
+UPDATE base.calles_21042025 SET r_f_add = 4851 where street_nam = 'Ramon B Castro' and r_f_add = 4901 and objectid = 5494;
+UPDATE base.calles_21042025 SET r_t_add = 4899 where street_nam = 'Ramon B Castro' and r_t_add = 4949 and objectid = 5494;
+UPDATE base.calles_21042025 SET r_t_add = 4849 where street_nam = 'Ramon B Castro' and r_t_add = 4899 and objectid = 5495;
+UPDATE base.calles_21042025 SET l_t_add = 2400 where street_nam = 'Marcelino Ugarte' and l_t_add = 2350;
+UPDATE base.calles_21042025 SET l_f_add = 2402 where street_nam = 'Marcelino Ugarte' and l_f_add = 2352;
+UPDATE base.calles_21042025 SET l_t_add = 2448 where street_nam = 'Marcelino Ugarte' and l_t_add = 2400 and objectid = 2582; 
+UPDATE base.calles_21042025 SET l_f_add = 2450 where street_nam = 'Marcelino Ugarte' and l_f_add = 2402 and objectid = 2581;
+UPDATE base.calles_21042025 SET l_t_add = 2500 where street_nam = 'Marcelino Ugarte' and l_t_add = 2480 and objectid = 2581;
+UPDATE base.calles_21042025 SET l_f_add = 2502 where street_nam = 'Marcelino Ugarte' and l_f_add = 2482 and objectid = 2580;
+UPDATE base.calles_21042025 SET l_t_add = 2518 where street_nam = 'Marcelino Ugarte' and l_t_add = 2500 and objectid = 2580;
+UPDATE base.calles_21042025 SET l_f_add = 2520 where street_nam = 'Marcelino Ugarte' and l_f_add = 2502 and objectid = 3174;
+UPDATE base.calles_21042025 SET r_t_add = 3099 where street_nam = 'Marcelino Ugarte' and r_t_add = 3089 and objectid = 3817;
+UPDATE base.calles_21042025 SET r_f_add = 3101 where street_nam = 'Marcelino Ugarte' and r_f_add = 3091 and objectid = 3816;
+UPDATE base.calles_21042025 SET r_t_add = 3103 where street_nam = 'Marcelino Ugarte' and r_t_add = 3099 and objectid = 3816;
+UPDATE base.calles_21042025 SET r_f_add = 3105 where street_nam = 'Marcelino Ugarte' and r_f_add = 3101 and objectid = 3815;
+UPDATE base.calles_21042025 SET r_t_add = 3199 where street_nam = 'Marcelino Ugarte' and r_t_add = 3169 and objectid = 3815;
+UPDATE base.calles_21042025 SET r_f_add = 3201 where street_nam = 'Marcelino Ugarte' and r_f_add = 3171 and objectid = 3820;
+UPDATE base.calles_21042025 SET r_t_add = 3219 where street_nam = 'Marcelino Ugarte' and r_t_add = 3199 and objectid = 3820;
+UPDATE base.calles_21042025 SET r_f_add = 3221 where street_nam = 'Marcelino Ugarte' and r_f_add = 3201 and objectid = 3819;
+UPDATE base.calles_21042025 SET r_t_add = 2949 where street_nam = 'Carlos Villate' and r_t_add = 2999;
+UPDATE base.calles_21042025 SET r_f_add = 2951 where street_nam = 'Carlos Villate' and r_f_add = 3001;
+UPDATE base.calles_21042025 SET r_t_add = 2999 where street_nam = 'Carlos Villate' and r_t_add = 3049;
+UPDATE base.calles_21042025 SET r_f_add = 3001 where street_nam = 'Carlos Villate' and r_f_add = 3051;
+UPDATE base.calles_21042025 SET r_t_add = 3069 where street_nam = 'Carlos Villate' and r_t_add = 3099;
+UPDATE base.calles_21042025 SET r_f_add = 3071 where street_nam = 'Carlos Villate' and r_f_add = 3101;
+UPDATE base.calles_21042025 SET r_t_add = 3099 where street_nam = 'Carlos Villate' and r_t_add = 3149;
+UPDATE base.calles_21042025 SET r_f_add = 3101 where street_nam = 'Carlos Villate' and r_f_add = 3151;
+UPDATE base.calles_21042025 SET r_t_add = 3189 where street_nam = 'Carlos Villate' and r_t_add = 3199;
+UPDATE base.calles_21042025 SET r_f_add = 3191 where street_nam = 'Carlos Villate' and r_f_add = 3201;
+UPDATE base.calles_21042025 SET r_t_add = 3199 where street_nam = 'Carlos Villate' and r_t_add = 3249;
+UPDATE base.calles_21042025 SET r_f_add = 3201 where street_nam = 'Carlos Villate' and r_f_add = 3251;
+UPDATE base.calles_21042025 SET l_t_add = 2264 where street_nam = 'Bartolome Mitre' and l_t_add = 2300;
+UPDATE base.calles_21042025 SET l_f_add = 2266 where street_nam = 'Bartolome Mitre' and l_f_add = 2302;
+UPDATE base.calles_21042025 SET l_t_add = 2300 where street_nam = 'Bartolome Mitre' and l_t_add = 2350;
+UPDATE base.calles_21042025 SET l_f_add = 2302 where street_nam = 'Bartolome Mitre' and l_f_add = 2352;
+UPDATE base.calles_21042025 SET l_t_add = 2350 where street_nam = 'Bartolome Mitre' and l_t_add = 2400;
+UPDATE base.calles_21042025 SET l_f_add = 2352 where street_nam = 'Bartolome Mitre' and l_f_add = 2402;
+UPDATE base.calles_21042025 SET l_t_add = 2400 where street_nam = 'Bartolome Mitre' and l_t_add = 2450;
+UPDATE base.calles_21042025 SET l_f_add = 2402 where street_nam = 'Bartolome Mitre' and l_f_add = 2452;
+UPDATE base.calles_21042025 SET r_t_add = 4699 where street_nam = 'Hipolito Yrigoyen' and r_t_add = 4649;
+UPDATE base.calles_21042025 SET r_f_add = 4701 where street_nam = 'Hipolito Yrigoyen' and r_f_add = 4651;
+UPDATE base.calles_21042025 SET r_t_add = 4719 where street_nam = 'Hipolito Yrigoyen' and r_t_add = 4699 and objectid = 804;
+UPDATE base.calles_21042025 SET r_f_add = 4721 where street_nam = 'Hipolito Yrigoyen' and r_f_add = 4701 and objectid = 803;
+UPDATE base.calles_21042025 SET r_t_add = 4799 where street_nam = 'Hipolito Yrigoyen' and r_t_add = 4749;
+UPDATE base.calles_21042025 SET r_f_add = 4801 where street_nam = 'Hipolito Yrigoyen' and r_f_add = 4751;
+UPDATE base.calles_21042025 SET r_t_add = 4849 where street_nam = 'Hipolito Yrigoyen' and r_t_add = 4799 and objectid = 861;
+UPDATE base.calles_21042025 SET r_f_add = 4851 where street_nam = 'Hipolito Yrigoyen' and r_f_add = 4801 and objectid = 860;
+UPDATE base.calles_21042025 SET r_t_add = 4899 where street_nam = 'Hipolito Yrigoyen' and r_t_add = 4849 and objectid = 860;
+UPDATE base.calles_21042025 SET r_f_add = 4901 where street_nam = 'Hipolito Yrigoyen' and r_f_add = 4851 and objectid = 910;
+UPDATE base.calles_21042025 SET r_t_add = 4949 where street_nam = 'Hipolito Yrigoyen' and r_t_add = 4899 and objectid = 910;
+UPDATE base.calles_21042025 SET r_f_add = 4951 where street_nam = 'Hipolito Yrigoyen' and r_f_add = 4901 and objectid = 909;
+UPDATE base.calles_21042025 SET r_t_add = 4999 where street_nam = 'Hipolito Yrigoyen' and r_t_add = 4979 and objectid = 909;
+UPDATE base.calles_21042025 SET l_t_add = 3290 where street_nam = 'Manuel Belgrano' and l_t_add = 3300;
+UPDATE base.calles_21042025 SET l_f_add = 3292 where street_nam = 'Manuel Belgrano' and l_f_add = 3302;
+UPDATE base.calles_21042025 SET l_t_add = 3300 where street_nam = 'Manuel Belgrano' and l_t_add = 3320;
+UPDATE base.calles_21042025 SET l_f_add = 3302 where street_nam = 'Manuel Belgrano' and l_f_add = 3322;
+UPDATE base.calles_21042025 SET l_t_add = 2864 where street_nam = 'Maipu' and l_t_add = 2900;
+UPDATE base.calles_21042025 SET l_f_add = 2866 where street_nam = 'Maipu' and l_f_add = 2902;
+UPDATE base.calles_21042025 SET l_f_add = 4402 where street_nam = 'Guillermo White' and l_f_add = 4462;
+UPDATE base.calles_21042025 SET r_f_add = 4401 where street_nam = 'Guillermo White' and r_f_add = 4461;
+UPDATE base.calles_21042025 SET r_t_add = 499 where street_nam = 'Julio A Roca' and r_t_add = 479;
+UPDATE base.calles_21042025 SET r_f_add = 501 where street_nam = 'Julio A Roca' and r_f_add = 481;
+UPDATE base.calles_21042025 SET r_t_add = 519 where street_nam = 'Julio A Roca' and r_t_add = 499 and objectid = 2440;
+UPDATE base.calles_21042025 SET r_f_add = 521 where street_nam = 'Julio A Roca' and r_f_add = 501 and objectid = 2018;
+UPDATE base.calles_21042025 SET l_t_add = 4900 where street_nam = 'Julio A Roca' and l_t_add = 4890;
+UPDATE base.calles_21042025 SET l_f_add = 4902 where street_nam = 'Julio A Roca' and l_f_add = 4892;
+UPDATE base.calles_21042025 SET l_f_add = 4902 where street_nam = 'Julio A Roca' and l_f_add = 4892 and objectid = 1311;
+UPDATE base.calles_21042025 SET l_t_add = 4918 where street_nam = 'Julio A Roca' and l_t_add = 4900 and objectid = 1311;
+UPDATE base.calles_21042025 SET l_f_add = 4920 where street_nam = 'Julio A Roca' and l_f_add = 4902 and objectid = 1316;
+UPDATE base.calles_21042025 SET r_t_add = 1979 where street_nam = 'Antonio Olaguer Y Feliu' and r_t_add = 1999;
+UPDATE base.calles_21042025 SET r_f_add = 1981 where street_nam = 'Antonio Olaguer Y Feliu' and r_f_add = 2001;
+UPDATE base.calles_21042025 SET r_t_add = 1999 where street_nam = 'Antonio Olaguer Y Feliu' and r_t_add = 2025;
+UPDATE base.calles_21042025 SET r_f_add = 2001 where street_nam = 'Antonio Olaguer Y Feliu' and r_f_add = 2027;
+UPDATE base.calles_21042025 SET r_t_add = 2039 where street_nam = 'Antonio Olaguer Y Feliu' and r_t_add = 2049;
+UPDATE base.calles_21042025 SET r_f_add = 2041 where street_nam = 'Antonio Olaguer Y Feliu' and r_f_add = 2051;
+UPDATE base.calles_21042025 SET l_f_add = 1702 where street_nam = 'Carlos Tejedor' and l_f_add = 1592 and objectid = 708;
+UPDATE base.calles_21042025 SET l_t_add = 1708 where street_nam = 'Carlos Tejedor' and l_t_add = 1600 and objectid = 708;
+UPDATE base.calles_21042025 SET l_f_add = 1710 where street_nam = 'Carlos Tejedor' and l_f_add = 1702 and objectid = 664;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Pascual Palazzo';
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Bolivia' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 0 AND  l_t_add = 0;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Antonio A Cetrangolo' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 0 AND  l_t_add = 0;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Carlos F Melo' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 0 AND  l_t_add = 0;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Juan Lavalle' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 0 AND  l_t_add = 0;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Tapiales' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 0 AND  l_t_add = 0;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Camacua' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 0 AND  l_t_add = 0;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Matias Sturiza' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 0 AND  l_t_add = 0;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Bautista Baigorria' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 0 AND  l_t_add = 0;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Carlos Tejedor' AND  r_f_add = 1591 AND  r_t_add = 1599 AND  l_f_add = 0 AND  l_t_add = 0;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Triunvirato' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 0 AND  l_t_add = 0;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Rafael Obligado' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 6198 AND  l_t_add = 6200;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Parana' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 3582 AND  l_t_add = 3600;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Ricardo Gutierrez' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 0 AND  l_t_add = 0;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Espana' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 0 AND  l_t_add = 0;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Jose M Paz' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 0 AND  l_t_add = 0;
+DELETE FROM base.calles_21042025 WHERE street_nam = 'Julian S Aguero' AND  r_f_add = 0 AND  r_t_add = 0 AND  l_f_add = 0 AND  l_t_add = 0;
+
+---CAPA PARA KAN
+DROP TABLE IF EXISTS base.calles_veredas_intersecciones;
+CREATE TABLE base.calles_veredas_intersecciones AS
+(SELECT * FROM base.calles_21042025
+union all
+SELECT objectid, street_nam, pre_type, pre_dir, 0 as r_f_add, 0 as r_t_add, 0 as l_f_add, 0 as l_t_add, geom_32721 as geom, id FROM base.calles);
+
+ALTER TABLE base.calles_veredas_intersecciones DROP COLUMN id;
+ALTER TABLE base.calles_veredas_intersecciones ADD COLUMN id SERIAL PRIMARY KEY;
+CREATE INDEX calles_veredas_intersecciones_geom ON base.calles_veredas_intersecciones USING GIST (geom); 
+
+
+
+---CAPA PARA GEOPORTAL
+DROP TABLE IF EXISTS base.calles_mvl__calles_327211;
+CREATE TABLE base.calles_mvl__calles_327211 AS
+(SELECT * FROM base.calles_veredas_intersecciones);
+
+ALTER TABLE base.calles_mvl__calles_327211 DROP COLUMN id;
+ALTER TABLE base.calles_mvl__calles_327211 ADD COLUMN id SERIAL PRIMARY KEY;
+CREATE INDEX calles_mvl__calles_327211_geom ON base.calles_mvl__calles_327211 USING GIST (geom); 
+
+
+
+/*
+---
+----------------
+---VALIDANDO
+SELECT 
+a.objectid, 
+a.street_nam,
+a.l_f_add,
+a.l_t_add,
+a.r_f_add,
+a.r_t_add,
+--a.geom_32721, 
+(ST_LENGTH(a.geom_32721))::numeric(100,2) as longitud_real,
+--b.geom_izquierdo,
+(ST_LENGTH(b.geom_izquierdo))::numeric(100,2) as longitud_izquierdo,
+(ST_LENGTH(a.geom_32721)-ST_LENGTH(b.geom_izquierdo))::numeric(100,2) as diferencia_izquierdo, 
+((((ST_LENGTH(a.geom_32721))::numeric(100,2)-(ST_LENGTH(a.geom_32721)-ST_LENGTH(b.geom_izquierdo))::numeric(100,2))/(ST_LENGTH(a.geom_32721))::numeric(100,2))*100)::numeric(100,2) as "perc_izquierdo",
+--b.geom_derecho,
+--(ST_LENGTH(b.geom_derecho))::numeric(100,2) as longitud_derecho,
+--(ST_LENGTH(a.geom_32721)-ST_LENGTH(b.geom_derecho))::numeric(100,2) as diferencia_derecho,
+--((((ST_LENGTH(a.geom_32721))::numeric(100,2)-(ST_LENGTH(a.geom_32721)-ST_LENGTH(b.geom_derecho))::numeric(100,2))/(ST_LENGTH(a.geom_32721))::numeric(100,2))*100)::numeric(100,2) AS "perc_derecho",
+b.id 
+FROM 
+base.calles as a
+left join
+calculos.calles_lados as b
+on 
+coalesce(a.objectid,0) = coalesce(b.objectid,0) and
+a.l_f_add = b.l_f_add and
+a.l_t_add = b.l_t_add and
+a.r_f_add = b.r_f_add and
+a.r_t_add = b.r_t_add
+WHERE  
+a.l_f_add <> 0 AND
+a.l_t_add <> 0 AND
+(ST_LENGTH(b.geom_izquierdo))::numeric(100,2) <> 0 AND
+((((ST_LENGTH(a.geom_32721))::numeric(100,2)-(ST_LENGTH(a.geom_32721)-ST_LENGTH(b.geom_izquierdo))::numeric(100,2))/(ST_LENGTH(a.geom_32721))::numeric(100,2))*100)::numeric(100,2) < 30
+--a.r_f_add <> 0 AND
+--a.r_t_add <> 0
+ORDER BY
+((((ST_LENGTH(a.geom_32721))::numeric(100,2)-(ST_LENGTH(a.geom_32721)-ST_LENGTH(b.geom_izquierdo))::numeric(100,2))/(ST_LENGTH(a.geom_32721))::numeric(100,2))*100)::numeric(100,2),
+a.street_nam,
+a.l_f_add,
+a.l_t_add
+
+
+/*
+a.street_nam,
+a.l_f_add,
+a.l_t_add,
+a.r_f_add,
+a.r_t_add
+*/
+
+
+--SELECT (ST_LENGTH(geom_izquierdo))::numeric(100,2) FROM calculos.calles_lados
+
+/*
+UPDATE base.calles SET geom_32721 = ST_Reverse(geom_32721) 
+where UPPER("street_nam") = 'MAIPU'
+and r_f_add = 0 and r_t_add = 0;
+*/
+
+
+*/

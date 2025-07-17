@@ -1,0 +1,141 @@
+SELECT DISTINCT * FROM
+(SELECT
+*
+,
+(CASE 
+ WHEN a.altura NOT ILIKE '%-%' AND a.altura NOT ILIKE '%(%' THEN
+(CASE 
+WHEN 
+ a.altura::bigint > b.altura_min 
+ and a.altura::bigint < b.altura_max 
+ THEN 'CORRESPONDE'
+ ELSE 'NO CORRESPONDE'
+END)
+END) as vl
+FROM (
+SELECT DISTINCT
+UPPER(trim(replace(direccion_nor,(case
+when 
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '0' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '1' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '2' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '3' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '4' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '5' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '6' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '7' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '8' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '9'
+then reverse(split_part(reverse(direccion_nor),' ',1))
+end),''))) AS direccion_nor,
+(case
+when 
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '0' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '1' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '2' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '3' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '4' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '5' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '6' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '7' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '8' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '9'
+then reverse(split_part(reverse(direccion_nor),' ',1))
+end) as altura,
+count(*)
+FROM calculos.luminarias_agosto2024
+WHERE 
+geocodificado = 'NO' 
+--and direccion not ilike '%plaz%'
+--and direccion not ilike '%parq%'
+--and direccion not ilike '%pasill%'
+GROUP BY 
+UPPER(trim(replace(direccion_nor,(case
+when 
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '0' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '1' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '2' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '3' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '4' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '5' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '6' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '7' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '8' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '9'
+then reverse(split_part(reverse(direccion_nor),' ',1))
+end),''))),
+(case
+when 
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '0' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '1' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '2' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '3' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '4' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '5' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '6' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '7' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '8' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '9'
+then reverse(split_part(reverse(direccion_nor),' ',1))
+end)
+ORDER BY 
+UPPER(trim(replace(direccion_nor,(case
+when 
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '0' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '1' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '2' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '3' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '4' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '5' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '6' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '7' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '8' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '9'
+then reverse(split_part(reverse(direccion_nor),' ',1))
+end),''))),
+(case
+when 
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '0' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '1' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '2' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '3' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '4' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '5' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '6' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '7' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '8' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '9'
+then reverse(split_part(reverse(direccion_nor),' ',1))
+end)
+) AS a
+LEFT JOIN 
+(
+		  SELECT 
+			UPPER("street_nam") as calle,
+			(CASE
+			WHEN  r_f_add = 0 AND r_t_add = 0 THEN l_f_add
+			ELSE r_f_add
+			END) AS altura_min,
+			r_t_add,
+			l_f_add,
+			(CASE
+			WHEN l_t_add = 0 AND l_f_add = 0 THEN r_t_add
+			ELSE l_t_add 
+			END) as altura_max,
+			geom_32721
+			FROM base.calles
+			ORDER BY 
+			UPPER("street_nam"),
+			r_f_add,
+			r_t_add,
+			l_f_add,
+			l_t_add
+		  ) AS b
+ON a.direccion_nor = b.calle)
+--WHERE vl = 'CORRESPONDE';
+
+WHERE 
+altura_min -10 < altura::bigint 
+and altura_max + 60 > altura::bigint
+and altura <> '3800(TREN-BICISENDA)'
+and altura <> '0-600';

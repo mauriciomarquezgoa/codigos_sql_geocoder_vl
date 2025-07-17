@@ -1,0 +1,6 @@
+ALTER TABLE base.calles ADD COLUMN IF NOT EXISTS revision character varying;
+
+UPDATE base.calles AS a SET 
+revision = b.revision FROM 
+(SELECT objectid, "shapefile de CALLES AJUSTADAS" as revision FROM calculos.calles_ajustadas) AS b
+WHERE a.objectid = b.objectid;

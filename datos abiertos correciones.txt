@@ -1,0 +1,66 @@
+alter table base.delegaciones_municipales_fuente_datos_abiertos add column geom geometry;
+
+update base.delegaciones_municipales_fuente_datos_abiertos  as a set
+geom = b.geom2 from
+(SELECT
+*,
+(ST_TRANSFORM(ST_SetSRID(ST_MAKEPOINT(replace("x",',','.')::double precision,replace("y",',','.')::double precision),4326),32721)) AS geom2
+FROM base.delegaciones_municipales_fuente_datos_abiertos) as b
+where a.id = b.id;
+
+
+
+alter table base.edificios_municipio_fuente_datos_abiertos add column geom geometry;
+
+update base.edificios_municipio_fuente_datos_abiertos  as a set
+geom = b.geom2 from
+(SELECT
+*,
+(ST_TRANSFORM(ST_SetSRID(ST_MAKEPOINT(replace("LONGITUD",',','.')::double precision,replace("LATITUD",',','.')::double precision),4326),32721)) AS geom2
+FROM base.edificios_municipio_fuente_datos_abiertos) as b
+where a.id = b.id;
+
+
+
+alter table base.instituciones_educativas_fuente_datos_abiertos add column geom geometry;
+
+update base.instituciones_educativas_fuente_datos_abiertos  as a set
+geom = b.geom2 from
+(SELECT
+*,
+(ST_TRANSFORM(ST_SetSRID(ST_MAKEPOINT(replace("LONGITUD",',','.')::double precision,replace("LATITUD",',','.')::double precision),4326),32721)) AS geom2
+FROM (SELECT 
+*,
+SPLIT_PART("geometry.coordinates",',',1) AS "LONGITUD",
+SPLIT_PART("geometry.coordinates",',',2) AS "LATITUD"
+FROM base.instituciones_educativas_fuente_datos_abiertos
+WHERE 
+SPLIT_PART("geometry.coordinates",',',1) <> '' AND
+SPLIT_PART("geometry.coordinates",',',2) <> ''
+)) as b
+where a.id = b.id;
+
+
+alter table base.organizaciones_sociales_fuente_datos_abiertos add column geom geometry;
+
+
+update base.organizaciones_sociales_fuente_datos_abiertos  as a set
+geom = b.geom2 from
+(SELECT
+*,
+(ST_TRANSFORM(ST_SetSRID(ST_MAKEPOINT(replace("lon",',','.')::double precision,replace("lat",',','.')::double precision),4326),32721)) AS geom2
+FROM base.organizaciones_sociales_fuente_datos_abiertos) as b
+where a.id = b.id;
+
+
+
+alter table base.plazas_fuente_datos_abiertos add column geom geometry;
+
+
+update base.plazas_fuente_datos_abiertos  as a set
+geom = b.geom2 from
+(SELECT
+*,
+(ST_TRANSFORM(ST_SetSRID(ST_MAKEPOINT(replace("LONGITUD",',','.')::double precision,replace("LATITUD",',','.')::double precision),4326),32721)) AS geom2
+FROM base.plazas_fuente_datos_abiertos) as b
+where a.id = b.id;

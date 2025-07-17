@@ -1,0 +1,32 @@
+DROP TABLE IF EXISTS calculos.luminarias_corregidas_lat_long;
+CREATE TABLE calculos.luminarias_corregidas_lat_long AS (
+SELECT 
+b.codigo_unico, 
+a.direccion as direccion_previa, 
+a.latitud as latitud_previa, 
+a.longitud as longitud_previa, 
+b.direccion as direccion_nueva, 
+b.latitud as latitud_nueva,  
+b.longitud as longitud_nueva,
+ST_TRANSFORM(ST_SETSRID(ST_MAKEPOINT(a."longitud"::double precision,a."latitud"::double precision),4326),32721) as geom_previo,
+ST_TRANSFORM(ST_SETSRID(ST_MAKEPOINT(b."longitud"::double precision,b."latitud"::double precision),4326),32721) as geom_nuevo,
+ST_MAKELINE(ST_TRANSFORM(ST_SETSRID(ST_MAKEPOINT(a."longitud"::double precision,a."latitud"::double precision),4326),32721),ST_TRANSFORM(ST_SETSRID(ST_MAKEPOINT(b."longitud"::double precision,b."latitud"::double precision),4326),32721)) as geom_line,
+ST_DISTANCE(ST_TRANSFORM(ST_SETSRID(ST_MAKEPOINT(a."longitud"::double precision,a."latitud"::double precision),4326),32721),ST_TRANSFORM(ST_SETSRID(ST_MAKEPOINT(b."longitud"::double precision,b."latitud"::double precision),4326),32721)) as distancia
+FROM 
+calculos.luminarias_agosto2024 as a
+RIGHT JOIN
+calculos.luminarias_octubre2024 as b
+ON 
+a.codigo_unico = b.codigo_unico
+WHERE 
+a.latitud <> b.latitud AND
+a.longitud <> b.longitud 
+AND ST_DISTANCE(ST_TRANSFORM(ST_SETSRID(ST_MAKEPOINT(a."longitud"::double precision,a."latitud"::double precision),4326),32721),ST_TRANSFORM(ST_SETSRID(ST_MAKEPOINT(b."longitud"::double precision,b."latitud"::double precision),4326),32721)) > 1	
+ORDER BY a.direccion, b.codigo_unico);
+
+CREATE INDEX luminarias_corregidas_lat_long_id on calculos.luminarias_corregidas_lat_long (codigo_unico); 
+CREATE INDEX luminarias_corregidas_lat_long_c on calculos.luminarias_corregidas_lat_long ("direccion_nueva"); 
+CREATE INDEX luminarias_corregidas_lat_long_geom_previo ON calculos.luminarias_corregidas_lat_long USING GIST (geom_previo); 
+CREATE INDEX luminarias_corregidas_lat_long_geom_nuevo ON calculos.luminarias_corregidas_lat_long USING GIST (geom_nuevo); 
+CREATE INDEX luminarias_corregidas_lat_long_geom_line ON calculos.luminarias_corregidas_lat_long USING GIST (geom_line); 
+

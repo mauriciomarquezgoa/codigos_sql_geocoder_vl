@@ -1,0 +1,200 @@
+DROP TABLE IF EXISTS calculos.geocoding_inverso;
+CREATE TABLE calculos.geocoding_inverso AS (
+SELECT DISTINCT ON (a.id_identificador) 
+	  a.id, 
+	  a.id_identificador, 
+	  a.codigo_unico, 
+	  b."street_nam" as direccion, 
+	  concat(b."street_nam", ' ', round(ST_Distance(ST_LineInterpolatepoint(ST_LineMerge(b.geom_32721),ST_LineLocatePoint(ST_LineMerge(b.geom_32721),a.geom)),ST_StartPoint(ST_LineMerge(b.geom_32721))))+(CASE
+			WHEN  b.r_f_add = 0 AND b.r_t_add = 0 THEN b.l_f_add
+			ELSE b.r_f_add
+			END)) as direccion_nor,
+      round(ST_Distance(ST_LineInterpolatepoint(ST_LineMerge(b.geom_32721),ST_LineLocatePoint(ST_LineMerge(b.geom_32721),a.geom)),ST_StartPoint(ST_LineMerge(b.geom_32721))))+(CASE
+			WHEN  b.r_f_add = 0 AND b.r_t_add = 0 THEN b.l_f_add
+			ELSE b.r_f_add
+			END) as altura,
+	  a.descripcion,
+	  min(ST_Distance (a.geom, ST_LineMerge(b.geom_32721)))as min,
+	  ST_LineInterpolatepoint(ST_LineMerge(b.geom_32721),ST_LineLocatePoint(ST_LineMerge(b.geom_32721),a.geom)) as geom
+	
+ 
+FROM (SELECT * FROM calculos.luminarias_agosto2024
+WHERE  "geo_inverso_rev" = 1
+ORDER BY id_identificador) as a, base.calles_32721 as b
+WHERE ST_DWithin(a.geom,b.geom_32721,100)
+ 
+GROUP BY b.objectid, a.id, a.codigo_unico, a.descripcion, b."street_nam", a.id_identificador, b.geom_32721, b.r_f_add, b.r_t_add , b.l_f_add, a.geom
+ORDER BY a.id_identificador, min);
+
+
+--CREACIÓN DE CAPA DE DATOS GEOLOCALIZADOS
+drop table if exists calculos.geocoding_inverso_geo;
+create table calculos.geocoding_inverso_geo as 
+SELECT 
+--EN ESTE SEGMENTO (a) SE INDICAN LOS CAMPOS DE LA CAPA DE DIRECCIONES
+a."id",
+a."id_identificador",
+a."codigo_unico",
+a."direccion",
+a."altura",
+a."descripcion",
+--EN ESTE SEGMENTO (b) SE INDICAN LOS CAMPOS DE LA CAPA DE EJES DE VIAS (VICENTE LOPEZ)
+b."r_f_add",  
+b."r_t_add",
+b."l_f_add",
+b."l_t_add",  
+cast(b."l_t_add" as bigint)-cast(b."r_f_add" as bigint)+1 as largo_calle,
+cast(a."altura" as bigint)-cast(b."r_f_add" as bigint)+1 as interpolar, 
+geom_32721 as geom
+FROM (SELECT
+id,
+descripcion,
+codigo_unico,
+id_identificador,
+direccion as direccion_ori,
+direccion_nor,
+replace(direccion_nor,(case
+when 
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '0' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '1' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '2' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '3' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '4' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '5' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '6' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '7' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '8' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '9'
+then reverse(split_part(reverse(direccion_nor),' ',1))
+end),'') as direccion,
+(case
+when 
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '0' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '1' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '2' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '3' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '4' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '5' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '6' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '7' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '8' or
+left(reverse(split_part(reverse(direccion_nor),' ',1)),1) = '9'
+then reverse(split_part(reverse(direccion_nor),' ',1))
+end) as altura 
+FROM calculos.geocoding_inverso) as a
+left join (
+		  SELECT 
+			"street_nam",
+			(CASE
+			WHEN  r_f_add = 0 AND r_t_add = 0 THEN l_f_add
+			ELSE r_f_add
+			END) AS r_f_add,
+			r_t_add,
+			l_f_add,
+			(CASE
+			WHEN l_t_add = 0 AND l_f_add = 0 THEN r_t_add
+			ELSE l_t_add 
+			END) as l_t_add,
+			geom_32721
+			FROM base.calles
+			ORDER BY 
+			UPPER("street_nam"),
+			r_f_add,
+			r_t_add,
+			l_f_add,
+			l_t_add
+		  ) as b on 
+UPPER(trim(a."direccion"))=UPPER(b."street_nam") where
+(cast(a."altura" as bigint)<=cast(b."l_t_add" as bigint)  and 
+ cast(a."altura" as bigint)>=cast(b."r_f_add" as bigint)) and 
+ b.geom_32721 is not null and
+ a.direccion is not null and 
+ a."altura" not ilike '%-%' and
+ a."altura" is not null
+order by a."id";
+
+
+
+--CREACIÓN DE INDICES EN CAPA DE DATOS GEOLOCALIZADOS
+CREATE INDEX geocoding_inverso_geo_id on calculos.geocoding_inverso_geo (id); 
+CREATE INDEX geocoding_inverso_geo_c on calculos.geocoding_inverso_geo ("direccion"); 
+CREATE INDEX geocoding_inverso_geo_geom ON calculos.geocoding_inverso_geo USING GIST (geom); 
+
+
+--DEFINICION DE LADO DE CALLE A GEOLOCALIZAR
+ALTER TABLE calculos.geocoding_inverso_geo ADD "lado" varchar; 
+
+update calculos.geocoding_inverso_geo set "lado" = 'I'
+where 
+right("altura"::varchar,1) = '1' or
+right("altura"::varchar,1) = '3' or
+right("altura"::varchar,1) = '5' or
+right("altura"::varchar,1) = '7' or
+right("altura"::varchar,1) = '9';
+
+update calculos.geocoding_inverso_geo set "lado" = 'D'
+where "lado" is null;  
+
+--AÑADIENDO CAMPO DE GEOLOCALIZACIÓN
+ALTER TABLE calculos.geocoding_inverso_geo ADD geom2 geometry; 
+
+
+--CALCULO DE GEOLOCALIZACIÓN MEDIANTE SENTENCIAS SQL POSTGIS
+UPDATE calculos.geocoding_inverso_geo AS a SET 
+geom2 = b.geom3 from (
+select 
+id_identificador,
+r_f_add,
+r_t_add,
+l_f_add,
+l_t_add,
+ST_LineInterpolatePoint
+	((
+	case
+	when lado = 'D' AND RIGHT(r_f_add::text,1) = '2' AND r_t_add = 0 then ST_LineMerge(ST_Reverse(ST_OffsetCurve(ST_LineMerge(geom), -7, 'quad_segs=4 join=round')))
+	when lado = 'I' AND RIGHT(r_f_add::text,1) = '1' AND l_f_add = 0 then ST_LineMerge(ST_OffsetCurve(ST_LineMerge(geom), -7, 'quad_segs=4 join=round'))
+	when lado = 'I' AND RIGHT(r_f_add::text,1) = '1' AND (l_f_add <> 0)  then ST_LineMerge(ST_OffsetCurve(ST_LineMerge(geom), -4, 'quad_segs=4 join=round'))
+	when lado = 'D' AND RIGHT(r_f_add::text,1) = '1' AND (l_f_add <> 0) then ST_LineMerge(ST_OffsetCurve(ST_LineMerge(geom), 4, 'quad_segs=4 join=round'))
+	end
+),(interpolar::double precision/largo_calle::double precision)) as geom3
+from calculos.geocoding_inverso_geo
+where 
+interpolar::double precision/largo_calle::double precision <= 1
+--and UPPER(trim("direccion")) <> 'CUBA'
+--and UPPER(trim("direccion")) <> 'TAPIALES'
+order by id) as b
+where 
+a.id_identificador = b.id_identificador and
+a.r_f_add = b.r_f_add and
+a.r_t_add = b.r_t_add and
+a.l_f_add = b.l_f_add and
+a.l_t_add = b.l_t_add;
+
+--ELIMINACION DE CAMPOS DE CAMPOS DEL PROCESO DE CALCULOS
+ALTER TABLE calculos.geocoding_inverso_geo DROP geom; 
+ALTER TABLE calculos.geocoding_inverso_geo DROP "r_f_add"; 
+ALTER TABLE calculos.geocoding_inverso_geo DROP "l_t_add"; 
+ALTER TABLE calculos.geocoding_inverso_geo DROP largo_calle; 
+ALTER TABLE calculos.geocoding_inverso_geo DROP interpolar; 
+ALTER TABLE calculos.geocoding_inverso_geo DROP lado; 
+ALTER TABLE calculos.geocoding_inverso_geo RENAME COLUMN geom2 to geom; 
+CREATE INDEX geocoding_inverso_geo_geom ON calculos.geocoding_inverso_geo USING GIST (geom); 
+
+
+
+UPDATE calculos.luminarias_agosto2024 AS a SET
+direccion_new = b.direccion_new,
+latitud_new = b.latitud_new,
+longitud_new = b.longitud_new, 
+geom_new = b.geom_new FROM
+(SELECT 
+id_identificador,
+concat(direccion,' ',altura) as direccion_new, 
+st_x(st_transform(geom,4326)) as latitud_new,
+st_y(st_transform(geom,4326)) as longitud_new,
+geom as geom_new
+FROM calculos.geocoding_inverso_geo
+WHERE geom is not null) as b
+WHERE a.id_identificador=b.id_identificador and a.geom_new is null;
+
+

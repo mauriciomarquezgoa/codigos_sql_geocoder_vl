@@ -1,0 +1,10 @@
+create extension pgrouting;
+
+alter table base.calles add column source integer;
+alter table base.calles add column target integer;
+
+select pgr_createTopology('base.calles', 0.0001, 'geom_32721', 'id');
+
+alter table base.calles add column speed float;
+alter table base.calles add column cost float;
+alter table base.calles add column reverse_cost float;

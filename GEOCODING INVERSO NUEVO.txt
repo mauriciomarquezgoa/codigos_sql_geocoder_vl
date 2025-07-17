@@ -1,0 +1,99 @@
+ALTER TABLE calculos2."PARADAS_2022" ADD COLUMN IF NOT EXISTS direccion character varying;
+ALTER TABLE calculos2."PARADAS_2022" ADD COLUMN IF NOT EXISTS altura integer;
+
+
+ALTER TABLE calculos2."PARADAS_2022" ADD geom2 geometry;
+UPDATE calculos2."PARADAS_2022" SET geom2 = ST_TRANSFORM(geom,22195);
+ALTER TABLE calculos2."PARADAS_2022" DROP COLUMN geom;
+ALTER TABLE calculos2."PARADAS_2022" RENAME COLUMN geom2 TO geom;
+CREATE INDEX paradas_2022_geom ON calculos2."PARADAS_2022" USING GIST (geom);
+
+
+UPDATE calculos2."PARADAS_2022" AS C 
+SET direccion = d.direccion2, altura = d.altura2 FROM
+(SELECT DISTINCT ON (a.id) 
+	  a.id, 
+	  b."nombre" as direccion2, 
+	  (concat(b."nombre", ' ', round(ST_Distance(ST_LineInterpolatepoint(ST_LineMerge(b.geom),ST_LineLocatePoint(ST_LineMerge(b.geom),a.geom)),ST_StartPoint(ST_LineMerge(b.geom))))+(CASE
+			WHEN  b.izq_desde = 0 AND b.izq_hasta = 0 THEN b.der_desde
+			ELSE b.izq_desde
+			END))) as direccion_nor,
+      round(ST_Distance(ST_LineInterpolatepoint(ST_LineMerge(b.geom),ST_LineLocatePoint(ST_LineMerge(b.geom),a.geom)),ST_StartPoint(ST_LineMerge(b.geom))))+(CASE
+			WHEN  b.izq_desde = 0 AND b.izq_hasta = 0 THEN b.der_desde
+			ELSE b.izq_desde
+			END) as altura2,
+	  a.descriptio,
+	  min(ST_Distance (a.geom, ST_LineMerge(b.geom)))as min,
+	  ST_LineInterpolatepoint(ST_LineMerge(b.geom),ST_LineLocatePoint(ST_LineMerge(b.geom),a.geom)) as geom
+	
+ 
+FROM (SELECT * FROM calculos2."PARADAS_2022"
+ORDER BY id) as a, base.pavimentos as b
+WHERE ST_DWithin(a.geom,b.geom,100)
+ 
+GROUP BY a.id, a.descriptio, b."nombre", b.geom, b.izq_desde, b.izq_hasta , b.der_desde, a.geom
+ORDER BY a.id, min) AS D
+WHERE c.id = d.id;
+
+
+
+ALTER TABLE calculos2."TOTEMS_2022" ADD COLUMN IF NOT EXISTS direccion character varying;
+ALTER TABLE calculos2."TOTEMS_2022" ADD COLUMN IF NOT EXISTS altura integer;
+
+UPDATE calculos2."TOTEMS_2022" AS C 
+SET direccion = d.direccion2, altura = d.altura2 FROM
+(SELECT DISTINCT ON (a.id) 
+	  a.id, 
+	  b."nombre" as direccion2, 
+	  (concat(b."nombre", ' ', round(ST_Distance(ST_LineInterpolatepoint(ST_LineMerge(b.geom),ST_LineLocatePoint(ST_LineMerge(b.geom),a.geom)),ST_StartPoint(ST_LineMerge(b.geom))))+(CASE
+			WHEN  b.izq_desde = 0 AND b.izq_hasta = 0 THEN b.der_desde
+			ELSE b.izq_desde
+			END))) as direccion_nor,
+      round(ST_Distance(ST_LineInterpolatepoint(ST_LineMerge(b.geom),ST_LineLocatePoint(ST_LineMerge(b.geom),a.geom)),ST_StartPoint(ST_LineMerge(b.geom))))+(CASE
+			WHEN  b.izq_desde = 0 AND b.izq_hasta = 0 THEN b.der_desde
+			ELSE b.izq_desde
+			END) as altura2,
+	  min(ST_Distance (a.geom, ST_LineMerge(b.geom)))as min,
+	  ST_LineInterpolatepoint(ST_LineMerge(b.geom),ST_LineLocatePoint(ST_LineMerge(b.geom),a.geom)) as geom
+	
+ 
+FROM (SELECT * FROM calculos2."TOTEMS_2022"
+ORDER BY id) as a, base.pavimentos as b
+WHERE ST_DWithin(a.geom,b.geom,15)
+ 
+GROUP BY a.id, b."nombre", b.geom, b.izq_desde, b.izq_hasta , b.der_desde, a.geom
+ORDER BY a.id, min) AS D
+WHERE c.id = d.id;
+
+
+ALTER TABLE base.cuadro_paradas_colectivos ADD COLUMN IF NOT EXISTS direccion character varying;
+ALTER TABLE base.cuadro_paradas_colectivos ADD COLUMN IF NOT EXISTS altura integer;
+
+UPDATE base.cuadro_paradas_colectivos AS C 
+SET direccion = d.direccion2, altura = d.altura2 FROM
+(SELECT DISTINCT ON (a.id) 
+	  a.id, 
+	  b."nombre" as direccion2, 
+	  (concat(b."nombre", ' ', round(ST_Distance(ST_LineInterpolatepoint(ST_LineMerge(b.geom),ST_LineLocatePoint(ST_LineMerge(b.geom),a.geom)),ST_StartPoint(ST_LineMerge(b.geom))))+(CASE
+			WHEN  b.izq_desde = 0 AND b.izq_hasta = 0 THEN b.der_desde
+			ELSE b.izq_desde
+			END))) as direccion_nor,
+      round(ST_Distance(ST_LineInterpolatepoint(ST_LineMerge(b.geom),ST_LineLocatePoint(ST_LineMerge(b.geom),a.geom)),ST_StartPoint(ST_LineMerge(b.geom))))+(CASE
+			WHEN  b.izq_desde = 0 AND b.izq_hasta = 0 THEN b.der_desde
+			ELSE b.izq_desde
+			END) as altura2,
+	  min(ST_Distance (a.geom, ST_LineMerge(b.geom)))as min,
+	  ST_LineInterpolatepoint(ST_LineMerge(b.geom),ST_LineLocatePoint(ST_LineMerge(b.geom),a.geom)) as geom
+	
+ 
+FROM (SELECT * FROM base.cuadro_paradas_colectivos
+ORDER BY id) as a, base.pavimentos as b
+WHERE ST_DWithin(a.geom,b.geom,100)
+ 
+GROUP BY a.id, b."nombre", b.geom, b.izq_desde, b.izq_hasta , b.der_desde, a.geom
+ORDER BY a.id, min) AS D
+WHERE c.id = d.id;
+
+
+
+

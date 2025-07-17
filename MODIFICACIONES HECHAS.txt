@@ -1,0 +1,23 @@
+SELECT * FROM
+(SELECT 
+a.objectid,
+a.street_nam,
+a.l_f_add,
+a.l_t_add,
+a.r_f_add,
+a.r_t_add,
+b.street_nam as street_nam_cambiado,
+b.l_f_add as l_f_add_cambiado,
+b.l_t_add as l_t_add_cambiado,
+b.r_f_add as r_f_add_cambiado,
+b.r_t_add as r_t_add_cambiado
+FROM base.calles_old as a
+left join 
+base.calles as b
+ON a.objectid=b.objectid) AS c
+WHERE 
+street_nam <> street_nam_cambiado or
+l_f_add <> l_f_add_cambiado or
+l_t_add <> l_t_add_cambiado or
+r_f_add <> r_f_add_cambiado or
+r_t_add <> r_t_add_cambiado

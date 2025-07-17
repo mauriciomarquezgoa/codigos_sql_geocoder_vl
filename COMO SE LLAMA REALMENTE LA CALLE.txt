@@ -1,0 +1,5 @@
+SELECT DISTINCT UPPER(trim("street_nam")) FROM base.calles
+WHERE
+UPPER(trim("street_nam")) 
+ILIKE '%monte%'
+ORDER BY UPPER(trim("street_nam"));
